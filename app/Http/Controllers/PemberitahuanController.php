@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Models\Penyedia;
 use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -29,9 +30,14 @@ class PemberitahuanController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id)
     {
-        //
+      
+
+        $penyedia = Penyedia::select('nama_penyedia', 'id')->get();
+        
+        $kegiatan = Kegiatan::find($id);
+        return view('form.pemberitahuan', ['kegiatan' => $kegiatan, 'penyedia' => $penyedia]);
     }
 
     /**
@@ -77,14 +83,12 @@ class PemberitahuanController extends Controller
     public function render(string $id)
         {
            
-            $kegiatan = Kegiatan::with('pemberitahuan')->find($id);           
+            $kegiatan = Kegiatan::with('pemberitahuan')->find($id);                
             $pemberitahuan = $kegiatan->pemberitahuan;
-           
             
             
             if (!$pemberitahuan) {
                 noty()->error('Pemberitahuan belum dibuat.');
-
                 return redirect()->back();
             }
 

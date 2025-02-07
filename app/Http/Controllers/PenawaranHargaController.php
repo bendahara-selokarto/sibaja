@@ -30,10 +30,13 @@ class PenawaranHargaController extends Controller
      */
     public function create($id)
     {
-        $kegiatan = Kegiatan::find($id)->first();
-        $pemberitahuan = $kegiatan->pemberitahuan->first();
-       
-        return view('form.penawaran-harga' , ['kegiatan' => $kegiatan, 'pemberitahuan' =>$pemberitahuan]);
+        $kegiatan = Kegiatan::find($id);
+        $pemberitahuan = $kegiatan->pemberitahuan;
+        if($pemberitahuan){
+            return view('form.penawaran-harga' , ['kegiatan' => $kegiatan, 'pemberitahuan' =>$pemberitahuan]);
+        }
+        noty()->error('Tidak ada pemberitahuan terkait');
+        return redirect()->back();
     }
 
     /**
@@ -41,9 +44,13 @@ class PenawaranHargaController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
-        
-        $kegiatan_id = Pemberitahuan::with('kegiatan')->find($request->pemberitahuan_id)->kegiatan->id;
+     
+    $pemberitahuan = Pemberitahuan::with('kegiatan')->find($request->pemberitahuan_id);
+    if (!$pemberitahuan || !$pemberitahuan->kegiatan) {
+        noty()->error('gagal menyimpan');
+        return redirect()->back();
+    }
+    $kegiatan_id = $pemberitahuan->kegiatan->id;
     $volume = $request->volume;
     $totalHarga = 0;
     for ($i = 0; $i < count($volume); $i++) {

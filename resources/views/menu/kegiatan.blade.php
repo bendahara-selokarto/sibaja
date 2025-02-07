@@ -36,7 +36,7 @@
                             <td>
                                 <ul>
                                     <li class="mb-4"><x-bladewind::tag outline="true" shade="dark" label="Pemberitahuan kepada 2 Penyedia"  /><br>
-                                        <form class="inline" action="{{ route('pbj.create', $kegiatan['id']) }}" method="post" >
+                                        <form class="inline" action="{{ route('pemberitahuan.create', $kegiatan['id']) }}" method="post" >
                                             @csrf
                                             @method('POST')
                                             <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">Buat</x-bladewind::button> 

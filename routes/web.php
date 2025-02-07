@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::post('pbj/create/{id}', [PBJController::class , 'create'])->name('pbj.create');
     Route::post('pbj/pemberitahuan/store', [PBJController::class , 'store'])->name('pbj.store');
     
+    Route::post('pemberitahuan/create/{id}', [PemberitahuanController::class , 'create'])->name('pemberitahuan.create');
     Route::get('pemberitahuan/render/{id}', [PemberitahuanController::class , 'render'])->name('pemberitahuan.render');
     Route::get('menu/pemberitahuan', [PemberitahuanController::class , 'index'])->name('menu.pemberitahuan');
     

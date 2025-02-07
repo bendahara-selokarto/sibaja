@@ -14,7 +14,9 @@ class PenyediaController extends Controller
         return view('menu.penyedia', ['penyedia' => $data ]);
     }
     public function create() {
-        return view('form.penyedia');
+        $penyedia = new Penyedia;
+        
+        return view('form.penyedia' , compact('penyedia'));
     }
 
     public function store(Request $request) {
@@ -48,6 +50,8 @@ class PenyediaController extends Controller
     }
 
     public function destroy($id){
+        
+
         $penyedia = Penyedia::find($id);
         if (!$penyedia) {
             flash()->error('penyedia tidak ditemukan');

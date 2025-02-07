@@ -35,17 +35,21 @@ class KegiatanController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'rekening_apbdes' => 'required|string',
-            'kegiatan' => 'required|string',
-            'ketua_tpk' => 'required|string',
-            'pka' => 'required|string',
-        ]);
-    
-        Kegiatan::create($validatedData);
-       
-
-        return redirect()->route('menu.kegiatan');
+        try {
+            $validatedData = $request->validate([
+                'rekening_apbdes' => 'required|string',
+                'kegiatan' => 'required|string',
+                'ketua_tpk' => 'required|string',
+                'pka' => 'required|string',
+            ]);
+        
+            Kegiatan::create($validatedData);
+            noty()->success('berhasil tersimpan');
+            
+        } catch (\Throwable $th) {
+            noty()->error($th);
+        }
+       return redirect()->route('menu.kegiatan');
     }
 
     /**
@@ -70,12 +74,20 @@ class KegiatanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $kegiatan = Kegiatan::find($id);
-        $kegiatan->rekening_apbdes = $request->rekening_apbdes;
-        $kegiatan->kegiatan = $request->kegiatan;
-        $kegiatan->ketua_tpk = $request->ketua_tpk;
-        $kegiatan->pka = $request->pka;
-        $kegiatan->save();
+        try {
+            $kegiatan = Kegiatan::find($id);
+            $kegiatan->rekening_apbdes = $request->rekening_apbdes;
+            $kegiatan->kegiatan = $request->kegiatan;
+            $kegiatan->ketua_tpk = $request->ketua_tpk;
+            $kegiatan->pka = $request->pka;
+            $kegiatan->save();
+            noty()->success('terupdate');
+            
+        } catch (\Throwable $th) {
+            noty()->error($th);
+        }
+
+
         return redirect()->route('menu.kegiatan');
     }
 
