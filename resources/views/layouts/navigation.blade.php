@@ -16,6 +16,26 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('menu.penyedia')" :active="request()->routeIs('menu.penyedia')">
+                        {{ __('Penyedia') }}
+                    </x-nav-link>
+                </div>             
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('menu.kegiatan')" :active="request()->routeIs('menu.kegiatan')">
+                        {{ __('Kegiatan') }}
+                    </x-nav-link>
+                </div>
+                {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('menu.pemberitahuan')" :active="request()->routeIs('menu.pemberitahuan')">
+                        {{ __('pemberitahuan') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('menu.pbj')" :active="request()->routeIs('menu.pbj')">
+                        {{ __('PBJ') }}
+                    </x-nav-link>
+                </div> --}}
             </div>
 
             <!-- Settings Dropdown -->
