@@ -166,7 +166,7 @@
       </tr>
       <tr>
         <td>{{ $penyedia->nama_pemilik }}</td>
-        <td>{{ $kegiatan->ketua_tpk }}</td>
+        <td>{{ $kegiatan->pka }}</td>
       </tr>
 
      </table>

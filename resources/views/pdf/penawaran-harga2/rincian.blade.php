@@ -91,9 +91,9 @@
           <table style="width: 100%">
             <tr>
                 <td style="width: 8cm"><br></td>
-                <td style="text-align: center;">{{ $penyedia1->nama_penyedia}}
+                <td style="text-align: center;">{{ $penyedia2->nama_penyedia}}
                     <br><br><br><br>
-                    <strong>{{ $penyedia1->nama_pemilik}}</strong></td>
+                    <strong>{{ $penyedia2->nama_pemilik}}</strong></td>
             </tr>
         </table>
    

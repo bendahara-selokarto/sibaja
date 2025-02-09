@@ -144,8 +144,7 @@ class PenawaranHargaController extends Controller
                 // dd($penawaran);
                 $penyedia1 = Penyedia::find($penawaran->penyedia_1);
                 $penyedia2 = Penyedia::find($penawaran->penyedia_2);
-                $pemberitahuan = $kegiatan->pemberitahuan->first();
-              
+                $pemberitahuan = $kegiatan->pemberitahuan;               
             $jumlah = $penawaran->harga_penawaran_1;
             $jumlah_2 = $penawaran->harga_penawaran_2;
             $item = $penawaran->item_penawaran_1;

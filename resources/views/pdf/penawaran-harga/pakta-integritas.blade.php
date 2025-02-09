@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <td>Jabatan</td>
-            <td>: {{ $penyedia1->jabatan_pemilik }} ({{ $penyedia1->nama_penyedia}})</td>
+            <td>: Pemilik {{ $penyedia1->jabatan_pemilik }} ({{ $penyedia1->nama_penyedia}})</td>
         </tr>
         <tr>
             <td>No.Identitas(KTP/SIM)</td>

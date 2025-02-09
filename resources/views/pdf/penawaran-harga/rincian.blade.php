@@ -96,4 +96,6 @@
                     <strong>{{ $penyedia1->nama_pemilik}}</strong></td>
             </tr>
         </table>
+
+        
    

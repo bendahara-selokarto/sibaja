@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rules\Enum;
 
 class PBJController extends Controller
 {

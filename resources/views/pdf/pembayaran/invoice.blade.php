@@ -125,12 +125,12 @@
         <td></td>
     </tr>
     <tr>
-        <td>000000</td>
+        <td></td>
         <td></td>
     </tr>
     <tr>
-        <td>an. Wachidi</td>
-        <td>Wachidi</td>
+        <td></td>
+        <td></td>
     </tr>
 </table>
 <br>

@@ -58,7 +58,8 @@
             <td style="width: 3cm">Hari</td>
             <td>: {{ Illuminate\Support\Carbon::parse($negosiasiHarga->tgl_negosiasi)->isoFormat('dddd')  }}</td>
         </tr>
-        <tr>            
+        <tr>   
+               
            
             <td>Tanggal</td>
             <td>: {{ Illuminate\Support\Carbon::parse($negosiasiHarga->tgl_negosiasi)->isoFormat('D MMMM Y')  }}</td>

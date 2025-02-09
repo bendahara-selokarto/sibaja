@@ -118,7 +118,7 @@ class NegosiasiHargaController extends Controller
         $pemberitahuan->no_ba_negosiasi = $pemberitahuan->no_pbj . '/BA-NEGO' . $nomor_surat;
         $pemberitahuan->no_perjanjian = $pemberitahuan->no_pbj . '/PERJ' . $nomor_surat;
         $negosiasiHarga->jumlah_hari_kerja = $negosiasiHarga->tgl_akhir_perjanjian->diffInDays($negosiasiHarga->tgl_perjanjian) * -1;
-        $penyedia = Penyedia::find($penawaranHarga->penyedia_1)->first();
+        $penyedia = Penyedia::find($penawaranHarga->penyedia_1);
         
         $pdf = Pdf::loadView('pdf.negosiasi-harga', compact('pemberitahuan', 'kegiatan', 'negosiasiHarga', 'penyedia', 'penawaranHarga', 'item'));
         return $pdf->stream();

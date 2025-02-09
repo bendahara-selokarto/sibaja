@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class KegiatanController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan menu Penyedia
      */
-    public function index()
+    public function index(): View
     {
         $kegiatan = Kegiatan::with('penyedia')->get();
-      
-        
+              
         $kegiatan   = Kegiatan::where('kode_desa' , Auth::user()->kode_desa)->get();       
         return view('menu.kegiatan')->with( 'kegiatans' , $kegiatan );
     }
@@ -44,7 +44,7 @@ class KegiatanController extends Controller
             ]);
         
             Kegiatan::create($validatedData);
-            noty()->success('berhasil tersimpan');
+            noty()->success('berhasil ditambahkan');
             
         } catch (\Throwable $th) {
             noty()->error($th);
