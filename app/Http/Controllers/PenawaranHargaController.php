@@ -140,11 +140,25 @@ class PenawaranHargaController extends Controller
         
         
         
-                $penawaran = $kegiatan->penawaran;
-                // dd($penawaran);
-                $penyedia1 = Penyedia::find($penawaran->penyedia_1);
-                $penyedia2 = Penyedia::find($penawaran->penyedia_2);
-                $pemberitahuan = $kegiatan->pemberitahuan;               
+            $penawaran = $kegiatan->penawaran;
+                            
+            $penyedia1 = Penyedia::find($penawaran->penyedia_1);
+            $penyedia2 = Penyedia::find($penawaran->penyedia_2);
+            $pemberitahuan = $kegiatan->pemberitahuan; 
+            if(!$penyedia1){
+                toastr()->error('Penyedia yang ditunjuk belum diset');
+                return back();
+            }
+            if(!$penyedia2){
+                toastr()->error('Penyedia pembanding belum diset');
+                return back();
+            }
+            if(!$pemberitahuan){
+                toastr()->error('Tidak ada pemberitahuan yang relevan');
+                return back();
+            }
+            
+                
             $jumlah = $penawaran->harga_penawaran_1;
             $jumlah_2 = $penawaran->harga_penawaran_2;
             $item = $penawaran->item_penawaran_1;

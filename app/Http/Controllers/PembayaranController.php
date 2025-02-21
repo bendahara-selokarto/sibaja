@@ -77,8 +77,13 @@ class PembayaranController extends Controller
     public function render($id){
         $kegiatan = Kegiatan::find($id);
         $id_penyedia = $kegiatan->penawaran->penyedia_1;
+        if(!$id_penyedia){
+            toastr()->error('belum ada penyedia ditunjuk');
+            return redirect()->back();
+        }
         $penyedia = Penyedia::find($id_penyedia);
         $tgl_pembayaran = $kegiatan->pembayaran->tgl_pembayaran_cms;
+        
         $item = $kegiatan->penawaran->item_penawaran_1;
         
 
