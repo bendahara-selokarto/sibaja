@@ -13,7 +13,10 @@
         <link href="{{ asset('vendor/bladewind/css/animate.min.css') }}" rel="stylesheet" />
         <link href="{{ asset('vendor/bladewind/css/bladewind-ui.min.css') }}" rel="stylesheet" />
         <link rel="stylesheet" href="{{ asset('vendor/toastr/toastr.min.css') }}">
-
+        <!-- PWA  -->
+        <meta name="theme-color" content="#6777ef"/>
+        <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
+        <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
         <!-- Scripts -->
         @php
@@ -54,5 +57,22 @@
         <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
         @stack('scripts')
+        <script src="{{ asset('/sw.js') }}"></script>
+        <script>
+        if ("serviceWorker" in navigator) {
+            // Register a service worker hosted at the root of the
+            // site using the default scope.
+            navigator.serviceWorker.register("/sw.js").then(
+            (registration) => {
+                console.log("Service worker registration succeeded:", registration);
+            },
+            (error) => {
+                console.error(`Service worker registration failed: ${error}`);
+            },
+            );
+        } else {
+            console.error("Service workers are not supported.");
+        }
+        </script>
     </body>
 </html>
