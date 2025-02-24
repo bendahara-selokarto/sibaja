@@ -1,17 +1,33 @@
+
 {
-    "name": "Laravel Package Tutorial",
-    "short_name": "LPT",
-    "start_url": "/index.php",
-    "background_color": "#6777ef",
-    "description": "Tutorial of Laravel Package",
-    "display": "fullscreen",
-    "theme_color": "#6777ef",
-    "icons": [
-        {
-            "src": "logo.PNG",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
-        }
-    ]
+  "name": "SIBAJA",
+  "short_name": "SBJ",
+  "start_url": "/index.php",
+  "background_color": "#6777ef",
+  "description": "Sistem Pengadaan Barang dan Jasa",
+  "display": "fullscreen",
+  "theme_color": "#6777ef",
+  "icons": [
+    {
+      "src": "batang.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "installable": true,
+  "screenshots": [
+    {
+      "src": "screenshot1.PNG",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshot2.PNG",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["desa"],
+  "iarc_rating_id": "1234567890",
+  "lang": "id_ID"
 }
+  
