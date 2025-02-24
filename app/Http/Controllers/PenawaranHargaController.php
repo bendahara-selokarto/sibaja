@@ -91,7 +91,7 @@ class PenawaranHargaController extends Controller
             ],[   
                 'pemberitahuan_id' => $request->pemberitahuan_id ,
                 'penyedia_2' => $request->id_penyedia,             
-                'tgl_penawaran_2' => $request->tgl_surat_penawaran,
+                'tgl_penawaran_2' => Carbon::parse($request->tgl_surat_penawaran),
                 'no_penawaran_2' => $request->no_penawaran,
                 'harga_penawaran_2' => $totalHarga,
                 'item_penawaran_2' => $item_penawaran
