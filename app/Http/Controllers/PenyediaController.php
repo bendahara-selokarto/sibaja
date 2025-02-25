@@ -22,11 +22,15 @@ class PenyediaController extends Controller
     public function store(Request $request) {
 
  
-        $path = $request->file('logo_penyedia')->storePubliclyAs(
-            'logo',
-            Auth::user()->kode_desa . $request->file('logo_penyedia')->getClientOriginalName(),
-            'public'
-        );
+        if ($request->hasFile('logo_penyedia')) {
+            $path = $request->file('logo_penyedia')->storePubliclyAs(
+                'logo', 
+                Auth::user()->kode_desa . $request->file('logo_penyedia')->getClientOriginalName(), 
+                'public'
+            );
+        } else {
+            $path = 'logo/default.png';
+        }
     
         $nama_penyedia = $request->nama_penyedia;
         $data = [
@@ -84,12 +88,16 @@ class PenyediaController extends Controller
 
     public function update( Request $request, $id){
         $penyedia = Penyedia::find($id);
+        if ($request->hasFile('logo_penyedia')) {
+        
         $path = $request->file('logo_penyedia')->storePubliclyAs(
             'logo',
             Auth::user()->kode_desa . $request->file('logo_penyedia')->getClientOriginalName(),
             'public'
         );
-    
+        } else {
+            $path = 'logo/default.png';
+        }
         
         $data = [
             'nama_penyedia' => $request->nama_penyedia,
