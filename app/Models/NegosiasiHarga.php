@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class NegosiasiHarga extends Model
 {
+    use HasUuids;
     
     public function kegiatan()
     {

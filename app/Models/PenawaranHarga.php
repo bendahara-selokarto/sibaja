@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class PenawaranHarga extends Model
 {
+    use HasUuids;
     public function negosiasiHarga()
     {
         return $this->hasOne(NegosiasiHarga::class, 'negosiasi_harga_id');

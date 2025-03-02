@@ -47,7 +47,7 @@ class KegiatanController extends Controller
             noty()->success('berhasil ditambahkan');
             
         } catch (\Throwable $th) {
-            noty()->error($th);
+            noty()->error($th->getMessage());
         }
        return redirect()->route('menu.kegiatan');
     }
@@ -84,7 +84,7 @@ class KegiatanController extends Controller
             noty()->success('terupdate');
             
         } catch (\Throwable $th) {
-            noty()->error($th);
+            noty()->error($th->getMessage());
         }
 
 

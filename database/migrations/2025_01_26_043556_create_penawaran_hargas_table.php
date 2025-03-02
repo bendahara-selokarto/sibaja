@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penawaran_hargas', function (Blueprint $table) {
-            $table->id();
-            $table->integer('pemberitahuan_id');
-            $table->foreignId('kegiatan_id')->constrained()->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('pemberitahuan_id');
+            $table->foreignUuid('kegiatan_id')->constrained()->cascadeOnDelete();
             $table->dateTime('tgl_penawaran_1')->nullable();
             $table->dateTime('tgl_penawaran_2')->nullable();
             $table->dateTime('penyedia_1')->nullable();

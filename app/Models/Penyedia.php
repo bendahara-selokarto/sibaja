@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Penyedia extends Model
 {
+    use HasUuids;
     public function kegiatan(): BelongsToMany
     {
         return $this->belongsToMany(Kegiatan::class, 'kegiatan_penyedia');

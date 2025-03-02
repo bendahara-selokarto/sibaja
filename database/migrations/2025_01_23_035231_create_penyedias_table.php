@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('penyedias', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('kode_desa')->nullable()->default('-');
             $table->string('nama_penyedia')->nullable()->default('-');
             $table->string('alamat_penyedia')->nullable()->default('-');
