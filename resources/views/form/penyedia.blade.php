@@ -73,7 +73,7 @@
                             </div>
                             <div>
                                 <x-input-label for="logo_penyedia" :value="__('Logo')" />
-                                <x-text-input id="logo_penyedia" name="logo_penyedia" type="file" class="mt-1 block w-full" :value="old('logo_penyedia', $penyedia->logo_penyedia)" required autocomplete="logo_penyedia" />
+                                <x-text-input id="logo_penyedia" name="logo_penyedia" type="file" class="mt-1 block w-full" :value="old('logo_penyedia', $penyedia->logo_penyedia)" autocomplete="logo_penyedia" />
                                 <x-input-error class="mt-2" :messages="$errors->get('logo_penyedia')" />
                             </div>
                         </div>

@@ -126,8 +126,9 @@ class PemberitahuanController extends Controller
     public function render(string $id)
         {
            
-            $kegiatan = Kegiatan::with('pemberitahuan')->find($id);                
+            $kegiatan = Kegiatan::with('pemberitahuan')->find($id);         
             $pemberitahuan = $kegiatan->pemberitahuan;
+            
             
             
             if (!$pemberitahuan) {

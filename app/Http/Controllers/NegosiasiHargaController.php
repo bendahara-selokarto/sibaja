@@ -109,6 +109,19 @@ class NegosiasiHargaController extends Controller
         $pemberitahuan = $kegiatan->pemberitahuan;
         $penawaranHarga = $kegiatan->penawaran;
         $negosiasiHarga  = $kegiatan->negosiasiHarga;
+        if(!$pemberitahuan){
+            toastr()->error('pemberitahuna belum diset');
+            return redirect()->back();
+        };
+        if(!$penawaranHarga){
+            toastr()->error('penawaran harga belum diset');
+            return redirect()->back();
+        };
+        if(!$negosiasiHarga){
+            toastr()->error('Negosiasi Harga belum diset');
+            return redirect()->back();
+        };
+        
         $negosiasiHarga->tgl_persetujuan = Carbon::parse($negosiasiHarga->tgl_persetujuan);
         $item = $kegiatan->penawaran->item_penawaran_1;
         $negosiasiHarga->tgl_negosiasi = Carbon::parse($negosiasiHarga->tgl_negosiasi);
