@@ -48,7 +48,7 @@
                                 <div id="inputContainer">  
                                     <div class="input-group">                  
                                         <input type="text" name="inputField1[]" placeholder="Uraian" required>
-                                        <input type="number" name="inputField2[]" placeholder="Vol" required>  
+                                        <input type="number" min="0" step="any" name="inputField2[]" placeholder="Vol" required>  
                                         <input type="text" name="inputField3[]" placeholder="Satuan" required>  
                                         <button type="button" onclick="removeInput(this)">Hapus</button>  
                                         <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="h-16 w-16 text-amber-500" />  
@@ -81,7 +81,7 @@
    newInputGroup.className = 'input-group';  
    newInputGroup.innerHTML = `  
        <x-text-input class="mt-1" type="text" name="inputField1[]" required autofocus autocomplete="uraian" />
-       <x-text-input class="mt-1" type="number" name="inputField2[]" required  autocomplete="Vol" />
+       <x-text-input class="mt-1" type="number" min="0" step="any" name="inputField2[]" required  autocomplete="Vol" />
        <x-text-input class="mt-1" type="text" name="inputField3[]" required  autocomplete="Satuan" />                  
        <button type="button" onclick="removeInput(this)"><x-bladewind::icon class="text-red-500" name="minus-circle"/></button> | <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="text-blue-500	"/></button>  
    `;  
