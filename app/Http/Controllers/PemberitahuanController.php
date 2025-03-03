@@ -30,7 +30,7 @@ class PemberitahuanController extends Controller
      */
     public function create($id)
     {
-        $penyedia = Penyedia::select('nama_penyedia', 'id')->get();
+        $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
         
         $kegiatan = Kegiatan::find($id);
         
