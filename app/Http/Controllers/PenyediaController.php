@@ -34,6 +34,7 @@ class PenyediaController extends Controller
     
         $nama_penyedia = $request->nama_penyedia;
         $data = [
+            'nama_penyedia' => $nama_penyedia,
             'alamat_penyedia' => $request->alamat_penyedia,
             'nama_pemilik' => $request->nama_pemilik,
             'alamat_pemilik' => $request->alamat_pemilik,
@@ -44,10 +45,9 @@ class PenyediaController extends Controller
             'jabata_pemilik' => $request->jabatan_pemilik,
             'instansi_pemberi_izin_usaha' => $request->penerbit_siup,
             'logo_penyedia' => $path,
-                ];
+            ];
 
-
-        $penyedia = Penyedia::updateOrCreate(['nama_penyedia' => $nama_penyedia], $data);
+        $penyedia = Penyedia::create($data);
          
         
         return redirect()->route('menu.penyedia');
