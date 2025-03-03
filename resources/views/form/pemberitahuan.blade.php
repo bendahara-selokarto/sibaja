@@ -24,7 +24,7 @@
                                 <hr> 
                                 <div>
                                     <x-input-label for="no_pbj" :value="__('Nomor Urut PBJ')" />
-                                    <x-text-input id="no_pbj" name="no_pbj" type="number" class="mt-1 block " required autocomplete="no_pbj" />
+                                    <x-text-input id="no_pbj" name="no_pbj" type="number" min="0" class="mt-1 block " required autocomplete="no_pbj" />
                                     <x-input-error class="mt-2" :messages="$errors->get('no_pbj')" />
                                 </div>
                                 <div>

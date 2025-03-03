@@ -21,7 +21,7 @@
                                 </div>
                                 <div>
                                     <x-input-label for="harga_negosiasi" :value="__('Harga Negosiasi')" />
-                                    <x-text-input id="harga_negosiasi" name="harga_negosiasi" type="number" class="mt-1 block " required autocomplete="harga_negosiasi" />
+                                    <x-text-input id="harga_negosiasi" name="harga_negosiasi" type="number" min="0" class="mt-1 block " required autocomplete="harga_negosiasi" />
                                     <x-input-error class="mt-2" :messages="$errors->get('harga_negosiasi')" />
                                 </div>
                                 <div>                               

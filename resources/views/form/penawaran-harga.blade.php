@@ -30,7 +30,7 @@
                         <br>
                         <div>
                             <x-input-label for="no_penawaran" :value="__('Nomor Penawaran')" />
-                            <x-text-input id="no_penawaran" name="no_penawaran" type="number" class="mt-1 block " required autocomplete="no_penawaran" />
+                            <x-text-input id="no_penawaran" name="no_penawaran" type="number" min="0" class="mt-1 block " required autocomplete="no_penawaran" />
                             <x-input-error class="mt-2" :messages="$errors->get('no_penawaran')" />
                         </div>
                         
@@ -51,7 +51,7 @@
                                     <td ><input type="hidden" value="{{ $k['field1']}}" placeholder="{{ $k['field1'] }}" readonly name='uraian[]'>{{ $k['field1']  }} </td>                             
                                     <td ><input type="hidden" value="{{ $k['field2']}}" placeholder="{{ $k['field2'] }}" readonly name='volume[]'>{{ $k['field2']  }} </td>                             
                                     <td ><input type="hidden" value="{{ $k['field3']}}" placeholder="{{ $k['field3'] }}" readonly name='satuan[]' >{{ $k['field3']  }} </td>                             
-                                    <td class="text-right"><input type="number" name="harga_satuan[]" onblur="formatNumber(this)" nilai-sebelumnya="{{ old('harga_satuan[]', 0) }}"></td>
+                                    <td class="text-right"><input type="number" min="0" name="harga_satuan[]" onblur="formatNumber(this)" nilai-sebelumnya="{{ old('harga_satuan[]', 0) }}"></td>
                                     <td class="text-right" name="format_number"></td> 
                                     <td ><input type="hidden" value="" id="total_input" name='total_input'></td>                             
                                                     
