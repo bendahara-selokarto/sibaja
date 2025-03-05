@@ -6,6 +6,7 @@ use App\Models\Kegiatan;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use function Laravel\Prompts\error;
 
 class KegiatanController extends Controller
 {
@@ -111,7 +112,11 @@ class KegiatanController extends Controller
             return back();
         }
 
-        $kegiatan->forceDelete();
+        try {
+            $kegiatan->forceDelete();
+        } catch (\Exception $e) {
+            flash()->error($e->getMessage());
+        }
         flash()->success('kegiatan berhasil diahpus');
         return redirect()->route('menu.kegiatan');
     }
