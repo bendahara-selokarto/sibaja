@@ -82,9 +82,14 @@ class PembayaranController extends Controller
             return redirect()->back();
         }
         $penyedia = Penyedia::find($id_penyedia);
-        $tgl_pembayaran = $kegiatan->pembayaran->tgl_pembayaran_cms;
-        
-        $item = $kegiatan->penawaran->item_penawaran_1;
+
+        try {
+            $tgl_pembayaran = $kegiatan->pembayaran->tgl_pembayaran_cms;
+            $item = $kegiatan->penawaran->item_penawaran_1;
+        } catch (\Exception $e) {
+            flash()->error('belum ada pembayaran');
+            return redirect()->back();
+        }
         
 
 
