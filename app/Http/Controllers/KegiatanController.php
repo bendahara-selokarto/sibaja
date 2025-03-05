@@ -111,7 +111,7 @@ class KegiatanController extends Controller
             return back();
         }
 
-        $kegiatan->delete();
+        $kegiatan->forceDelete();
         flash()->success('kegiatan berhasil diahpus');
         return redirect()->route('menu.kegiatan');
     }
