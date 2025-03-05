@@ -32,7 +32,13 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $kegiatan['rekening_apbdes'] }}</td>
-                            <td>{{ $kegiatan['kegiatan'] }} <br><br><a href="{{ route('kegiatan.edit', $kegiatan['id']) }}"> <x-bladewind::button size='tiny' outline="true" can_submit="true" color="yellow" size='tiny'>Ubah</x-bladewind::button></a><a href="{{ route('kegiatan.edit', $kegiatan['id']) }}"> <x-bladewind::button size='tiny' outline="true" can_submit="true" color="red" size='tiny'>Hapus</x-bladewind::button></a> </td>                           
+                            <td>{{ $kegiatan['kegiatan'] }} <br><br><a href="{{ route('kegiatan.edit', $kegiatan['id']) }}"> <x-bladewind::button size='tiny' outline="true" can_submit="true" color="yellow" size='tiny'>Ubah</x-bladewind::button></a>
+                                <form action="{{ route('kegiatan.destroy', $kegiatan['id']) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-bladewind::button size='tiny' outline="true" can_submit="true" color="red" size='tiny'>Hapus</x-bladewind::button>
+                                </form>
+                            </td>
                             <td>
                                 <ul>
                                     <li class="mb-4"><x-bladewind::tag outline="true" shade="dark" label="Pemberitahuan kepada 2 Penyedia"  /><br>

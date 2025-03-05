@@ -66,6 +66,10 @@ class KegiatanController extends Controller
     public function edit(string $id)
     {
         $kegiatan = Kegiatan::find($id);
+        if (!$kegiatan) {
+            flash()->error('kegiatan tidak ditemukan');
+            return redirect()->route('menu.kegiatan');
+        }
         return view('form.kegiatan', compact('kegiatan'));
     }
 
@@ -96,6 +100,19 @@ class KegiatanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $kegiatan = Kegiatan::find($id);
+        if (!$kegiatan) {
+            flash()->error('kegiatan tidak ditemukan');
+            return redirect()->route('menu.kegiatan');
+        }
+
+        if ($kegiatan->pemberitahuan && $kegiatan->pemberitahuan->count() > 0) {
+            flash()->error('kegiatan sudah memiliki pemberitahuan');
+            return back();
+        }
+
+        $kegiatan->delete();
+        flash()->success('kegiatan berhasil diahpus');
+        return redirect()->route('menu.kegiatan');
     }
 }

@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('kegiatan/edit/{id}', [KegiatanController::class , 'edit'])->name('kegiatan.edit');
     Route::patch('kegiatan/update/{id}', [KegiatanController::class , 'update'])->name('kegiatan.update');
     Route::post('kegiatan/store', [KegiatanController::class , 'store'])->name('kegiatan.store');
-    Route::delete('kegiatan/{id}', [KegiatanController::class , 'destroy'])->name('menu.kegiatan.destroy');
+    Route::delete('menu/kegiatan/{id}', [KegiatanController::class , 'destroy'])->name('kegiatan.destroy');
     
     Route::get('menu/penyedia', [PenyediaController::class , 'index'])->middleware(CheckDefaultKode::class)->name('menu.penyedia');
     Route::get('penyedia/create', [PenyediaController::class , 'create'])->name('penyedia.create');
