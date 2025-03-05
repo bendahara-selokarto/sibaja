@@ -48,10 +48,10 @@ class NegosiasiHargaController extends Controller
         $tgl = Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan);
         NegosiasiHarga::updateOrCreate( ['kegiatan_id' => $request->kegiatan_id,],[
             'rekening_apbdes' =>$kegiatan->rekening_apbdes,
-            'tgl_persetujuan' => (clone $tgl)->modify('+3 days'), 
-            'tgl_negosiasi' => (clone $tgl)->modify('+5 days'),
-            'tgl_perjanjian' => (clone $tgl)->modify('+6 days'),
-            'tgl_akhir_perjanjian' => (clone $tgl)->modify('+30 days'),
+            'tgl_persetujuan' => Carbon::parse($request->tgl_persetujuan),
+            'tgl_negosiasi' => Carbon::parse($request->tgl_negosiasi),
+            'tgl_perjanjian' => Carbon::parse($request->tgl_perjanjian),
+            'tgl_akhir_perjanjian' => Carbon::parse($request->tgl_akhir_perjanjian),
             'harga_negosiasi' => $request->harga_negosiasi,
         ]);
 
