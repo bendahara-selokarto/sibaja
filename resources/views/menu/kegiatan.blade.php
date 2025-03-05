@@ -19,6 +19,7 @@
             <br>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-stone">
+                    <div class="overflow-scroll">
                     <x-bladewind::table>
                         <x-slot name="header">
                             <th class="w-xl">No</th>
@@ -96,6 +97,7 @@
                         @endforelse
                         
                     </x-bladewind::table>
+                </div>
                 </div>
             </div>
         </div>
