@@ -19,10 +19,12 @@ class NegosiasiHargaController extends Controller
      */
     public function index($id)
     {
-       $kegiatan = Kegiatan::find($id);
+       $kegiatan = Kegiatan::with('penawaran')->find($id);
+    //    dd($kegiatan);
        if (!$kegiatan) {
            return redirect()->back()->with('error', 'Data not found');
        }
+       $kegiatan->tgl = Carbon::parse($kegiatan->penawaran->tgl_penawaran_1)->format('Y-m-d');
        return view('form.negosiasi', compact('kegiatan'));
     }
   

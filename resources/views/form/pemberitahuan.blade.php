@@ -29,7 +29,7 @@
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_pemberitahuan" :value="__('Tanggal Surat')" />
-                                    <x-text-input id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" class="mt-1 block " required autocomplete="tgl_pemberitahuan" />
+                                    <x-text-input id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 block " required autocomplete="tgl_pemberitahuan" />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_pemberitahuan')" />
                                 </div>
                                 {{-- <div> --}}

@@ -25,23 +25,23 @@
                                     <x-input-error class="mt-2" :messages="$errors->get('harga_negosiasi')" />
                                 </div>
                                 <div>
-                                    <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
-                                    <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date" class="mt-1 block" required autocomplete="tgl_persetujuan" />
+                                    <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" /> 
+                                    <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 block" :value="old('tgl_persetujuan' , $kegiatan->tgl )" min="{{ $kegiatan->tgl }}" required autocomplete="tgl_persetujuan" />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_negosiasi" :value="__('Tanggal Negosiasi Harga')" />
-                                    <x-text-input id="tgl_negosiasi" name="tgl_negosiasi" type="date" class="mt-1 block" required autocomplete="tgl_negosiasi" />
+                                    <x-text-input id="tgl_negosiasi" name="tgl_negosiasi" type="date" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 block" required autocomplete="tgl_negosiasi" />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_negosiasi')" />
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_perjanjian" :value="__('Tanggal Perjanjian')" />
-                                    <x-text-input id="tgl_perjanjian" name="tgl_perjanjian" type="date" class="mt-1 block" required autocomplete="tgl_perjanjian" />
+                                    <x-text-input id="tgl_perjanjian" name="tgl_perjanjian" type="date" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 block" required autocomplete="tgl_perjanjian" />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_perjanjian')" />
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_akhir_perjanjian" :value="__('Tanggal Akhir Perjanjian')" />
-                                    <x-text-input id="tgl_akhir_perjanjian" name="tgl_akhir_perjanjian" type="date" class="mt-1 block" required autocomplete="tgl_akhir_perjanjian" />
+                                    <x-text-input id="tgl_akhir_perjanjian" name="tgl_akhir_perjanjian" type="date" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 block" required autocomplete="tgl_akhir_perjanjian" />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
                                 </div>
                                 <div>                               
