@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('penyedias', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('kode_desa')->nullable()->default('-');
-            $table->string('nama_penyedia')->nullable()->default('-');
+            $table->char('kode_desa',length: 10);
+            $table->string('nama_penyedia');
             $table->string('alamat_penyedia')->nullable()->default('-');
             $table->string('nama_pemilik')->nullable()->default('-');
             $table->string('alamat_pemilik')->nullable()->default('-');
             $table->string('nomor_hp')->nullable()->default('-');
             $table->string('nomor_identitas')->nullable()->default('-');
-            $table->string('nomor_npwp')->nullable()->default('-');
+            $table->string('nomor_npwp');
             $table->string('nomor_izin_usaha')->nullable()->default('-');
             $table->string('jabata_pemilik')->nullable()->default('pemilik');
             $table->string('instansi_pemberi_izin_usaha')->nullable()->default('-');

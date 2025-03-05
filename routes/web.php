@@ -1,12 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CheckDefaultKode;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\KegiatanController;
-use App\Http\Controllers\NegosiasiHargaController;
-use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PenyediaController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PemberitahuanController;
+use App\Http\Controllers\NegosiasiHargaController;
 use App\Http\Controllers\PenawaranHargaController;
 
 Route::get('/', function () {
@@ -22,14 +23,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('menu/kegiatan', [KegiatanController::class , 'index'])->name('menu.kegiatan');
+    Route::get('menu/kegiatan', [KegiatanController::class , 'index'])->middleware(CheckDefaultKode::class)->name('menu.kegiatan');
     Route::get('kegiatan/create', [KegiatanController::class , 'create'])->name('kegiatan.create');
     Route::get('kegiatan/edit/{id}', [KegiatanController::class , 'edit'])->name('kegiatan.edit');
     Route::patch('kegiatan/update/{id}', [KegiatanController::class , 'update'])->name('kegiatan.update');
     Route::post('kegiatan/store', [KegiatanController::class , 'store'])->name('kegiatan.store');
     Route::delete('kegiatan/{id}', [KegiatanController::class , 'destroy'])->name('menu.kegiatan.destroy');
     
-    Route::get('menu/penyedia', [PenyediaController::class , 'index'])->name('menu.penyedia');
+    Route::get('menu/penyedia', [PenyediaController::class , 'index'])->middleware(CheckDefaultKode::class)->name('menu.penyedia');
     Route::get('penyedia/create', [PenyediaController::class , 'create'])->name('penyedia.create');
     Route::get('penyedia/edit/{id}', [PenyediaController::class , 'edit'])->name('penyedia.edit');
     Route::patch('penyedia/update/{id}', [PenyediaController::class , 'update'])->name('penyedia.update');
