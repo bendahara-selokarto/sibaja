@@ -110,15 +110,15 @@ class NegosiasiHargaController extends Controller
         $penawaranHarga = $kegiatan->penawaran;
         $negosiasiHarga  = $kegiatan->negosiasiHarga;
         if(!$pemberitahuan){
-            toastr()->error('pemberitahuna belum diset');
+            flash()->error('pemberitahuna belum diset');
             return redirect()->back();
         };
         if(!$penawaranHarga){
-            toastr()->error('penawaran harga belum diset');
+            flash()->error('penawaran harga belum diset');
             return redirect()->back();
         };
         if(!$negosiasiHarga){
-            toastr()->error('Negosiasi Harga belum diset');
+            flash()->error('Negosiasi Harga belum diset');
             return redirect()->back();
         };
         

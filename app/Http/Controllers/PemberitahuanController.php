@@ -139,7 +139,7 @@ class PemberitahuanController extends Controller
             $pdf = Pdf::loadView('pdf.pemberitahuan', ['pemberitahuan' => $pemberitahuan, 'kegiatan' => $kegiatan] );
 
             if (!$pdf) {
-                toastr()->error('Gagal membuat PDF.');
+                flash()->error('Gagal membuat PDF.');
                 return redirect()->back();
             }
 

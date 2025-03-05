@@ -78,7 +78,7 @@ class PembayaranController extends Controller
         $kegiatan = Kegiatan::find($id);
         $id_penyedia = $kegiatan->penawaran->penyedia_1;
         if(!$id_penyedia){
-            toastr()->error('belum ada penyedia ditunjuk');
+            flash()->error('belum ada penyedia ditunjuk');
             return redirect()->back();
         }
         $penyedia = Penyedia::find($id_penyedia);

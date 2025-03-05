@@ -146,15 +146,15 @@ class PenawaranHargaController extends Controller
             $penyedia2 = Penyedia::find($penawaran->penyedia_2);
             $pemberitahuan = $kegiatan->pemberitahuan; 
             if(!$penyedia1){
-                toastr()->error('Penyedia yang ditunjuk belum diset');
+                flash()->error('Penyedia yang ditunjuk belum diset');
                 return back();
             }
             if(!$penyedia2){
-                toastr()->error('Penyedia pembanding belum diset');
+                flash()->error('Penyedia pembanding belum diset');
                 return back();
             }
             if(!$pemberitahuan){
-                toastr()->error('Tidak ada pemberitahuan yang relevan');
+                flash()->error('Tidak ada pemberitahuan yang relevan');
                 return back();
             }
             
