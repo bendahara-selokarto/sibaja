@@ -113,11 +113,11 @@ class KegiatanController extends Controller
         }
 
         try {
-            $kegiatan->forceDelete();
+            $kegiatan->delete();
+            flash()->success('kegiatan berhasil diahpus');
         } catch (\Exception $e) {
             flash()->error($e->getMessage());
         }
-        flash()->success('kegiatan berhasil diahpus');
         return redirect()->route('menu.kegiatan');
     }
 }
