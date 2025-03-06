@@ -94,6 +94,26 @@ function removeInput(button) {
    inputGroup.remove();  
 }  
 </script>
+<script>
+    const tglPemberitahuan = document.getElementById('tgl_pemberitahuan');
+const tglBatasAkhirPenawaran = document.getElementById('tgl_batas_akhir_penawaran');
+
+tglPemberitahuan.addEventListener('change', (e) => {
+  const tanggalPemberitahuan = new Date(e.target.value);
+  const tanggalBatasAkhirPenawaran = new Date(tanggalPemberitahuan);
+  tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 5);
+
+  const tahun = tanggalBatasAkhirPenawaran.getFullYear();
+  const bulan = tanggalBatasAkhirPenawaran.getMonth() + 1;
+  const hari = tanggalBatasAkhirPenawaran.getDate();
+
+  const tanggalBatasAkhirPenawaranFormat = `${tahun}-${bulan.toString().padStart(2, '0')}-${hari.toString().padStart(2, '0')}`;
+
+  tglBatasAkhirPenawaran.min = tglPemberitahuan.value;
+  tglBatasAkhirPenawaran.max = tanggalBatasAkhirPenawaranFormat;
+    tglBatasAkhirPenawaran.value = tanggalBatasAkhirPenawaranFormat;
+});
+</script>
 
 @endPushOnce
 </x-app-layout>
