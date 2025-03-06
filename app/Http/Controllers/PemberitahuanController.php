@@ -33,8 +33,7 @@ class PemberitahuanController extends Controller
         $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
         
         $kegiatan = Kegiatan::find($id);
-        $nomor = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->count();
-        $nomor++;
+        $nomor = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->count() + 1;
 
         // $nomor = str_pad($nomor, 3, '0', STR_PAD_LEFT);
         
