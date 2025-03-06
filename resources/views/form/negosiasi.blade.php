@@ -21,7 +21,8 @@
                                 </div>
                                 <div>
                                     <x-input-label for="harga_negosiasi" :value="__('Harga Negosiasi')" />
-                                    <x-text-input id="harga_negosiasi" name="harga_negosiasi" type="number" min="0" class="mt-1 block w-full" required autocomplete="harga_negosiasi" />
+                                    <x-text-input id="harga_negosiasi" name="harga_negosiasi" type="number" value="{{ $kegiatan->harga_penawaran }}" min="0" class="mt-1 inline sm:block" required autocomplete="harga_negosiasi" />
+                                    <div class="mt-1 inline sm:block text-green-700" id="format_curency"></div>
                                     <x-input-error class="mt-2" :messages="$errors->get('harga_negosiasi')" />
                                 </div>
                                 <div>
@@ -54,4 +55,20 @@
             </div>
         </div>
     </div>  
-</x-app-layout>
+{{-- javascript --}}
+@pushOnce('scripts')
+<script>
+    const hargaNegosiasi = document.getElementById('harga_negosiasi');
+    const formatCurency = document.getElementById('format_curency');
+
+    hargaNegosiasi.addEventListener('input', (e) => {
+    const nilai = parseInt(e.target.value);
+    const format = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+    }).format(nilai);
+    formatCurency.innerText = format;
+    });
+</script>
+@endPushOnce
+</x-app-layout> 

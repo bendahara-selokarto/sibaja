@@ -25,6 +25,7 @@ class NegosiasiHargaController extends Controller
            return redirect()->back()->with('error', 'Data not found');
        }
        $kegiatan->tgl = Carbon::parse($kegiatan->penawaran->tgl_penawaran_1)->format('Y-m-d');
+       $kegiatan->harga_penawaran = $kegiatan->penawaran->harga_penawaran_1;
        return view('form.negosiasi', compact('kegiatan'));
     }
   
