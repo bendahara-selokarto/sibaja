@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('belanja')->nullable();
             $table->dateTime('tgl_surat_pemberitahuan')->nullable();
             $table->dateTime('tgl_batas_akhir_penawaran')->nullable();
-            $table->integer('no_pbj')->uniqid()->autoIncrement();
+            $table->integer('no_pbj')->uniqid();
             $table->string('penyedia')->nullable();
             $table->timestamps();
         });

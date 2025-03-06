@@ -33,8 +33,12 @@ class PemberitahuanController extends Controller
         $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
         
         $kegiatan = Kegiatan::find($id);
+        $nomor = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->count();
+        $nomor++;
+
+        // $nomor = str_pad($nomor, 3, '0', STR_PAD_LEFT);
         
-        return view('form.pemberitahuan', ['kegiatan' => $kegiatan, 'penyedia' => $penyedia]);
+        return view('form.pemberitahuan', ['kegiatan' => $kegiatan, 'penyedia' => $penyedia, 'nomor' => $nomor]);
     }
 
     /**
@@ -67,8 +71,7 @@ class PemberitahuanController extends Controller
         $request->validate([
             'tgl_pemberitahuan' => 'required|date',
         ]);
-        $tgl_surat_pemberitahuan = Carbon::parse($request->input('tgl_pemberitahuan'));
-        $tgl_batas_akhir_penawaran = $tgl_surat_pemberitahuan->copy()->modify('+3 days');
+        $tgl_batas_akhir_penawaran = Carbon::parse($request->input('tgl_batas_akhir_penawaran'));
 
         $data = [
             // 'rekening_apbdes' => $request->input('rekening_apbdes'),

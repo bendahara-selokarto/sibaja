@@ -24,7 +24,7 @@
                                 <hr> 
                                 <div>
                                     <x-input-label for="no_pbj" :value="__('Nomor Urut PBJ')" />
-                                    <x-text-input id="no_pbj" name="no_pbj" type="number" min="0" class="mt-1 block " required autocomplete="no_pbj" />
+                                    <x-text-input id="no_pbj" name="no_pbj" type="number" min="0" value="{{ $nomor }}" class="mt-1 block " required autocomplete="no_pbj" />
                                     <x-input-error class="mt-2" :messages="$errors->get('no_pbj')" />
                                 </div>
                                 <div>
@@ -32,12 +32,13 @@
                                     <x-text-input id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 block " required autocomplete="tgl_pemberitahuan" />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_pemberitahuan')" />
                                 </div>
-                                {{-- <div> --}}
-                                    {{-- <x-input-label for="tgl_batas_akhir_penawaran" :value="__('Nomor Urut PBJ')" /> --}}
-                                    {{-- <x-text-input id="tgl_batas_akhir_penawaran" name="tgl_batas_akhir_penawaran" type="date" class="mt-1 block " required autocomplete="tgl_batas_akhir_penawaran" /> --}}
-                                    {{-- <x-input-error class="mt-2" :messages="$errors->get('tgl_batas_akhir_penawaran')" /> --}}
-                                {{-- </div> --}}
+                                <div>
+                                    <x-input-label for="tgl_batas_akhir_penawaran" :value="__('tgl batas akhir penawaran')" />
+                                    <x-text-input id="tgl_batas_akhir_penawaran" name="tgl_batas_akhir_penawaran" type="date" class="mt-1 block " required autocomplete="tgl_batas_akhir_penawaran" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('tgl_batas_akhir_penawaran')" />
+                                </div>
                                 <br>
+                                <p>Centang 2 Penyedia yang diberi penawaran :</p>
                                 @foreach ($penyedia as  $p)
                                 <x-bladewind::checkbox
                                 name="penyedia[]"
