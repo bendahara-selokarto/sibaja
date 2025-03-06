@@ -84,7 +84,7 @@
         </tr> 
     </table>
    
-    <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pengelola Kegiatan {{ $penawaran->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($penawaran->tgl_penawaran_1)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
+    <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pengelola Kegiatan {{ $penawaran->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
     <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format($jumlah, 0, ',', '.') }} ({{ Terbilang::make($jumlah)  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
     <p>Sesuai dengan persyaratan yang diminta bersama ini kami sampaikan :</p>
     <ol type="a">
