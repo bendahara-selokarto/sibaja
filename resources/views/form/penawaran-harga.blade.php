@@ -7,7 +7,9 @@
     <div class="py-12">       
     @foreach ( $pemberitahuan->penyedia as $p )
         @php
+    
             $nama_penyedia = App\Models\Penyedia::select('nama_penyedia')->where('id', $p)->first();
+            
         @endphp
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
@@ -24,7 +26,7 @@
                         </div>
                         <div>
                             <x-input-label for="tgl_surat_penawaran" :value="__('Tanggal Surat Penawaran')" />
-                            <x-text-input id="tgl_surat_penawaran" name="tgl_surat_penawaran" type="date" class="mt-1 block " required autocomplete="tgl_surat_penawaran" />
+                            <x-text-input id="tgl_surat_penawaran" name="tgl_surat_penawaran" type="date" min="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') }}" max="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->format('Y-m-d') }}" class="mt-1 block " required autocomplete="tgl_surat_penawaran" />
                             <x-input-error class="mt-2" :messages="$errors->get('tgl_surat_penawaran')" />
                         </div>
                         <br>
