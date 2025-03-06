@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rules\Unique;
 
 return new class extends Migration
 {
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->string('belanja')->nullable();
             $table->dateTime('tgl_surat_pemberitahuan')->nullable();
             $table->dateTime('tgl_batas_akhir_penawaran')->nullable();
-            $table->integer('no_pbj')->nullable();
+            $table->integer('no_pbj')->uniqid()->autoIncrement();
             $table->string('penyedia')->nullable();
             $table->timestamps();
         });
