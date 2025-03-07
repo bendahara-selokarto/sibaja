@@ -31,7 +31,8 @@
     <div class="cover" style="height: 100%;">
     
     <div class="text-center"><div class="img">
-        <img src="batang.png" alt="batang" style="width: 3cm; height:auto;">
+        <img src="batang.png" alt="batang" style="width: 2.5cm; height:3cm;">
+        <img src="garuda.png" alt="garuda" style="width: 2.8cm; height:auto;">
     </div>
 
         <h1 style="text-align: left; vertical-align:80%">DOKUMEN</h1>
