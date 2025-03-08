@@ -34,7 +34,7 @@
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_batas_akhir_penawaran" :value="__('tgl batas akhir penawaran')" />
-                                    <x-text-input id="tgl_batas_akhir_penawaran" name="tgl_batas_akhir_penawaran" type="date" class="mt-1 block " required autocomplete="tgl_batas_akhir_penawaran" />
+                                    <x-text-input id="tgl_batas_akhir_penawaran" name="tgl_batas_akhir_penawaran" type="date" class="mt-1 inline " required autocomplete="tgl_batas_akhir_penawaran" /><span id="hari-batas-akhir-penawaran"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_batas_akhir_penawaran')" />
                                 </div>
                                 <br>
@@ -105,7 +105,21 @@ tglPemberitahuan.addEventListener('change', (e) => {
   const hariPemberitahuan = listHari[tanggalPemberitahuan.getDay()];
   const spanPemberitahuan = document.getElementById('hari-pemberitahuan');
     spanPemberitahuan.textContent = `(${hariPemberitahuan})`;
-  tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 5);
+    tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 3);
+
+
+    const hariIndex = tanggalBatasAkhirPenawaran.getDay();
+  if (hariIndex === 0) {
+    tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 1);
+  } else if (hariIndex === 6) {
+    tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 2);
+  } else {
+    tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate());
+  }
+  const hariBatasAkhirPenawaran = listHari[tanggalBatasAkhirPenawaran.getDay()];
+  console.log(hariBatasAkhirPenawaran);
+  const spanBatasAkhirPenawaran = document.getElementById('hari-batas-akhir-penawaran');
+    spanBatasAkhirPenawaran.textContent = `(${hariBatasAkhirPenawaran})`;
 
   const tahun = tanggalBatasAkhirPenawaran.getFullYear();
   const bulan = tanggalBatasAkhirPenawaran.getMonth() + 1;
