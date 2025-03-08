@@ -29,7 +29,7 @@
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_pemberitahuan" :value="__('Tanggal Surat')" />
-                                    <x-text-input id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 block " required autocomplete="tgl_pemberitahuan" />
+                                    <x-text-input id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 inline " required autocomplete="tgl_pemberitahuan" /> <span id="hari-pemberitahuan"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_pemberitahuan')" />
                                 </div>
                                 <div>
@@ -97,10 +97,14 @@ function removeInput(button) {
 <script>
     const tglPemberitahuan = document.getElementById('tgl_pemberitahuan');
 const tglBatasAkhirPenawaran = document.getElementById('tgl_batas_akhir_penawaran');
+const listHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
 tglPemberitahuan.addEventListener('change', (e) => {
   const tanggalPemberitahuan = new Date(e.target.value);
   const tanggalBatasAkhirPenawaran = new Date(tanggalPemberitahuan);
+  const hariPemberitahuan = listHari[tanggalPemberitahuan.getDay()];
+  const spanPemberitahuan = document.getElementById('hari-pemberitahuan');
+    spanPemberitahuan.textContent = `(${hariPemberitahuan})`;
   tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 5);
 
   const tahun = tanggalBatasAkhirPenawaran.getFullYear();
