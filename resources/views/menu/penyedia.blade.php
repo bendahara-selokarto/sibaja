@@ -42,12 +42,12 @@
                                 <form action="{{ route('penyedia.destroy', $i['id']) }}" method="post">
                                     @csrf
                                     @method('DELETE')
-                                    <x-danger-button type="submit"   >delete</x-danger-button>
+                                    <x-bladewind::button can_submit="true" size='tiny' color="red">hapus</x-bladewind::button>
                                 </form>
                                 <form action="{{ route('penyedia.edit', $i['id']) }}" method="get">
                                     @csrf
                                     @method('GET')
-                                    <x-primary-button type="submit"   >Ubah</x-primary-button>
+                                    <x-bladewind::button can_submit="true" size='tiny' color="cyan">ubah</x-bladewind::button>
                                 </form>
 
                             </td>
