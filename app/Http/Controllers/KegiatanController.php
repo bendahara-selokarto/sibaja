@@ -15,9 +15,7 @@ class KegiatanController extends Controller
      */
     public function index(): View
     {
-        $kegiatan = Kegiatan::with('penyedia')->get();
-              
-        $kegiatan   = Kegiatan::where('kode_desa' , Auth::user()->kode_desa)->get();       
+        $kegiatan = Kegiatan::where('kode_desa', Auth::user()->kode_desa)->orderBy('created_at', 'desc')->get();
         return view('menu.kegiatan')->with( 'kegiatans' , $kegiatan );
     }
 
