@@ -11,7 +11,7 @@ Follow these steps to clone the repository from GitHub and run the Laravel appli
 2. **Navigate to the Project Directory:**
     Change your current directory to the project directory:
     ```sh
-    cd your-repository
+    cd sibaja
     ```
 
 3. **Install Dependencies:**
