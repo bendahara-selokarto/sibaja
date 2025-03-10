@@ -1,4 +1,12 @@
-## Cloning the Repository and Running the Application
+# Required Software
+
+Before you begin, ensure you have the following software installed on your system:
+
+- **Git**: [Download and install Git](https://git-scm.com/downloads)
+- **Composer**: [Download and install Composer](https://getcomposer.org/download/)
+- **Node.js and npm**: [Download and install Node.js](https://nodejs.org/)
+
+# Cloning the Repository and Running the Application
 
 Follow these steps to clone the repository from GitHub and run the Laravel application using `artisan serve`:
 
