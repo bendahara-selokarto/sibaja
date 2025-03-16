@@ -118,14 +118,9 @@ class KegiatanController extends Controller
             flash()->error('kegiatan sudah memiliki pemberitahuan');
             return back();
         }
-
-        try {
-            DB::reconnect();
             $kegiatan->delete();
             flash()->success('kegiatan berhasil diahpus');
-        } catch (\Exception $e) {
-            flash()->error($e->getMessage());
-        }
+       
         return redirect()->route('menu.kegiatan');
     }
 }
