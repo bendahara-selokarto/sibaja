@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Kegiatan;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use function Laravel\Prompts\error;
 
 class KegiatanController extends Controller
 {
@@ -16,15 +16,12 @@ class KegiatanController extends Controller
     public function index(): View
     {
         $kegiatan = Kegiatan::where('kode_desa', Auth::user()->kode_desa)->orderBy('created_at', 'desc')->get();
-        return view('menu.kegiatan')->with( 'kegiatans' , $kegiatan );
+        $data = $kegiatan->toArray();
+        // dd($data);
+        return view('menu.kegiatan')->with( 'kegiatans' , $kegiatan )->with( 'data' , $data );
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        // $kegiatan = Kegiatan::where('kode_desa', Auth::user()->kode_desa);
         $kegiatan = new Kegiatan();
         return view('form.kegiatan', compact('kegiatan'));
     }
@@ -56,7 +53,19 @@ class KegiatanController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $kegiatan = Kegiatan::select('rekening_apbdes', 'kegiatan', 'tpk')->find($id);
+        if (!$kegiatan) {
+            flash()->error('kegiatan tidak ditemukan');
+            return redirect()->route('menu.kegiatan');
+        }
+        // dd($kegiatan->toArray());
+        $kegiatan->tombol = 'hapus';
+        $data[] = $kegiatan->toArray();
+        
+        // return response(json_decode($kegiatan));
+
+        return response()->view('detail.kegiatan', compact('data'));
+        // return response()->json($data);
     }
 
     /**
@@ -111,6 +120,7 @@ class KegiatanController extends Controller
         }
 
         try {
+            DB::reconnect();
             $kegiatan->delete();
             flash()->success('kegiatan berhasil diahpus');
         } catch (\Exception $e) {
