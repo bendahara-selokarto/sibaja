@@ -118,7 +118,8 @@ class KegiatanController extends Controller
             flash()->error('kegiatan sudah memiliki pemberitahuan');
             return back();
         }
-            $kegiatan->delete();
+            // $kegiatan->delete();
+            $deleted = Kegiatan::where('id', $id)->delete();
             flash()->success('kegiatan berhasil diahpus');
        
         return redirect()->route('menu.kegiatan');
