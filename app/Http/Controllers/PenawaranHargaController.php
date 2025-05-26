@@ -32,11 +32,16 @@ class PenawaranHargaController extends Controller
     {
         $kegiatan = Kegiatan::find($id);
         $pemberitahuan = $kegiatan->pemberitahuan;
-        if($pemberitahuan){
-            return view('form.penawaran-harga' , ['kegiatan' => $kegiatan, 'pemberitahuan' =>$pemberitahuan]);
+
+        if (!$pemberitahuan) {
+            noty()->error('Tidak ada pemberitahuan terkait');
+            return redirect()->back();
         }
-        noty()->error('Tidak ada pemberitahuan terkait');
-        return redirect()->back();
+
+        return view('form.penawaran-harga', [
+            'kegiatan' => $kegiatan,
+            'pemberitahuan' => $pemberitahuan
+        ]);
     }
 
     /**
@@ -140,19 +145,23 @@ class PenawaranHargaController extends Controller
         
         
         
-            $penawaran = $kegiatan->penawaran;
+            $penawaran = $kegiatan->penawaran;        
+            if(!$penawaran){
+                flash()->error('Tidak ada penawaran yang relevan');
+                return back();
+            }
                             
             $penyedia1 = Penyedia::find($penawaran->penyedia_1);
-            $penyedia2 = Penyedia::find($penawaran->penyedia_2);
-            $pemberitahuan = $kegiatan->pemberitahuan; 
             if(!$penyedia1){
                 flash()->error('Penyedia yang ditunjuk belum diset');
                 return back();
             }
+            $penyedia2 = Penyedia::find($penawaran->penyedia_2);
             if(!$penyedia2){
                 flash()->error('Penyedia pembanding belum diset');
                 return back();
             }
+            $pemberitahuan = $kegiatan->pemberitahuan; 
             if(!$pemberitahuan){
                 flash()->error('Tidak ada pemberitahuan yang relevan');
                 return back();

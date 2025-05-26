@@ -20,7 +20,9 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-stone">
                     <div class="overflow-scroll">
-                        <x-bladewind::table :data="$data"/>
+                        <x-bladewind::table 
+                        searchable="true"
+                        :data="$data"/>
                     <x-bladewind::table>
                         <x-slot name="header">
                             <th class="w-xl">No</th>

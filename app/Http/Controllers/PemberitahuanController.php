@@ -73,7 +73,7 @@ class PemberitahuanController extends Controller
         $tgl_batas_akhir_penawaran = Carbon::parse($request->input('tgl_batas_akhir_penawaran'));
 
         $data = [
-            // 'rekening_apbdes' => $request->input('rekening_apbdes'),
+            'rekening_apbdes' => $request->input('rekening_apbdes'),
             'kegiatan_id' => $request->input('kegiatan_id'),
             'belanja' => $belanja,
             'pekerjaan' => $string,
@@ -83,10 +83,11 @@ class PemberitahuanController extends Controller
             'no_pbj' => $request->input('no_pbj'),
         ];
 
-        $saveSpem = Pemberitahuan::updateOrCreate(
-            ['rekening_apbdes' => $request->input('rekening_apbdes')],
-            $data
-        );
+        // $saveSpem = Pemberitahuan::updateOrCreate(
+        //     ['rekening_apbdes' => $request->input('rekening_apbdes')],
+        //     $data
+        // );
+        $saveSpem = Pemberitahuan::create($data);
         $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
         return redirect()->route('menu.kegiatan')->with('pemberitahuan', $spem);
         

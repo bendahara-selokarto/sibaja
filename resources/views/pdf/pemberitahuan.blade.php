@@ -118,7 +118,7 @@
     </tr>
     <tr>
         {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
-        <td colspan="4" style="border: 1px solid black; text-align:right">PPN 11%</td>
+        <td colspan="4" style="border: 1px solid black; text-align:right">PPN dan PPh Pasal 22</td>
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
     <tr>
