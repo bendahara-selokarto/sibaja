@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('kegiatans', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('rekening_apbdes')->nullable()->default('0.0.0.0');
-            $table->string('kegiatan')->nullable()->default('Pembangunan');
-            $table->string('ketua_tpk')->nullable()->default('ketua TPK');
-            $table->string('pka')->nullable()->default('PKA');
-            $table->string('kode_desa')->nullable()->default('332514');
+            $table->string('rekening_apbdes')->nullable();
+            $table->string('kegiatan')->nullable();
+            $table->string('ketua_tpk')->nullable();
+            $table->string('pka')->nullable();
+            $table->string('kode_desa')->nullable();
             $table->timestamps();
         });
     }
