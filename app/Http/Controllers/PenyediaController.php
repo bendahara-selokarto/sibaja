@@ -10,7 +10,8 @@ class PenyediaController extends Controller
 {
     public function index(){
        
-        $data = Penyedia::where('kode_desa' , Auth::user()->kode_desa)->get();
+        $data = Penyedia::all();
+        // $data = Penyedia::where('kode_desa' , Auth::user()->kode_desa)->get();
         return view('menu.penyedia', ['penyedia' => $data ]);
     }
     public function create() {

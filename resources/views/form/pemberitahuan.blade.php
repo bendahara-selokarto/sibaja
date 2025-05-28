@@ -45,10 +45,22 @@
                                 value="{{ $p['id'] }}"
                                 label="{{ $p['nama_penyedia'] }}" />            
                                 @endforeach
-                                
+                                @php
+                                $countries = [
+                                        [ 'label' => 'Benin',         'value' => 'bj' ],
+                                        [ 'label' => 'Burkina Faso',  'value' => 'bf' ],
+                                        [ 'label' => 'Ghana',         'value' => 'gh' ],
+                                        [ 'label' => 'Nigeria',       'value' => 'ng' ],
+                                        [ 'label' => 'Kenya',         'value' => 'ke' ]
+                                    ];
+                                @endphp
                                 <div id="inputContainer">  
                                     <div class="input-group">                  
-                                        <input type="text" name="inputField1[]" placeholder="Uraian" required>
+                                        <!-- <input type="text" name="inputField1[]" placeholder="Uraian" required> -->
+                                        
+    <select name="inputField1[]" class="mt-1 block w-full">
+    <option value="gh">Ghana</option>
+</select>
                                         <input type="number" min="0" step="any" name="inputField2[]" placeholder="Vol" required>  
                                         <input type="text" name="inputField3[]" placeholder="Satuan" required>  
                                         <button type="button" onclick="removeInput(this)">Hapus</button>  
