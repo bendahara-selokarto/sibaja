@@ -129,15 +129,18 @@ class PemberitahuanController extends Controller
     public function render(string $id)
         {
            
-            $kegiatan = Kegiatan::with('pemberitahuan')->find($id);         
-            $pemberitahuan = $kegiatan->pemberitahuan;
-            
-            
+            $pemberitahuan = Pemberitahuan::where('id', $id)->first();
             
             if (!$pemberitahuan) {
                 noty()->error('Pemberitahuan belum dibuat.');
                 return redirect()->back();
             }
+            $kegiatan = Kegiatan::with('pemberitahuan')->find($pemberitahuan->kegiatan_id);
+            if (!$kegiatan) {
+                noty()->error('Kegiatan tidak ditemukan.');
+                return redirect()->back();
+            }         
+            // $pemberitahuan = $kegiatan->pemberitahuan;
 
             $pdf = Pdf::loadView('pdf.pemberitahuan', ['pemberitahuan' => $pemberitahuan, 'kegiatan' => $kegiatan] );
 

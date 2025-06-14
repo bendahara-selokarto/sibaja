@@ -7,6 +7,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Pemberitahuan;
 
 class KegiatanController extends Controller
 {
@@ -53,18 +54,17 @@ class KegiatanController extends Controller
      */
     public function show(string $id)
     {
-        $kegiatan = Kegiatan::select('rekening_apbdes', 'kegiatan', 'tpk')->find($id);
+        $kegiatan = Kegiatan::find($id);
         if (!$kegiatan) {
             flash()->error('kegiatan tidak ditemukan');
             return redirect()->route('menu.kegiatan');
         }
-        // dd($kegiatan->toArray());
-        $kegiatan->tombol = 'hapus';
-        $data[] = $kegiatan->toArray();
-        
-        // return response(json_decode($kegiatan));
+        $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->get();
+        if ($pemberitahuan->isEmpty()) {
+            flash()->error('kegiatan tidak memiliki pemberitahuan');
+        }
 
-        return response()->view('detail.kegiatan', compact('data'));
+        return view('detail.kegiatan')->with('kegiatan', $kegiatan)->with('pemberitahuan', $pemberitahuan);
         // return response()->json($data);
     }
 
