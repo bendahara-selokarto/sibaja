@@ -69,9 +69,14 @@ class PembayaranController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pembayaran $pembayaran)
+    public function destroy($kegiatan_id)
     {
-        //
+        $pembayaran = Pembayaran::where('kegiatan_id', $kegiatan_id)->first();
+        if ($pembayaran) {
+            $pembayaran->delete();
+            return redirect()->route('menu.kegiatan')->with('success', 'Pembayaran berhasil dihapus.');
+        }
+        return redirect()->route('menu.kegiatan')->with('error', 'Pembayaran tidak ditemukan.');
     }
 
     public function render($id){

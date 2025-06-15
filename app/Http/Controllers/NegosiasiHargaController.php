@@ -91,9 +91,14 @@ class NegosiasiHargaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(NegosiasiHarga $negosiasiHarga)
+    public function destroy($kegiatan_id)
     {
-        //
+        $negosiasi = NegosiasiHarga::where('kegiatan_id', $kegiatan_id)->first();
+        if (!$negosiasi) {
+            return redirect()->back()->with('error', 'Negosiasi tidak ditemukan');
+        }
+        $negosiasi->delete();
+        return redirect()->back()->with('success', 'Negosiasi berhasil dihapus');
     }
 
     /**

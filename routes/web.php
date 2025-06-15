@@ -28,8 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('kegiatan/edit/{id}', [KegiatanController::class , 'edit'])->name('kegiatan.edit');
     Route::patch('kegiatan/update/{id}', [KegiatanController::class , 'update'])->name('kegiatan.update');
     Route::post('kegiatan/store', [KegiatanController::class , 'store'])->name('kegiatan.store');
-    Route::delete('menu/kegiatan/{id}', [KegiatanController::class , 'destroy'])->name('kegiatan.destroy');
     Route::get('kegiatan/detail/{id}', [KegiatanController::class , 'show'])->name('kegiatan.show');
+    Route::delete('menu/kegiatan/{id}', [KegiatanController::class , 'destroy'])->name('kegiatan.destroy');
     
     Route::get('menu/penyedia', [PenyediaController::class , 'index'])->middleware(CheckDefaultKode::class)->name('menu.penyedia');
     Route::get('penyedia/create', [PenyediaController::class , 'create'])->name('penyedia.create');
@@ -50,14 +50,17 @@ Route::middleware('auth')->group(function () {
     Route::post('penawaran-harga/create/{id}', [PenawaranHargaController::class , 'create'])->name('penawaran.create');
     Route::post('penawaran-harga/store', [PenawaranHargaController::class , 'store'])->name('penawaran.store');
     Route::get('penawaran-harga/render/{id}', [PenawaranHargaController::class , 'render'])->name('penawaran.render');
+    Route::delete('penawaran-harga/destroy/{id}', [PenawaranHargaController::class , 'destroy'])->name('penawaran.destroy');
     
     Route::post('negosiasi/create/{id}', [NegosiasiHargaController::class , 'index'])->name('negosiasi.create');
     Route::post('negosiasi/store', [NegosiasiHargaController::class , 'store'])->name('negosiasi.store');
     Route::get('negosiasi/render/{id}', [NegosiasiHargaController::class , 'renderPDF'])->name('negosiasi.render');
+    Route::delete('negosiasi/destroy/{id}', [NegosiasiHargaController::class , 'destroy'])->name('negosiasi.destroy');
     
     Route::post('/pembayaran/create/{id}' , [PembayaranController::class , 'create'])->name('pembayaran.create');
     Route::post('/pembayaran/store' , [PembayaranController::class , 'store'])->name('pembayaran.store');
     Route::get('/pembayaran/render/{id}' , [PembayaranController::class , 'render'])->name('pembayaran.render');
+    Route::delete('pembayaran/destroy/{id}', [PembayaranController::class , 'destroy'])->name('pembayaran.destroy');
 });
 
 require __DIR__.'/auth.php';
