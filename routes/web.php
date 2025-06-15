@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::post('pemberitahuan/edit/{id}', [PemberitahuanController::class , 'edit'])->name('pemberitahuan.edit');
     Route::patch('pemberitahuan/update/{id}', [PemberitahuanController::class , 'update'])->name('pemberitahuan.update');
     Route::get('pemberitahuan/render/{id}', [PemberitahuanController::class , 'render'])->name('pemberitahuan.render');
+    Route::delete('pemberitahuan/destroy/{id}', [PemberitahuanController::class , 'destroy'])->name('pemberitahuan.destroy');
     
     Route::get('penawaran-harga', [PenawaranHargaController::class , 'index'])->name('penawaran');
     Route::post('penawaran-harga/create/{id}', [PenawaranHargaController::class , 'create'])->name('penawaran.create');

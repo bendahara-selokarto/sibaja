@@ -18,7 +18,7 @@
             </div>
             <br>
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-stone">
+                <div class="p-7 text-stone">
                     <div class="overflow-scroll">
                        
                     <x-bladewind::table searchable="true">
@@ -26,7 +26,7 @@
                             <th class="w-xl">No</th>
                             <th class="w-xl">Kode Rekening</th>
                             <th class="w-3xl">Kegiatan</th>
-                            <th class="w-2xl">Dokumen PBJ</th>
+                            <th class="w-3xl">Dokumen PBJ</th>
                             {{-- <th>output</th> --}}
                         </x-slot>
                         
@@ -53,6 +53,11 @@
                                             @csrf
                                             @method('POST')
                                             <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">ubah</x-bladewind::button> 
+                                        </form>
+                                        <form class="inline" action="{{ route('pemberitahuan.destroy', $kegiatan['id']) }}" method="post" >
+                                            @csrf
+                                            @method('DELETE')
+                                            <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="red">hapus</x-bladewind::button> 
                                         </form>
                                         <a target="_blank" href="{{ route('pemberitahuan.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">Cetak</x-bladewind::button></a> 
                                     </li>

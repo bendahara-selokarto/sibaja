@@ -190,7 +190,14 @@ class PemberitahuanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->first();
+        if ($pemberitahuan) {
+            $pemberitahuan->delete();
+            noty()->success('Pemberitahuan berhasil dihapus.');
+        } else {
+            noty()->error('Pemberitahuan tidak ditemukan.');
+        }
+        return redirect()->route('menu.kegiatan');
     }
 
     public function render(string $id)
