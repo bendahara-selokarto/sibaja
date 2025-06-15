@@ -51,8 +51,8 @@
                                         <input type="text" name="inputField1[]" placeholder="Uraian" required>
                                         <input type="number" min="0" step="any" name="inputField2[]" placeholder="Vol" required>  
                                         <input type="text" name="inputField3[]" placeholder="Satuan" required>  
-                                        <button type="button" onclick="removeInput(this)">Hapus</button>  
-                                        <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="h-16 w-16 text-amber-500" />  
+                                        <!-- <button type="button" onclick="removeInput(this)">Hapus</button>   -->
+                                        <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="text-blue-500" />  
                                     </div>  
                                 </div>    
                             </div>            
