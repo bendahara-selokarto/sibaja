@@ -49,7 +49,11 @@
                                             @method('POST')
                                             <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">Buat</x-bladewind::button> 
                                         </form>
-                                        <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">ubah</x-bladewind::button> 
+                                        <form class="inline" action="{{ route('pemberitahuan.edit', $kegiatan['id']) }}" method="post" >
+                                            @csrf
+                                            @method('POST')
+                                            <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">ubah</x-bladewind::button> 
+                                        </form>
                                         <a target="_blank" href="{{ route('pemberitahuan.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">Cetak</x-bladewind::button></a> 
                                     </li>
                                     <li class="mb-4"><x-bladewind::tag outline="true" shade="dark" label="Penawaran Harga dari 2 Penyedia"  /><br>
