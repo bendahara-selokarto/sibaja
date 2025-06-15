@@ -66,7 +66,11 @@
                                         @method('POST')
                                         <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">Buat</x-bladewind::button>
                                     </form>
-                                    <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">Ubah</x-bladewind::button>
+                                    <form class="inline" action="{{ route('penawaran.edit', $kegiatan['id']) }}" method="post">
+                                        @csrf
+                                        @method('POST')
+                                        <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">Ubah</x-bladewind::button>
+                                    </form>
                                     <form class="inline" action="{{ route('penawaran.destroy', $kegiatan['id']) }}" method="post" >
                                         @csrf
                                         @method('DELETE')
@@ -80,7 +84,11 @@
                                     @method('post')
                                     <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green" >Buat</x-bladewind::button>
                                 </form>
-                                <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow" >Ubah</x-bladewind::button>
+                                <form class="inline" action="{{ route('negosiasi.edit', $kegiatan['id']) }}" method="post">
+                                    @csrf
+                                    @method('POST')
+                                    <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow" >Ubah</x-bladewind::button>
+                                </form>
                                     <form class="inline" action="{{ route('negosiasi.destroy', $kegiatan['id']) }}" method="post" >
                                         @csrf
                                         @method('DELETE')
@@ -94,7 +102,11 @@
                                     @method('post')
                                     <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green" >buat</x-bladewind::button>
                                 </form>
-                                <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow" >ubah</x-bladewind::button>
+                                <form class="inline" action="{{ route('pembayaran.edit', $kegiatan['id']) }}" method="post">
+                                    @csrf
+                                    @method('post')
+                                    <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow" >ubah</x-bladewind::button>
+                                </form>
                                     <form class="inline" action="{{ route('pembayaran.destroy', $kegiatan['id']) }}" method="post" >
                                         @csrf
                                         @method('DELETE')
