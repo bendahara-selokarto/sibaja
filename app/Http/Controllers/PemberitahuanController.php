@@ -203,13 +203,12 @@ class PemberitahuanController extends Controller
     public function render(string $id)
         {
            
-            $pemberitahuan = Pemberitahuan::where('id', $id)->first();
-            
+            $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->first();
             if (!$pemberitahuan) {
-                noty()->error('Pemberitahuan belum dibuat.');
+                noty()->error('Pemberitahuan tidak ditemukan.');
                 return redirect()->back();
             }
-            $kegiatan = Kegiatan::with('pemberitahuan')->find($pemberitahuan->kegiatan_id);
+            $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
             if (!$kegiatan) {
                 noty()->error('Kegiatan tidak ditemukan.');
                 return redirect()->back();
