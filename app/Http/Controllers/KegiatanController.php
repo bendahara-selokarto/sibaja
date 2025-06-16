@@ -87,12 +87,15 @@ class KegiatanController extends Controller
     public function update(Request $request, string $id)
     {
         try {
+            $validatedData = $request->validate([
+            'rekening_apbdes' => 'required|string',
+            'kegiatan' => 'required|string',
+            'ketua_tpk' => 'required|string',
+            'pka' => 'required|string',
+            ]);
+
             $kegiatan = Kegiatan::find($id);
-            $kegiatan->rekening_apbdes = $request->rekening_apbdes;
-            $kegiatan->kegiatan = $request->kegiatan;
-            $kegiatan->ketua_tpk = $request->ketua_tpk;
-            $kegiatan->pka = $request->pka;
-            $kegiatan->save();
+            $kegiatan->update($validatedData);
             noty()->success('terupdate');
             
         } catch (\Throwable $th) {
