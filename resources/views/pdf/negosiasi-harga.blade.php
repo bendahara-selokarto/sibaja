@@ -77,7 +77,7 @@
         <tr>            
            
             <td>Tempat</td>
-            <td>: Aula Balaidesa {{ Auth::user()->desa }}</td>
+            <td>: Kantor Kepala Desa {{ Auth::user()->desa }}</td>
         </tr>
         <tr>            
            
@@ -87,7 +87,7 @@
     </table>
     <table>
 
-    <p style="margin-left:2.6cm">Demikian atas perhatian dan kerjasamnya diucapkan terima kasih.</p>
+    <p style="margin-left:2.6cm">Demikian atas perhatian dan kerjasamanya diucapkan terima kasih.</p>
     <div style="margin-left:4cm">
         <table style="width: 100%">
             <tr>

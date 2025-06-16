@@ -65,24 +65,24 @@
           @endphp
           @endforeach
           <tr>
-              {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
-              <td colspan="4" style="border: 1px solid black; text-align:right">Jumlah</td>
-              <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2 * (100/111), 0, ',', '.') }}</td>
+              <td colspan="4" style="border: 1px solid black; text-align:right">Sub Total</td>
+              <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2, 0, ',', '.') }}</td>
           </tr>
           <tr>
               {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
               <td colspan="4" style="border: 1px solid black; text-align:right">PPN 11%</td>
               <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2 * (11/111), 0, ',', '.') }}</td>
-          </tr>
-          <tr>
-              {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
-              <td colspan="4" style="border: 1px solid black; text-align:right">PPh22 3%</td>
-              <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2 * (3/111), 0, ',', '.') }}</td>
-          </tr>
-          <tr>
-              <td colspan="4" style="border: 1px solid black; text-align:right">Jumlah Total (harga + pajak)</td>
-              <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2, 0, ',', '.') }}</td>
-          </tr>
+            </tr>
+            <tr>
+                {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
+                <td colspan="4" style="border: 1px solid black; text-align:right">PPh22 1.5%</td>
+                <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2 * (1.5/111), 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
+                <td colspan="4" style="border: 1px solid black; text-align:right">Total</td>
+                <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2 * (100/111), 0, ',', '.') }}</td>
+            </tr>
       
           </table>
           <strong><p>Terbilang : {{ Terbilang::make($jumlah_2) }} rupiah</p></strong>

@@ -1,5 +1,5 @@
 <div style="text-align: center; width: 100%;">
-    ketua TPK
+    Ketua TPK
     <br>
     <br>
     <br>
