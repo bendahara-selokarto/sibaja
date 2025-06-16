@@ -28,8 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('kegiatan/edit/{id}', [KegiatanController::class , 'edit'])->name('kegiatan.edit');
     Route::patch('kegiatan/update/{id}', [KegiatanController::class , 'update'])->name('kegiatan.update');
     Route::post('kegiatan/store', [KegiatanController::class , 'store'])->name('kegiatan.store');
-    Route::delete('menu/kegiatan/{id}', [KegiatanController::class , 'destroy'])->name('kegiatan.destroy');
     Route::get('kegiatan/detail/{id}', [KegiatanController::class , 'show'])->name('kegiatan.show');
+    Route::delete('menu/kegiatan/{id}', [KegiatanController::class , 'destroy'])->name('kegiatan.destroy');
     
     Route::get('menu/penyedia', [PenyediaController::class , 'index'])->middleware(CheckDefaultKode::class)->name('menu.penyedia');
     Route::get('penyedia/create', [PenyediaController::class , 'create'])->name('penyedia.create');
@@ -41,20 +41,32 @@ Route::middleware('auth')->group(function () {
     Route::get('menu/pemberitahuan', [PemberitahuanController::class , 'index'])->name('menu.pemberitahuan');
     Route::post('pemberitahuan/create/{id}', [PemberitahuanController::class , 'create'])->name('pemberitahuan.create');
     Route::post('pemberitahuan/store', [PemberitahuanController::class , 'store'])->name('pemberitahuan.store');
+    Route::post('pemberitahuan/edit/{id}', [PemberitahuanController::class , 'edit'])->name('pemberitahuan.edit');
+    Route::patch('pemberitahuan/update/{id}', [PemberitahuanController::class , 'update'])->name('pemberitahuan.update');
     Route::get('pemberitahuan/render/{id}', [PemberitahuanController::class , 'render'])->name('pemberitahuan.render');
+    Route::delete('pemberitahuan/destroy/{id}', [PemberitahuanController::class , 'destroy'])->name('pemberitahuan.destroy');
     
     Route::get('penawaran-harga', [PenawaranHargaController::class , 'index'])->name('penawaran');
     Route::post('penawaran-harga/create/{id}', [PenawaranHargaController::class , 'create'])->name('penawaran.create');
     Route::post('penawaran-harga/store', [PenawaranHargaController::class , 'store'])->name('penawaran.store');
+    Route::post('penawaran-harga/edit/{id}', [PenawaranHargaController::class , 'edit'])->name('penawaran.edit');
+    Route::patch('penawaran-harga/update/{id}', [PenawaranHargaController::class , 'update'])->name('penawaran.update');
     Route::get('penawaran-harga/render/{id}', [PenawaranHargaController::class , 'render'])->name('penawaran.render');
+    Route::delete('penawaran-harga/destroy/{id}', [PenawaranHargaController::class , 'destroy'])->name('penawaran.destroy');
     
     Route::post('negosiasi/create/{id}', [NegosiasiHargaController::class , 'index'])->name('negosiasi.create');
     Route::post('negosiasi/store', [NegosiasiHargaController::class , 'store'])->name('negosiasi.store');
+    Route::post('negosiasi/edit/{id}', [NegosiasiHargaController::class , 'edit'])->name('negosiasi.edit');
+    Route::patch('negosiasi/update/{id}', [NegosiasiHargaController::class , 'update'])->name('negosiasi.update');
     Route::get('negosiasi/render/{id}', [NegosiasiHargaController::class , 'renderPDF'])->name('negosiasi.render');
+    Route::delete('negosiasi/destroy/{id}', [NegosiasiHargaController::class , 'destroy'])->name('negosiasi.destroy');
     
-    Route::post('/pembayaran/create/{id}' , [PembayaranController::class , 'create'])->name('pembayaran.create');
-    Route::post('/pembayaran/store' , [PembayaranController::class , 'store'])->name('pembayaran.store');
-    Route::get('/pembayaran/render/{id}' , [PembayaranController::class , 'render'])->name('pembayaran.render');
+    Route::post('pembayaran/create/{id}' , [PembayaranController::class , 'create'])->name('pembayaran.create');
+    Route::post('pembayaran/store' , [PembayaranController::class , 'store'])->name('pembayaran.store');
+    Route::post('pembayaran/edit/{id}', [PembayaranController::class , 'edit'])->name('pembayaran.edit');
+    Route::patch('pembayaran/update/{id}', [PembayaranController::class , 'update'])->name('pembayaran.update');
+    Route::get('pembayaran/render/{id}' , [PembayaranController::class , 'render'])->name('pembayaran.render');
+    Route::delete('pembayaran/destroy/{id}', [PembayaranController::class , 'destroy'])->name('pembayaran.destroy');
 });
 
 require __DIR__.'/auth.php';

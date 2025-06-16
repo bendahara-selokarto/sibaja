@@ -53,25 +53,49 @@ class PembayaranController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Pembayaran $pembayaran)
+    public function edit($id)
     {
-        //
+        $pembayaran = Kegiatan::with('pembayaran')->find($id);
+        if (!$pembayaran || !$pembayaran->pembayaran) {
+            return redirect()->route('menu.kegiatan')->with('error', 'Pembayaran tidak ditemukan.');
+        }
+        $kegiatan = Kegiatan::find($id);
+        if (!$kegiatan) {
+            return redirect()->route('menu.kegiatan')->with('error', 'Kegiatan tidak ditemukan.');
+        }
+
+
+       
+        return view('form.pembayaran_edit', compact('pembayaran', 'kegiatan'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pembayaran $pembayaran)
+    public function update(Request $request, $id)
     {
-        //
+        $pembayaran = Pembayaran::where('kegiatan_id', $id)->first();
+        if (!$pembayaran) {
+            return redirect()->route('menu.kegiatan')->with('error', 'Pembayaran tidak ditemukan.');
+        }
+
+        $pembayaran->tgl_pembayaran_cms = $request->tgl_pembayaran_cms;
+        $pembayaran->save();
+
+        return redirect()->route('menu.kegiatan')->with('success', 'Pembayaran berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pembayaran $pembayaran)
+    public function destroy($kegiatan_id)
     {
-        //
+        $pembayaran = Pembayaran::where('kegiatan_id', $kegiatan_id)->first();
+        if ($pembayaran) {
+            $pembayaran->delete();
+            return redirect()->route('menu.kegiatan')->with('success', 'Pembayaran berhasil dihapus.');
+        }
+        return redirect()->route('menu.kegiatan')->with('error', 'Pembayaran tidak ditemukan.');
     }
 
     public function render($id){

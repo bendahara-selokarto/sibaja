@@ -75,25 +75,60 @@ class NegosiasiHargaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(NegosiasiHarga $negosiasiHarga)
+    public function edit($kegiatan_id)
     {
-        //
+        $kegiatan = Kegiatan::with(['penawaran', 'negosiasiHarga'])->find($kegiatan_id);
+        if (!$kegiatan || !$kegiatan->negosiasiHarga) {
+            return redirect()->back()->with('error', 'Data negosiasi tidak ditemukan');
+        }
+        $negosiasiHarga = $kegiatan->negosiasiHarga;
+        return view('form.negosiasi_edit', compact('kegiatan', 'negosiasiHarga'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, NegosiasiHarga $negosiasiHarga)
+    public function update(Request $request, $kegiatan_id)
     {
-        //
+        $negosiasiHarga = NegosiasiHarga::where('kegiatan_id', $kegiatan_id)->first();
+        if (!$negosiasiHarga) {
+            return redirect()->back()->with('error', 'Negosiasi tidak ditemukan');
+        }
+        $kegiatan = Kegiatan::find($kegiatan_id);
+        if (!$kegiatan) {
+            return redirect()->back()->with('error', 'Kegiatan tidak ditemukan');
+        }
+        $request->validate([
+            'tgl_persetujuan' => 'required|date',
+            'tgl_negosiasi' => 'required|date',
+            'tgl_perjanjian' => 'required|date',
+            'tgl_akhir_perjanjian' => 'required|date',
+            'harga_negosiasi' => 'required|numeric|min:0',
+        ]);
+
+        $negosiasiHarga->update([
+            'rekening_apbdes' => $kegiatan->rekening_apbdes,
+            'tgl_persetujuan' => Carbon::parse($request->tgl_persetujuan),
+            'tgl_negosiasi' => Carbon::parse($request->tgl_negosiasi),
+            'tgl_perjanjian' => Carbon::parse($request->tgl_perjanjian),
+            'tgl_akhir_perjanjian' => Carbon::parse($request->tgl_akhir_perjanjian),
+            'harga_negosiasi' => $request->harga_negosiasi,
+        ]);
+
+        return redirect()->route('menu.kegiatan')->with('success', 'Negosiasi berhasil diperbarui');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(NegosiasiHarga $negosiasiHarga)
+    public function destroy($kegiatan_id)
     {
-        //
+        $negosiasi = NegosiasiHarga::where('kegiatan_id', $kegiatan_id)->first();
+        if (!$negosiasi) {
+            return redirect()->back()->with('error', 'Negosiasi tidak ditemukan');
+        }
+        $negosiasi->delete();
+        return redirect()->back()->with('success', 'Negosiasi berhasil dihapus');
     }
 
     /**

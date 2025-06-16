@@ -3,14 +3,13 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Profile') }}
         </h2>
-    </x-slot>   
-
+    </x-slot> 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <form action="{{ route('pemberitahuan.store') }}" class="survey" method="POST">
-                    @method('post')
-                    @csrf
+                <form action="{{ route('pemberitahuan.update', $pemberitahuan->id) }}" class="survey" method="POST">
+                    @method('PATCH')
+                    @csrf                   
                     <div class="py-12">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
@@ -24,37 +23,60 @@
                                 <hr> 
                                 <div>
                                     <x-input-label for="no_pbj" :value="__('Nomor Urut PBJ')" />
-                                    <x-text-input id="no_pbj" name="no_pbj" type="number" min="0" value="{{ $nomor }}" class="mt-1 block " required autocomplete="no_pbj" />
+                                    <x-text-input id="no_pbj" name="no_pbj" type="number" min="0" value="{{ $pemberitahuan->no_pbj }}" class="mt-1 block " required autocomplete="no_pbj" />
                                     <x-input-error class="mt-2" :messages="$errors->get('no_pbj')" />
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_pemberitahuan" :value="__('Tanggal Surat')" />
-                                    <x-text-input id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 inline " required autocomplete="tgl_pemberitahuan" /> <span id="hari-pemberitahuan"></span>
+                                    <x-text-input id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 inline " required autocomplete="tgl_pemberitahuan" value="{{ is_object($tgl_pemberitahuan) ? $tgl_pemberitahuan->format('Y-m-d') : (is_string($tgl_pemberitahuan) ? substr($tgl_pemberitahuan, 0, 10) : '') }}" /> <span id="hari-pemberitahuan"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_pemberitahuan')" />
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_batas_akhir_penawaran" :value="__('tgl batas akhir penawaran')" />
-                                    <x-text-input id="tgl_batas_akhir_penawaran" name="tgl_batas_akhir_penawaran" type="date" class="mt-1 inline " required autocomplete="tgl_batas_akhir_penawaran" /><span id="hari-batas-akhir-penawaran"></span>
+                                    <x-text-input id="tgl_batas_akhir_penawaran" name="tgl_batas_akhir_penawaran" type="date" class="mt-1 inline " required autocomplete="tgl_batas_akhir_penawaran" value="{{ is_object($tgl_batas_akhir_penawaran) ? $tgl_batas_akhir_penawaran->format('Y-m-d') : (is_string($tgl_batas_akhir_penawaran) ? substr($tgl_batas_akhir_penawaran, 0, 10) : '') }}"  /><span id="hari-batas-akhir-penawaran"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_batas_akhir_penawaran')" />
                                 </div>
                                 <br>
                                 <p>Centang 2 Penyedia yang diberi penawaran :</p>
-                                @foreach ($penyedia as  $p)
-                                <x-bladewind::checkbox
-                                name="penyedia[]"
-                                value="{{ $p['id'] }}"
-                                label="{{ $p['nama_penyedia'] }}" />            
-                                @endforeach
-                                
-                                <div id="inputContainer">  
+                                @for ($i = 0; $i < count($penyedia); $i++)
+                                    <x-bladewind::checkbox
+                                    :checked="in_array($penyedia[$i]['id'], $selected_penyedia)"
+                                        name="penyedia[]"
+                                        value="{{ $penyedia[$i]['id'] }}"
+                                        label="{{ $penyedia[$i]['nama_penyedia'] }}" />
+                                @endfor
+                                <!-- <div id="inputContainer">  
                                     <div class="input-group">                  
-                                        <input type="text" name="inputField1[]" placeholder="Uraian" required>
-                                        <input type="number" min="0" step="any" name="inputField2[]" placeholder="Vol" required>  
-                                        <input type="text" name="inputField3[]" placeholder="Satuan" required>  
-                                        <!-- <button type="button" onclick="removeInput(this)">Hapus</button>   -->
+                                        <input value = "{{ $belanja[0]['field1'] }}" type="text" name="inputField1[]" placeholder="Uraian" required>
+                                        <input value = "{{ $belanja[0]['field2'] }}"  type="number" min="0" step="any" name="inputField2[]" placeholder="Vol" required>  
+                                        <input value = "{{ $belanja[0]['field3'] }}"  type="text" name="inputField3[]" placeholder="Satuan" required>  
                                         <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="text-blue-500" />  
                                     </div>  
-                                </div>    
+                                </div>     -->
+                                @foreach ($belanja as $index => $item)
+                                    @if ($index >= 0)
+                                        <div class="input-group">
+                                            <input value="{{ $item['field1'] }}" type="text" name="inputField1[]" placeholder="Uraian" required>
+                                            <input value="{{ $item['field2'] }}" type="number" min="0" step="any" name="inputField2[]" placeholder="Vol" required>
+                                            <input value="{{ $item['field3'] }}" type="text" name="inputField3[]" placeholder="Satuan" required>
+                                            <button type="button" onclick="removeInput(this)"><x-bladewind::icon class="text-red-500" name="minus-circle"/></button>
+                                            <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="text-blue-500"/></button>
+                                        </div>
+                                    @endif
+                                @endforeach
+                                <div id="inputContainer">
+                                </div>
+                                
+
+
+
+
+
+
+
+
+
+
                             </div>            
                         </div>
                         <br>
