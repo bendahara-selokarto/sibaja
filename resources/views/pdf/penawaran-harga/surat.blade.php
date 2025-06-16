@@ -11,7 +11,6 @@
         </td>       
         <td>
            <h2 style="text-align: center; margin: 0cm;">{{ $penyedia1->nama_penyedia }}</h2>
-           <h3 style="text-align: center; margin: 0cm;">TOKO BAHAN BANGUNAN</h3>
            <h4 style="text-align: center; margin: 0cm;">{{ $penyedia1->alamat_penyedia }}</h4>
            <h4 style="text-align: center; margin: 0cm; color: blue;">HP : {{  $penyedia1->nomor_hp}}</h4>
         </td>

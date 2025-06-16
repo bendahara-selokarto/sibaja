@@ -16,7 +16,7 @@
     tanggal  <strong>{{ Terbilang::make($negosiasiHarga->tgl_perjanjian->isoFormat('D'));}} </strong> 
     bulan <strong>{{ $negosiasiHarga->tgl_perjanjian->isoFormat('MMMM');}} </strong> 
     tahun <strong> {{ Terbilang::make($negosiasiHarga->tgl_perjanjian->isoFormat('Y'));}} </strong> 
-    bertempat di Balaidesa {{ ucwords(Auth::user()->desa)  }},
+    bertempat di Kantor Kepala Desa {{ ucwords(Auth::user()->desa)  }},
     kami yang bertanda tangan di bawah ini:</p>
 <table style="vertical-align: top;">
     <tr>
@@ -49,7 +49,7 @@
     <tr>
         <td style="vertical-align: top;">Jabatan</td>
         <td style="vertical-align: top;">:</td>
-        <td style="vertical-align: top;"> {{ $penyedia->jabata_pemilik . '( '.  $penyedia->nama_penyedia . ' )' }}</td>
+        <td style="vertical-align: top;"> {{ $penyedia->jabata_pemilik . ' ( '.  $penyedia->nama_penyedia . ' )' }}</td>
     </tr>
     <tr>
         <td style="vertical-align: top;">Alamat</td>
@@ -74,7 +74,7 @@
 <p style="text-align: center">Pasal 2</p>
 <p style="text-align: center">NILAI PEKERJAAN</p>
 
-<p style="text-align: justify">Nilai yang disepakati untuk menyelesaikan pekerjaan ( Menyediakan Material ) dalam perjanjian ini adalah ( Daftar Rincian Harga terlmpir ) termasuk pajak dan bea materai.</p>
+<p style="text-align: justify">Nilai yang disepakati untuk menyelesaikan pekerjaan ( Menyediakan Material ) dalam perjanjian ini adalah ( Daftar Rincian Harga terlampir ) termasuk pajak dan bea materai.</p>
 
 <p style="text-align: center">Pasal 3</p>
 <p style="text-align: center">HAK DAN KEWAJIBAN</p>
@@ -118,7 +118,7 @@
 
 <table style="width: 100%; text-align: center">
     <tr>
-        <td style="vertical-align: top;">PIHAK KEDUA <br> {{ $penyedia->jabata_pemilik }}({{ $penyedia->nama_penyedia }}) </td>
+        <td style="vertical-align: top;">PIHAK KEDUA <br> {{ $penyedia->jabata_pemilik }} ({{ $penyedia->nama_penyedia }}) </td>
         <td style="vertical-align: top;"><br>PIHAK PERTAMA <br> <br> <br> <br>    </td>
     </tr>
     <tr>

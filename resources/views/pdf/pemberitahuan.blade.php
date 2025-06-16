@@ -113,7 +113,7 @@
     @endforeach
     <tr>
         {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
-        <td colspan="4" style="border: 1px solid black; text-align:right">Jumlah</td>
+        <td colspan="4" style="border: 1px solid black; text-align:right">Sub Total</td>
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
     <tr>
@@ -122,7 +122,7 @@
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
     <tr>
-        <td colspan="4" style="border: 1px solid black; text-align:right">Jumlah termasuk Pajak</td>
+        <td colspan="4" style="border: 1px solid black; text-align:right">Total</td>
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
 
