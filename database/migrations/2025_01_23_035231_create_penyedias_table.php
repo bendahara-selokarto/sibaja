@@ -20,12 +20,11 @@ return new class extends Migration
             $table->string('alamat_pemilik')->nullable()->default('-');
             $table->string('nomor_hp')->nullable()->default('-');
             $table->string('nomor_identitas')->nullable()->default('-');
-            $table->string('nomor_npwp')->nullable()->default('-');
+            $table->string('nomor_npwp');
             $table->string('nomor_izin_usaha')->nullable()->default('-');
             $table->string('jabata_pemilik')->nullable()->default('pemilik');
             $table->string('instansi_pemberi_izin_usaha')->nullable()->default('-');
-            $table->string('logo_penyedia')->nullable()->default('default.png');
-            $table->string('jenis_penyedia')->nullable()->default('-');
+            $table->string('logo_penyedia')->nullable();
             $table->string('rekening')->nullable();
             $table->string('bank')->nullable();
             $table->string('atas_nama')->nullable();

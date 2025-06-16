@@ -94,7 +94,6 @@ class PenawaranHargaController extends Controller
             //     [
             //     'id_penyedia' => $request->id_penyedia,                
             // ]);
-            flash()->success('pemenang berhasil diset, silahkan lanjutkan dengan set pembanding');
                    
         }
         
@@ -109,8 +108,6 @@ class PenawaranHargaController extends Controller
                 'harga_penawaran_2' => $totalHarga,
                 'item_penawaran_2' => $item_penawaran
             ]);
-            flash()->success('pembanding berhasil diset, silahkan lanjutkan dengan set pemenang');
-
         }
         
      return redirect()->route('menu.kegiatan');         
