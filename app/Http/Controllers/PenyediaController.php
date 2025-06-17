@@ -31,6 +31,17 @@ class PenyediaController extends Controller
         } else {
             $path = 'logo/default.png';
         }
+        if ($request->hasFile('kop_surat')) {
+            $path_kop = $request->file('kop_surat')->storePubliclyAs(
+                'kop_surat', 
+                Auth::user()->kode_desa . $request->file('kop_surat')->getClientOriginalName(), 
+                'public'
+            );
+        } else {
+            $path_kop = 'kop_surat/default.png';
+        }
+
+        
     
         $nama_penyedia = $request->nama_penyedia;
         $data = [
@@ -45,6 +56,7 @@ class PenyediaController extends Controller
             'jabata_pemilik' => $request->jabatan_pemilik,
             'instansi_pemberi_izin_usaha' => $request->penerbit_siup,
             'logo_penyedia' => $path,
+            'kop_surat' => $path_kop,
             ];
 
         $penyedia = Penyedia::create($data);
@@ -88,6 +100,10 @@ class PenyediaController extends Controller
 
     public function update( Request $request, $id){
         $penyedia = Penyedia::find($id);
+        if (!$penyedia) {
+            flash()->error('Penyedia tidak ditemukan');
+            return redirect()->route('menu.penyedia');
+        }
         if ($request->hasFile('logo_penyedia')) {
         
         $path = $request->file('logo_penyedia')->storePubliclyAs(
@@ -98,6 +114,17 @@ class PenyediaController extends Controller
         } else {
             $path = 'logo/default.png';
         }
+
+        if ($request->hasFile('kop_surat')) {
+            $path_kop = $request->file('kop_surat')->storePubliclyAs(
+                'kop_surat', 
+                Auth::user()->kode_desa . $request->file('kop_surat')->getClientOriginalName(), 
+                'public'
+            );
+        } else {
+            $path_kop = 'kop_surat/default.png';
+        }
+
         
         $data = [
             'nama_penyedia' => $request->nama_penyedia,
@@ -111,6 +138,7 @@ class PenyediaController extends Controller
             'jabata_pemilik' => $request->jabatan_pemilik,
             'instansi_pemberi_izin_usaha' => $request->penerbit_siup,
             'logo_penyedia' => $path,
+            'kop_surat' => $path_kop,
                 ];
 
             $penyedia->update($data);
