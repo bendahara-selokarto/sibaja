@@ -84,8 +84,8 @@ onerror="this.src='{{ asset('') }}'"
             </tr>
             <tr>
                 {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
-                <td colspan="4" style="border: 1px solid black; text-align:right">PPh22 1.5%</td>
-                <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2 * (1.5/111), 0, ',', '.') }}</td>
+                <td colspan="4" style="border: 1px solid black; text-align:right">PPh22 3%</td>
+                <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2 * (3/111), 0, ',', '.') }}</td>
             </tr>
             <tr>
                 {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}

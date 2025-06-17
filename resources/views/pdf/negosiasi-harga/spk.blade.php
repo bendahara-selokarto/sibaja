@@ -131,7 +131,7 @@
         </tr>
         <tr>
           <td style="text-align: right" colspan="4">Pajak PPN dan PPh22</td>
-            <td style="text-align: right">{{ number_format($negosiasiHarga->harga_negosiasi * (12.5/111 ), 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format($negosiasiHarga->harga_negosiasi * (14/111 ), 0, ',', '.') }}</td>
         </tr>
         <tr>
           <td style="text-align: right" colspan="4">Total</td>
