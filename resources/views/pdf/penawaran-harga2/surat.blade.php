@@ -1,3 +1,11 @@
+@if(!empty($penyedia2->kop_surat))
+<img 
+    src="storage/{{$penyedia2->kop_surat }}" 
+    alt=" " 
+    style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
+    onerror="this.src='{{ asset('') }}'" 
+>
+@else
 <table style="width: 100%">
     <tr>
         <td style="width: 120px">            
@@ -17,6 +25,7 @@
     </tr>
 </table>
 <hr>
+@endif
 <table style="width: 100%">
     <tr>
         <td></td>

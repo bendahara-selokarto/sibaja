@@ -1,3 +1,11 @@
+@if(!empty($penyedia2->kop_surat))
+<img 
+src="storage/{{$penyedia2->kop_surat }}" 
+alt=" " 
+style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
+onerror="this.src='{{ asset('') }}'" 
+>
+@else
 <table style="width: 100%">
     <tr>
         <td style="width: 120px">            
@@ -17,6 +25,7 @@
     </tr>
 </table>
 <hr>
+@endif
 <h3 style="text-align: center;line-height: 50%;">DAFTAR RINCIAN PENAWARAN HARGA BARANG/JASA</h3>
     <h3 style="text-align: center; line-height: 50%">SUDAH TERMASUK PAJAK-PAJAK KEPADA NEGARA DAN</h3>
     <h3 style="text-align: center; line-height: 50%">BEA MATERAI</h3>
