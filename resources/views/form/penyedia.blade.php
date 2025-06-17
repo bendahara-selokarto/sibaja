@@ -37,13 +37,13 @@
                                 <x-text-input id="alamat_pemilik" name="alamat_pemilik" type="text" class="mt-1 block w-full" :value="old('alamat_pemilik', $penyedia->alamat_pemilik)" required autocomplete="alamat_pemilik" />
                                 <x-input-error class="mt-2" :messages="$errors->get('alamat_pemilik')" />
                             </div>
-                        </div>
-                        <div>
                             <div>
                                 <x-input-label for="nomor_hp" :value="__('Nomor HP')" />
                                 <x-text-input id="nomor_hp" name="nomor_hp" type="text" class="mt-1 block w-full" :value="old('nomor_hp', $penyedia->nomor_hp)" required autofocus autocomplete="nomor_hp" />
                                 <x-input-error class="mt-2" :messages="$errors->get('nomor_hp')" />
                             </div>
+                        </div>
+                        <div>
                             <div>
                                 <x-input-label for="nomor_identitas" :value="__('Nomor KTP/SIM')" />
                                 <x-text-input id="nomor_identitas" name="nomor_identitas" type="text" class="mt-1 block w-full" :value="old('nomor_identitas', $penyedia->nomor_identitas)" required autocomplete="nomor_identitas" />
@@ -59,8 +59,6 @@
                                 <x-text-input id="no_SIUP" name="no_siup" type="text" class="mt-1 block w-full" :value="old('no_SIUP', $penyedia->nomor_izin_usaha)" required autocomplete="no_SIUP" />
                                 <x-input-error class="mt-2" :messages="$errors->get('no_SIUP')" />
                             </div>
-                        </div>
-                        <div>
                             <div>
                                 <x-input-label for="penerbit_SIUP" :value="__('Instansi Pemberi Izin')" />
                                 <x-text-input id="penerbit_SIUP" name="penerbit_siup" type="text" class="mt-1 block w-full" :value="old('penerbit_SIUP', $penyedia->instansi_pemberi_izin_usaha)" required autofocus autocomplete="penerbit_SIUP" />
@@ -70,6 +68,23 @@
                                 <x-input-label for="jabatan_pemilik" :value="__('Jabatan Pemilik')" />
                                 <x-text-input id="jabatan_pemilik" name="jabatan_pemilik" type="text" class="mt-1 block w-full" :value="old('jabatan_pemilik', $penyedia->jabata_pemilik)" required autofocus autocomplete="jabatan_pemilik" />
                                 <x-input-error class="mt-2" :messages="$errors->get('jabatan_pemilik')" />
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <x-input-label for="rekening_bank" :value="__('Rekening Bank')" />
+                                <x-text-input id="rekening_bank" name="rekening_bank" type="text" class="mt-1 block w-full" :value="old('rekening_bank', $penyedia->rekening)" required autofocus autocomplete="rekening_bank" />
+                                <x-input-error class="mt-2" :messages="$errors->get('rekening_bank')" />
+                            </div>
+                            <div>
+                                <x-input-label for="atas_nama" :value="__('Atas Nama')" />
+                                <x-text-input id="atas_nama" name="atas_nama" type="text" class="mt-1 block w-full" :value="old('atas_nama', $penyedia->atas_nama)" required autofocus autocomplete="atas_nama" />
+                                <x-input-error class="mt-2" :messages="$errors->get('atas_nama')" />
+                            </div>
+                            <div>
+                                <x-input-label for="nama_bank" :value="__('Nama Bank')" />
+                                <x-text-input id="nama_bank" name="nama_bank" type="text" class="mt-1 block w-full" :value="old('nama_bank', $penyedia->bank)" required autofocus autocomplete="nama_bank" />
+                                <x-input-error class="mt-2" :messages="$errors->get('nama_bank')" />
                             </div>
                             <div>
                                 <x-input-label for="logo_penyedia" :value="__('Logo')" />
