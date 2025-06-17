@@ -218,16 +218,12 @@ class PenawaranHargaController extends Controller
     public function render(string $id)
     {
         
-        $pemberitahuan = Pemberitahuan::find($id);
-        if (!$pemberitahuan) {
-            flash()->error('Tidak ada pemberitahuan terkait');
-            return back();
-        }
-
-
-        $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($pemberitahuan->kegiatan_id);
-        
-        
+            $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($id);
+            if (!$kegiatan) {
+                flash()->error('Kegiatan tidak ditemukan');
+                return back();
+            }       
+    
         
             $penawaran = $kegiatan->penawaran;        
             if(!$penawaran){
