@@ -263,7 +263,7 @@ class PenawaranHargaController extends Controller
                 'item' => $item,
                 'item_2' => $item_2
             ]);
-            return $pdf->stream();
+            return $pdf->stream('2. PENAWARAN HARGA - (' . $kegiatan->kegiatan . ').pdf');
        
     }
 }

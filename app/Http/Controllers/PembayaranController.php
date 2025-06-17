@@ -118,6 +118,6 @@ class PembayaranController extends Controller
 
 
         $pdf = Pdf::loadView('pdf.pembayaran.kwitansi', compact('kegiatan', 'penyedia' , 'item'));
-        return $pdf->stream();
+        return $pdf->stream('4. PEMBAYARAN - (' . $kegiatan->kegiatan . ').pdf');
     }
 }

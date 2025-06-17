@@ -222,6 +222,6 @@ class PemberitahuanController extends Controller
                 return redirect()->back();
             }
 
-            return $pdf->stream();
+            return $pdf->stream('1. PEMBERITAHUAN- (' . $kegiatan->kegiatan . ').pdf');
         }
 }
