@@ -16,6 +16,11 @@
         </td>
     </tr>
 </table>
+<img 
+src="storage/{{$penyedia1->kop_surat }}" 
+alt=" " 
+onerror="this.src='{{ asset('') }}'" 
+>
 <hr>
 <table style="width: 100%">
     <tr>

@@ -30,21 +30,18 @@ class PenawaranHargaController extends Controller
      */
     public function create($id)
     {
-        $pemberitahuan = Pemberitahuan::find($id);
+        $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
+        if (!$kegiatan) {
+            noty()->error('Kegiatan tidak ditemukan');
+            return redirect()->back();
+        }
+        
+        $pemberitahuan = $kegiatan->pemberitahuan;
         if (!$pemberitahuan) {
             noty()->error('Tidak ada pemberitahuan terkait');
             return redirect()->back();
         }
         
-        $kegiatan = Kegiatan::find($pemberitahuan->kegiatan_id);
-        if (!$kegiatan) {
-            noty()->error('Kegiatan tidak ditemukan');
-            return redirect()->back();
-        }
-
-        
-
-
         return view('form.penawaran-harga', [
             'kegiatan' => $kegiatan,
             'pemberitahuan' => $pemberitahuan
