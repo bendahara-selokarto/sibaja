@@ -61,7 +61,7 @@
                                         <form class="inline" action="{{ route('pemberitahuan.destroy', $kegiatan['id']) }}" method="post" >
                                             @csrf
                                             @method('DELETE')
-                                            <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="red">hapus</x-bladewind::button> 
+                                            <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
                                         </form>
                                         <a target="_blank" href="{{ route('pemberitahuan.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">Cetak</x-bladewind::button></a> 
                                     </li>
@@ -79,7 +79,7 @@
                                     <form class="inline" action="{{ route('penawaran.destroy', $kegiatan['id']) }}" method="post" >
                                         @csrf
                                         @method('DELETE')
-                                        <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="red">hapus</x-bladewind::button> 
+                                        <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
                                     </form>
                                     <a target="_blank" href="{{ route('penawaran.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">Cetak</x-bladewind::button></a>
                                 </li>
@@ -97,7 +97,7 @@
                                     <form class="inline" action="{{ route('negosiasi.destroy', $kegiatan['id']) }}" method="post" >
                                         @csrf
                                         @method('DELETE')
-                                        <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="red">hapus</x-bladewind::button> 
+                                        <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
                                     </form>
                                     <a target="_blank" href="{{ route('negosiasi.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo" >cetak</x-bladewind::button></a>
                                 </li>
@@ -115,7 +115,7 @@
                                     <form class="inline" action="{{ route('pembayaran.destroy', $kegiatan['id']) }}" method="post" >
                                         @csrf
                                         @method('DELETE')
-                                        <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="red">hapus</x-bladewind::button> 
+                                        <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
                                     </form>
                                         <a target="_blank" href="{{ route('pembayaran.render', $kegiatan['id']) }}"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo" >cetak</x-bladewind::button></a>
                                     </li>
