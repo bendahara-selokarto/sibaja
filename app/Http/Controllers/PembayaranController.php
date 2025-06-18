@@ -99,7 +99,7 @@ class PembayaranController extends Controller
     }
 
     public function render($id){
-        $kegiatan = Kegiatan::find($id);
+        $kegiatan = Kegiatan::with('negosiasiHarga')->find($id);
         $id_penyedia = $kegiatan->penawaran->penyedia_1;
         if(!$id_penyedia){
             flash()->error('belum ada penyedia ditunjuk');

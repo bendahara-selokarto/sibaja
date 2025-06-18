@@ -62,7 +62,7 @@
         </div></td>
     </tr>
 </table>
-<p>Kepada Yth: PKA Desa Selokarto Kecamatan Pecalungan</p>
+<p>Kepada Yth: PKA Desa {{ Auth::user()->desa }} Kecamatan Pecalungan</p>
 <p>di-</p>
 <p>TEMPAT</p>
 <br>
@@ -78,64 +78,57 @@
         </tr>
     </thead>
     <tbody>
-        @php
-            // dd($item->uraian);
-        @endphp
+       
         @foreach ($item['uraian'] as $key => $value)
         <tr>
             <td style="text-align: center">{{ $loop->iteration }}</td>
             <td style="text-align: left">{{ $item['uraian'][$key] }}</td>         
             <td style="text-align: right">{{ $item['volume'][$key]  }}</td>         
             <td style="text-align: left">{{ $item['satuan'][$key] }}</td>         
-            <td style="text-align: right">{{ $item['harga_satuan'][$key] }}</td>         
-            <td style="text-align: right">{{ $item['volume'][$key] * $item['harga_satuan'][$key] }}</td>         
+            <td style="text-align: right">{{ number_format($item['harga_satuan'][$key], 0, ',', '.') }}</td>         
+            <td style="text-align: right">{{ number_format($item['volume'][$key] * $item['harga_satuan'][$key], 0, ',', '.') }}</td>         
         </tr>              
         @endforeach        
         <tr>
            
-            <td style="border-top: 1px dashed black; text-align:right" colspan="5">Jumlah</td>
-            <td style="border-top: 1px dashed black; text-align:right">{{ session('harga_negosiasi') }}</td>
-        </tr>
+            <td style="border-top: 1px dashed black; text-align:right" colspan="5">Sub Total</td>
+            <td style="border-top: 1px dashed black; text-align:right">{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>   </tr>
         <tr>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            <td style="text-align:right">PPN 11%</td>
-            <td style="text-align:right">{{ session('harga_negosiasi') }}</td>
-        </tr>
-        <tr>
+            <td style="text-align:right">PPN dan PPh Pasal 22</td>
+            <td style="text-align:right">{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/111)), 0, ',', '.') }}</td>
+        </tr>   <tr>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            <td style="border-bottom: 1px dashed black; text-align:right" >Jumlah non Pajak</td>
-            <td style="border-bottom: 1px dashed black; text-align:right">{{ session('harga_negosiasi') }}</td>
-        </tr>
-    </tbody>
+            <td style="border-bottom: 1px dashed black; text-align:right">Total</td>
+            <td style="border-bottom: 1px dashed black; text-align:right">
+                {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi - ($kegiatan->negosiasiHarga->harga_negosiasi * (14/111))), 0, ',', '.') }}
+            </td>   </tr>   </tbody>
 </table>
 <br>
 <table>
     <tr>
-        <td>TRANSFER VIA</td>
-        <td>rekanan</td>
-    </tr>
-    <tr>
-        <td>Bank Jateng</td>
+        <td>Pembayaran Via Bank</td>
         <td></td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
+        <td>Nomor Rekening</td>
+        <td>: {{ $penyedia->rekening }}</td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
+        <td>a.n</td>
+        <td>: {{ $penyedia->atas_nama }}</td>
+    </tr>
+    <tr>
+        <td>Nama Bank</td>
+        <td>: {{ $penyedia->bank }}</td>s
     </tr>
 </table>
-<br>
-<br>
-<br>
 <br>
 <h6><strong>Pembayaran via Transfer dianggap lunasi setelah terkonfirmasi</strong></h6>
 
