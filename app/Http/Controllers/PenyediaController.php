@@ -37,10 +37,14 @@ class PenyediaController extends Controller
                 Auth::user()->kode_desa . $request->file('kop_surat')->getClientOriginalName(), 
                 'public'
             );
-        } else {
-            $path_kop = 'kop_surat/default.png';
-        }
-
+        } 
+        if ($request->hasFile('data_dukung')) {
+            $path_kop = $request->file('data_dukung')->storePubliclyAs(
+                'data_dukung', 
+                Auth::user()->kode_desa . $request->file('data_dukung')->getClientOriginalName(), 
+                'public'
+            );
+        } 
         
     
         $nama_penyedia = $request->nama_penyedia;
