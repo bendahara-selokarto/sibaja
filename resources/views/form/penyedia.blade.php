@@ -96,6 +96,11 @@
                                 <x-text-input id="kop_surat" name="kop_surat" type="file" class="mt-1 block w-full" :value="old('kop_surat', $penyedia->kop_surat)" autocomplete="kop_surat" />
                                 <x-input-error class="mt-2" :messages="$errors->get('kop_surat')" />
                             </div>
+                            <div>
+                                <x-input-label for="data_dukung" :value="__('Lampiran data dukung .pdf')" />
+                                <x-text-input id="data_dukung" name="data_dukung" type="file" class="mt-1 block w-full" :value="old('data_dukung', $penyedia->data_dukung)" autocomplete="data_dukung" />
+                                <x-input-error class="mt-2" :messages="$errors->get('data_dukung')" />
+                            </div>
                         </div>
                     {{-- </div> --}}
                     <div>                        
