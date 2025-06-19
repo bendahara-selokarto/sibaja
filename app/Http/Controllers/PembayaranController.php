@@ -118,6 +118,9 @@ class PembayaranController extends Controller
 
 
         $pdf = Pdf::loadView('pdf.pembayaran.kwitansi', compact('kegiatan', 'penyedia' , 'item'));
-        return $pdf->stream('4. PEMBAYARAN - (' . $kegiatan->kegiatan . ').pdf');
+        $filename = '4. PEMBAYARAN - (' . $kegiatan->kegiatan . ')';
+        // Replace invalid filename characters with underscore
+        $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
+        return $pdf->stream($filename . '.pdf');
     }
 }

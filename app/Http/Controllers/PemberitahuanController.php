@@ -222,6 +222,8 @@ class PemberitahuanController extends Controller
                 return redirect()->back();
             }
 
-            return $pdf->stream('1. PEMBERITAHUAN- (' . $kegiatan->kegiatan . ').pdf');
+            // Replace all invalid filename characters with underscore
+            $safeKegiatan = preg_replace('/[\/\\\:\*\?"<>\|]/', '_', $kegiatan->kegiatan);
+            return $pdf->stream('1. PEMBERITAHUAN- (' . $safeKegiatan . ').pdf');
         }
 }

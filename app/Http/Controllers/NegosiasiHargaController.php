@@ -172,6 +172,10 @@ class NegosiasiHargaController extends Controller
         $penyedia = Penyedia::find($penawaranHarga->penyedia_1);
         
         $pdf = Pdf::loadView('pdf.negosiasi-harga', compact('pemberitahuan', 'kegiatan', 'negosiasiHarga', 'penyedia', 'penawaranHarga', 'item'));
-        return $pdf->stream('3. NEGOSIASI HARGA - (' . $kegiatan->kegiatan . ').pdf');
+        // Replace invalid filename characters with underscore
+        $filename = '3. NEGOSIASI HARGA - (' . $kegiatan->kegiatan . ')';
+        $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
+
+        return $pdf->stream($filename . '.pdf');
     }
 }
