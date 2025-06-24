@@ -7,7 +7,7 @@
         </tr>
         <tr>
             <td>Pekerjaan</td>
-            <td>: {{ $penyedia2->jabatan_pemilik }}  ({{ $penyedia2->nama_penyedia }})</td>
+            <td>: {{ $penyedia2->jabata_pemilik }}  {{ $penyedia2->nama_penyedia }}</td>
         </tr>
         <tr>
             <td>Alamat</td>
@@ -38,13 +38,13 @@
                 <td style="width: 5mm">1.</td>
                 <td style="width: 5cm">Nama</td>
                 <td style="width: 5mm">:</td>
-                <td>: {{ $penyedia2->nama_penyedia }}</td>
+                <td> {{ $penyedia2->nama_pemilik }}</td>
             </tr>
             <tr>
                 <td>2.</td>
                 <td>Pekerjaan</td>
                 <td>:</td>
-                <td> {{ $penyedia2->jabatan_pemilik }} ({{ $penyedia2->nama_penyedia }})</td>
+                <td> {{ $penyedia2->jabata_pemilik }} {{ $penyedia2->nama_penyedia }}</td>
             </tr>
             <tr>
                 <td>3.</td>
@@ -94,11 +94,11 @@
         <tr>
             <td style="width: 5mm">1.</td>
             <td style="width: 4cm">No. Surat Izin Usaha</td>
-            <td style="width: 5cm">: {{ $penyedia2->no_surat_izin_usaha }} </td>
+            <td style="width: 5cm">: {{ $penyedia2->nomor_izin_usaha }} </td>
         </tr>
         <tr>
             <td>2.</td>
-            <td>Masa Berlaku Izin Usaha</td>
+            <td>Instansi Pemberi Izin Usaha</td>
             <td>: {{ $penyedia2->instansi_pemberi_izin_usaha }} </td>
         </tr>
     </table>
@@ -106,7 +106,7 @@
 <table style="width: 100%">
     <tr>
         <td style="width: 8cm"><br></td>
-        <td style="text-align: center;">Rekanan
+        <td style="text-align: center;">{{$penyedia2->nama_penyedia}}
             <br><br><br><br>
             <strong>{{ $penyedia2->nama_pemilik}}</strong></td>
     </tr>

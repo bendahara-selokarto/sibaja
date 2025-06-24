@@ -9,12 +9,12 @@ onerror="this.src='{{ asset('') }}'"
 
 <table style="width: 100%">
     <tr>
-        <td style="width: 120px">            
+        <td style="width: 100px">            
             <img 
                 src="storage/{{$penyedia1->logo_penyedia }}" 
                 class="logo-kop-desa" 
                 alt=" " 
-                width="120px" 
+                width="100px" 
                 onerror="this.src='{{ asset('') }}'" 
             >
         </td>       
@@ -44,7 +44,7 @@ onerror="this.src='{{ asset('') }}'"
         <td>Lampiran</td>
         <td>: -</td>
         <td>Yth</td>
-        <td rowspan="3">Ketua Tim Pengelola Kegiatan {{ $penawaran->kegiatan }}</td>
+        <td rowspan="3">Ketua Tim Pelaksana Kegiatan {{ $penawaran->kegiatan }}</td>
     </tr>
     <tr>
         <td>Perihal</td>
@@ -85,7 +85,7 @@ onerror="this.src='{{ asset('') }}'"
         </tr>
         <tr>
             <td>Jabatan</td>
-            <td>: {{ $penyedia1->jabata_pemilik }} ({{ $penyedia1->nama_penyedia }})</td>
+            <td>: {{ $penyedia1->jabata_pemilik }} {{ $penyedia1->nama_penyedia }}</td>
         </tr> 
         <tr>
             <td>Alamat</td>
@@ -93,7 +93,7 @@ onerror="this.src='{{ asset('') }}'"
         </tr> 
     </table>
    
-    <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pengelola Kegiatan {{ $penawaran->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
+    <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pelaksana Kegiatan {{ $penawaran->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
     <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format($jumlah, 0, ',', '.') }} ({{ Terbilang::make($jumlah)  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
     <p>Sesuai dengan persyaratan yang diminta bersama ini kami sampaikan :</p>
     <ol type="a">
@@ -104,14 +104,16 @@ onerror="this.src='{{ asset('') }}'"
         <li>Foto copy Nomor Pokok Wajib Pajak (NPWP)</li>
     </ol>
     <p>Harga penawaran tersebut di atas sudah termasuk Pajak Pertambahan Nilai serta biaya lainnya yang wajib dilunasi oleh kami.</p>
-    
-    <p>Demikian di sampaikannya Surat Penawaran ini, maka kami meny
+    <p>Demikian di sampaikannya Surat Penawaran ini, maka kami  menyatakan sanggup
+dan akan tunduk pada semua ketentuan yang berlaku.
+</p>
 
     <table style="width: 100%">
         <tr>
             <td style="width: 50%; text-align: center;"></td>
             <td style="width: 50%; text-align: center;">
-                <p>{{ $penyedia1->nama_penyedia }}</p>
+                <p style="padding: 0%">Hormat Kami</p>
+                <p style="padding: 0%">{{ $penyedia1->nama_penyedia }}</p>
                 <br><br><br>
                 <p><strong>{{ $penyedia1->nama_pemilik }}</strong></p>
             </td>

@@ -43,7 +43,7 @@
         <td>Lampiran</td>
         <td>: -</td>
         <td>Yth</td>
-        <td rowspan="3">Ketua Tim Pengelola Kegiatan {{ $penawaran->kegiatan }}</td>
+        <td rowspan="3">Ketua Tim Pelaksana Kegiatan {{ $penawaran->kegiatan }}</td>
     </tr>
     <tr>
         <td>Perihal</td>
@@ -84,7 +84,7 @@
         </tr>
         <tr>
             <td>Jabatan</td>
-            <td>: {{ $penyedia2->jabata_pemilik }} ({{ $penyedia2->nama_penyedia }})</td>
+            <td>: {{ $penyedia2->jabata_pemilik }} {{ $penyedia2->nama_penyedia }}</td>
         </tr> 
         <tr>
             <td>Alamat</td>
@@ -92,8 +92,8 @@
         </tr> 
     </table>
    
-    <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pengelola Kegiatan Nomor {{ $pemberitahuan->no_pbj }}/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
-    <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format($jumlah_2, 0, ',', '.') }} ({{ Terbilang::make($jumlah)  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
+    <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pelaksana Kegiatan Nomor {{ $pemberitahuan->no_pbj }}/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
+    <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format($jumlah_2 * (114/100), 0, ',', '.') }} ({{ Terbilang::make($jumlah_2 * (114/100))  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
     <p>Sesuai dengan persyaratan yang diminta bersama ini kami sampaikan :</p>
     <ol type="a">
         <li>Form isian pengadaan barang/jasa</li>
@@ -104,14 +104,15 @@
     </ol>
     <p>Harga penawaran tersebut di atas sudah termasuk Pajak Pertambahan Nilai serta biaya lainnya yang wajib dilunasi oleh kami.</p>
     
-    <p>Demikian di sampaikannya Surat Penawaran ini, maka kami meny
+    <p>Demikian di sampaikannya Surat Penawaran ini, maka kami menyatakan sanggup dan akan tunduk pada semua ketentuan yang berlaku.</p>
 
     <table style="width: 100%">
         <tr>
             <td style="width: 50%; text-align: center;"></td>
             <td style="width: 50%; text-align: center;">
+                <p>Hormat Kami</p>
                 <p>{{ $penyedia2->nama_penyedia }}</p>
-                <br><br><br>
+                <br><br>
                 <p><strong>{{ $penyedia2->nama_pemilik }}</strong></p>
             </td>
         </tr>

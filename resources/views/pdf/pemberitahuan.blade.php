@@ -17,7 +17,7 @@
 </head>
 <body>   
     <x-kop-tpk >
-        <x-slot name="kegiatan">{{ $kegiatan->kegiatan }}</x-slot>
+        <!-- <x-slot name="kegiatan">{{ $kegiatan->kegiatan }}</x-slot> -->
     </x-kop-tpk>
     <table>
     <tr>
@@ -113,21 +113,26 @@
     @endforeach
     <tr>
         {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
-        <td colspan="4" style="border: 1px solid black; text-align:right">Sub Total</td>
+        <td colspan="4" style="border: 1px solid black; text-align:right">Jumlah</td>
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
     <tr>
         {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
-        <td colspan="4" style="border: 1px solid black; text-align:right">PPN dan PPh Pasal 22</td>
+        <td colspan="4" style="border: 1px solid black; text-align:right">PPN </td>
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
     <tr>
-        <td colspan="4" style="border: 1px solid black; text-align:right">Total</td>
+        {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
+        <td colspan="4" style="border: 1px solid black; text-align:right">PPh 22 </td>
+        <td style="border: 1px solid black; text-align:right"></td>
+    </tr>
+    <tr>
+        <td colspan="4" style="border: 1px solid black; text-align:right">Jumlah Total</td>
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
 
     </table>
-    <div style=" page-break-after: always"></div>
+    <!-- <div style=" page-break-after: always"></div> -->
     <table>
    <tr>
     <td></td>
