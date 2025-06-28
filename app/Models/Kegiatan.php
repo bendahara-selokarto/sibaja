@@ -24,6 +24,14 @@ class Kegiatan extends Model
     {
         return $this->hasOne(PenawaranHarga::class, 'kegiatan_id');
     }
+    public function penawaran_1()
+    {
+        return $this->hasOne(Penawaran_1::class, 'kegiatan_id');
+    }
+    public function penawaran_2()
+    {
+        return $this->hasOne(Penawaran_2::class, 'kegiatan_id');
+    }
     public function negosiasiHarga()
     {
         return $this->hasOne(NegosiasiHarga::class, 'kegiatan_id');

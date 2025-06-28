@@ -31,11 +31,11 @@
         <td></td>
         <td style="width: 6cm"></td>
         <td></td>
-        <td style='text-align:right'>{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($penawaran->tgl_penawaran_1)->isoFormat('D MMMM Y') }}</td>
+        <td style='text-align:right'>{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y') }}</td>
     </tr>
     <tr>
         <td>Nomor</td>
-        <td>: {{ $penawaran->no_penawaran_2 }}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
+        <td>: {{ $penawaran_2->no_penawaran }}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
         <td></td>
         <td>Kepada</td>
     </tr>
@@ -43,7 +43,7 @@
         <td>Lampiran</td>
         <td>: -</td>
         <td>Yth</td>
-        <td rowspan="3">Ketua Tim Pelaksana Kegiatan {{ $penawaran->kegiatan }}</td>
+        <td rowspan="3">Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }}</td>
     </tr>
     <tr>
         <td>Perihal</td>

@@ -99,8 +99,12 @@ class PembayaranController extends Controller
     }
 
     public function render($id){
-        $kegiatan = Kegiatan::with('negosiasiHarga')->find($id);
-        $id_penyedia = $kegiatan->penawaran->penyedia_1;
+        $kegiatan = Kegiatan::with('negosiasiHarga')->with('penawaran_1')->find($id);
+        if (!$kegiatan) {
+            flash()->error('Kegiatan tidak ditemukan');
+            return redirect()->back();
+        }
+        $id_penyedia = $kegiatan->penawaran_1->penyedia_id;
         if(!$id_penyedia){
             flash()->error('belum ada penyedia ditunjuk');
             return redirect()->back();
@@ -109,7 +113,11 @@ class PembayaranController extends Controller
 
         try {
             $tgl_pembayaran = $kegiatan->pembayaran->tgl_pembayaran_cms;
-            $item = $kegiatan->penawaran->item_penawaran_1;
+            $item = $kegiatan->penawaran_1->item;
+            if (!$item) {
+                flash()->error('belum ada item');
+                return redirect()->back();
+            };
         } catch (\Exception $e) {
             flash()->error('belum ada pembayaran');
             return redirect()->back();

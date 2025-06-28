@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('penawaran-harga/render/{id}', [PenawaranHargaController::class , 'render'])->name('penawaran.render');
     Route::delete('penawaran-harga/destroy/{id}', [PenawaranHargaController::class , 'destroy'])->name('penawaran.destroy');
     
-    Route::post('negosiasi/create/{id}', [NegosiasiHargaController::class , 'index'])->name('negosiasi.create');
+    Route::post('negosiasi/create/{id}', [NegosiasiHargaController::class , 'create'])->name('negosiasi.create');
     Route::post('negosiasi/store', [NegosiasiHargaController::class , 'store'])->name('negosiasi.store');
     Route::post('negosiasi/edit/{id}', [NegosiasiHargaController::class , 'edit'])->name('negosiasi.edit');
     Route::patch('negosiasi/update/{id}', [NegosiasiHargaController::class , 'update'])->name('negosiasi.update');

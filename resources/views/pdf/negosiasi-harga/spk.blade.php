@@ -43,11 +43,11 @@
         </tr>
         <tr>
           <td style="width: 15mm; border-left: 1px solid black">Nomor</td>
-          <td >: {{ $pemberitahuan->no_spk }}</td>
+          <td >: {{ $data['pemberitahuan']->no_spk }}</td>
         </tr>
         <tr>
           <td style="border-left: 1px solid black" >Tanggal</td>
-          <td >: {{ Illuminate\Support\Carbon::parse($negosiasiHarga->tgl_perjanjian)->isoFormat('D MMMM Y') }}</td>
+          <td >: {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_perjanjian)->isoFormat('D MMMM Y') }}</td>
         </tr>
         <tr>
           <td style="border-top: 1px solid black"></td>
@@ -56,27 +56,27 @@
         <tr>
           <td style="text-align: center">PEKERJAAN</td>
           <td style="border-left: 1px solid black" >Nomor</td>
-          <td >: {{ $kegiatan->penawaran->no_penawaran_1 }}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
+          <td >: {{ $data['kegiatan']->penawaran_1->no_penawaran }}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
         </tr>
         <tr>
-          <td style="text-align: center">{{ $kegiatan->kegiatan }}</td>
+          <td style="text-align: center">{{ $data['kegiatan']->kegiatan }}</td>
           <td style="border-left: 1px solid black" >Tanggal</td>
         
-          <td >: {{ Illuminate\Support\Carbon::parse($kegiatan->penawaran->tgl_penawaran_1)->isoFormat('D MMMM Y')  }}</td>
+          <td >: {{ Illuminate\Support\Carbon::parse($data['kegiatan']->penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y')  }}</td>
         </tr>
         <tr>
           <td style="text-align: center">KODE REKENING BELANJA</td>
           <td style="border-left: 1px solid black; border-top: 1px solid black" colspan="2">BERITA ACARA NEGOSIASI</td>
         </tr>
         <tr>
-          <td style="text-align: center">{{ $kegiatan->rekening_apbdes }}</td>
+          <td style="text-align: center">{{ $data['kegiatan']->rekening_apbdes }}</td>
           <td style="border-left: 1px solid black" >Nomor</td>
-          <td>: {{ $pemberitahuan->no_ba_negosiasi }}</td>
+          <td>: {{ $data['pemberitahuan']->no_ba_negosiasi }}</td>
         </tr>
         <tr>
           <td></td>
           <td style="border-left: 1px solid black" >Tanggal</td>
-          <td>: {{ Illuminate\Support\Carbon::parse($negosiasiHarga->tgl_negosiasi)->isoFormat('D MMMM Y')  }}</td>
+          <td>: {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_negosiasi)->isoFormat('D MMMM Y')  }}</td>
         </tr>    
       </thead>
       </table>
@@ -89,19 +89,19 @@
       <tbody>
         <tr>
           <td >NOMOR</td>
-          <td >: {{ $pemberitahuan->no_pbj }}/SPK/{{ Auth::user()->kode_desa }}/{{ Auth::user()->tahun_anggaran }}</td>
+          <td >: {{ $data['pemberitahuan']->no_pbj }}/SPK/{{ Auth::user()->kode_desa }}/{{ Auth::user()->tahun_anggaran }}</td>
         </tr>
         <tr>
           <td >TANGGAL</td>
-          <td >: {{ Illuminate\Support\Carbon::parse($negosiasiHarga->tgl_perjanjian)->isoFormat('D MMMM Y')  }}</td>
+          <td >: {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_perjanjian)->isoFormat('D MMMM Y')  }}</td>
         </tr>
         <tr>
           <td >WAKTU PELAKSANAAN</td>
-          <td >: {{ $negosiasiHarga->jumlah_hari_kerja }} hari</td>
+          <td >: {{ $data['negosiasiHarga']->jumlah_hari_kerja }} hari</td>
         </tr>
         <tr>
           <td >NILAI PEKERJAAN</td>
-            <td >: Rp. {{ number_format($negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>
+            <td >: Rp. {{ number_format($data['negosiasiHarga']->harga_negosiasi, 0, ',', '.') }}</td>
         </tr>
       </tbody>
       </table>
@@ -115,30 +115,34 @@
         </tr></thead>
       <tbody>
         
-        @foreach ($item['uraian'] as $k => $v )
+        @foreach ($data['item']['uraian'] as $k => $v )
             
         <tr>
           <td style="text-align: center">{{ $loop->iteration }}</td>
-            <td >{{ $item['uraian'][$k] }}</td>
-            <td style="text-align: center">{{ $item['volume'][$k] . ' '. $item['satuan'][$k]  }}</td>
-            <td style="text-align: right"> {{ number_format($item['harga_satuan'][$k], 0, ',', '.') }}</td>
-            <td style="text-align: right"> {{ number_format($item['volume'][$k] * $item['harga_satuan'][$k], 0, ',', '.') }}</td>
+            <td >{{ $data['item']['uraian'][$k] }}</td>
+            <td style="text-align: center">{{ $data['item']['volume'][$k] . ' '. $data['item']['satuan'][$k]  }}</td>
+            <td style="text-align: right"> {{ number_format($data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
+            <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
         </tr>
         @endforeach
         <tr>
-          <td style="text-align: right" colspan="4">Sub Total</td>
-            <td style="text-align: right">{{ number_format($negosiasiHarga->harga_negosiasi , 0, ',', '.') }}</td>
+          <td style="text-align: right" colspan="4">Sub Jumlah</td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_negosiasi , 0, ',', '.') }}</td>
         </tr>
         <tr>
-          <td style="text-align: right" colspan="4">Pajak PPN dan PPh22</td>
-            <td style="text-align: right">{{ number_format($negosiasiHarga->harga_negosiasi * (14/111 ), 0, ',', '.') }}</td>
+          <td style="text-align: right" colspan="4">PPN</td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->ppn, 0, ',', '.') }}</td>
         </tr>
         <tr>
-          <td style="text-align: right" colspan="4">Total</td>
-            <td style="text-align: right">{{ number_format($negosiasiHarga->harga_negosiasi * (100/111), 0, ',', '.') }}</td>
+          <td style="text-align: right" colspan="4">PPh Pasal 22</td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->pph_22, 0, ',', '.') }}</td>
         </tr>
         <tr>
-          <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make($negosiasiHarga->harga_negosiasi)) }} Rupiah )</td>
+          <td style="text-align: right" colspan="4">Jumlah Total</td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+          <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make($data['negosiasiHarga']->harga_total)) }} Rupiah )</td>
         </tr>
       </tbody>
       </table>
@@ -150,14 +154,14 @@
        </tr>
       <tr>
         <td></td>
-        <td>{{ ucwords(Auth::user()->desa) .', '. $negosiasiHarga->tgl_perjanjian->isoFormat('D MMMM Y') }}</td>
+        <td>{{ ucwords(Auth::user()->desa) .', '. $data['negosiasiHarga']->tgl_perjanjian->isoFormat('D MMMM Y') }}</td>
       </tr>
       <tr>
         <td>PIHAK KEDUA</td>
         <td>PIHAK PERTAMA</td>
       </tr>
       <tr>
-        <td>{{ $penyedia->nama_penyedia }}</td>
+        <td>{{ $data['penyedia']->nama_penyedia }}</td>
         <td>PKA</td>
       </tr>
       <tr>
@@ -165,8 +169,8 @@
         <td></td> 
       </tr>
       <tr>
-        <td>{{ $penyedia->nama_pemilik }}</td>
-        <td>{{ $kegiatan->pka }}</td>
+        <td>{{ $data['penyedia']->nama_pemilik }}</td>
+        <td>{{ $data['kegiatan']->pka }}</td>
       </tr>
 
      </table>

@@ -25,101 +25,127 @@
                         <x-slot name="header">
                             <th class="w-xl">No</th>
                             <th class="w-xl">Kode Rekening</th>
-                            <th class="w-3xl">Kegiatan</th>
-                            <th class="w-3xl">Dokumen PBJ</th>                           
+                            <th class="w-5xl">Kegiatan</th>
                         </x-slot>
                         
                         @forelse ( $kegiatans as $kegiatan )
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $kegiatan['rekening_apbdes'] }}</td>
-                            <td>{{ $kegiatan['kegiatan'] }} <br><br><a href="{{ route('kegiatan.edit', $kegiatan['id']) }}"> <x-bladewind::button size='tiny' outline="true" can_submit="true" color="yellow" size='tiny'>Ubah</x-bladewind::button></a>
-                            <form class="inline" action="{{ route('kegiatan.show', $kegiatan['id']) }}" method="post" >
-                                            @csrf
-                                            @method('GET')
-                                            <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">Buat</x-bladewind::button> 
-                                        </form>    
-                            <form action="{{ route('kegiatan.destroy', $kegiatan['id']) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <x-bladewind::button size='tiny' outline="true" can_submit="true" color="red" size='tiny'>Hapus</x-bladewind::button>
-                                </form>
+                            <td>
+                                {{ $kegiatan['rekening_apbdes'] }} <br>
+                                <a href="{{ route('kegiatan.edit', $kegiatan['id']) }}"> <x-bladewind::button size='tiny' outline="true" can_submit="true" color="yellow" size='tiny'>Ubah</x-bladewind::button></a>
+                                <br>
+                                <form action="{{ route('kegiatan.destroy', $kegiatan['id']) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <x-bladewind::button size='tiny' outline="true" can_submit="true" color="red" size='tiny'>Hapus</x-bladewind::button>
+                                </form>                                
                             </td>
                             <td>
-                                <ul>
-                                    <li class="mb-4"><x-bladewind::tag outline="true" shade="dark" label="Pemberitahuan kepada 2 Penyedia"  /><br>
-                                        <form class="inline" action="{{ route('pemberitahuan.create', $kegiatan['id']) }}" method="post" >
+                                <!-- <x-bladewind::tag outline="true" shade="dark" label="{{ $kegiatan['kegiatan'] }}"  /><br> -->
+                                <h1>{{ $kegiatan['kegiatan'] }}</h1><br>
+                                                          
+                                <ol>
+                                    <li class="mb-4">                                        
+                                        @if(!$kegiatan->pemberitahuan)
+                                            <form class="inline" action="{{ route('pemberitahuan.create', $kegiatan['id']) }}" method="post" >
+                                                @csrf
+                                                @method('POST')
+                                                <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">Buat</x-bladewind::button> 
+                                            </form>
+                                        @else                                                                                   
+                                            <form class="inline" action="{{ route('pemberitahuan.edit', $kegiatan['id']) }}" method="post" >
+                                                @csrf
+                                                @method('POST')
+                                                <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">Ubah</x-bladewind::button> 
+                                            </form>
+                                            <form class="inline" action="{{ route('pemberitahuan.destroy', $kegiatan['id']) }}" method="post" >
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">Hapus</x-bladewind::button> 
+                                            </form>
+                                            
+                                                <a target="_blank" href="{{ route('pemberitahuan.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">Cetak</x-bladewind::button></a>
+                                        @endif
+                                        1. Pemberitahuan kepada 2 Penyedia"
+                                            </li>
+                                            @if($kegiatan->pemberitahuan)
+                                            <li class="mb-4">                                            
+                                            @if(!$kegiatan->penawaran_1 || !$kegiatan->penawaran_2)
+                                            
+                                            <form class="inline" action="{{ route('penawaran.create', $kegiatan['id']) }}" method="post">
+                                                @csrf
+                                                @method('POST')
+                                                <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">Buat</x-bladewind::button>
+                                            </form>
+                                            @else
+                                                                                
+                                            <form class="inline" action="{{ route('penawaran.edit', $kegiatan['id']) }}" method="post">
+                                                @csrf
+                                                @method('POST')
+                                                <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">Ubah</x-bladewind::button>
+                                            </form>
+                                            <form class="inline" action="{{ route('penawaran.destroy', $kegiatan['id']) }}" method="post" >
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
+                                            </form>
+                                            <a target="_blank" href="{{ route('penawaran.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">Cetak</x-bladewind::button></a>
+                                            @endif
+                                            2. Penawaran Harga dari 2 Penyedia
+                                        </li> 
+                                        @endif
+                                        @if($kegiatan->penawaran_1 && $kegiatan->penawaran_2)
+                                        <li class="mb-4">                                            
+                                            @if(!$kegiatan->negosiasiHarga)
+                                            <form class="inline" action="{{ route('negosiasi.create', $kegiatan['id']) }}" method="post">
+                                                @csrf
+                                                @method('post')
+                                                <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green" >Buat</x-bladewind::button>
+                                            </form>
+                                            @else
+                                            <form class="inline" action="{{ route('negosiasi.edit', $kegiatan['id']) }}" method="post">
+                                                @csrf
+                                                @method('POST')
+                                                <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow" >Ubah</x-bladewind::button>
+                                            </form>
+                                                <form class="inline" action="{{ route('negosiasi.destroy', $kegiatan['id']) }}" method="post" >
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
+                                                </form>
+                                        
+                                                <a target="_blank" href="{{ route('negosiasi.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo" >cetak</x-bladewind::button></a>
+                                            @endif
+                                            3. Negosiasi Harga dengan Penyedia Terpilih
+                                        </li>
+                                        @endif
+                                        @if($kegiatan->negosiasiHarga)                                        
+                                        <li class="mb-4">
+                                            @if(!$kegiatan->pembayaran)
+                                        <form class="inline" action="{{ route('pembayaran.create', $kegiatan['id']) }}" method="post">
                                             @csrf
-                                            @method('POST')
-                                            <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">Buat</x-bladewind::button> 
+                                            @method('post')
+                                            <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green" >buat</x-bladewind::button>
                                         </form>
-                                        <form class="inline" action="{{ route('pemberitahuan.edit', $kegiatan['id']) }}" method="post" >
+                                        @else
+                                        <form class="inline" action="{{ route('pembayaran.edit', $kegiatan['id']) }}" method="post">
                                             @csrf
-                                            @method('POST')
-                                            <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">ubah</x-bladewind::button> 
+                                            @method('post')
+                                            <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow" >Ubah</x-bladewind::button>
                                         </form>
-                                        <form class="inline" action="{{ route('pemberitahuan.destroy', $kegiatan['id']) }}" method="post" >
-                                            @csrf
-                                            @method('DELETE')
-                                            <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
-                                        </form>
-                                        <a target="_blank" href="{{ route('pemberitahuan.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">Cetak</x-bladewind::button></a> 
+                                            <form class="inline" action="{{ route('pembayaran.destroy', $kegiatan['id']) }}" method="post" >
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">Hapus</x-bladewind::button> 
+                                            </form>
+                                            
+                                            <a target="_blank" href="{{ route('pembayaran.render', $kegiatan['id']) }}"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo" >cetak</x-bladewind::button></a>
+                                        @endif
+                                        4. Pembayaran
                                     </li>
-                                    <li class="mb-4"><x-bladewind::tag outline="true" shade="dark" label="Penawaran Harga dari 2 Penyedia"  /><br>
-                                    <form class="inline" action="{{ route('penawaran.create', $kegiatan['id']) }}" method="post">
-                                        @csrf
-                                        @method('POST')
-                                        <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">Buat</x-bladewind::button>
-                                    </form>
-                                    <form class="inline" action="{{ route('penawaran.edit', $kegiatan['id']) }}" method="post">
-                                        @csrf
-                                        @method('POST')
-                                        <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">Ubah</x-bladewind::button>
-                                    </form>
-                                    <form class="inline" action="{{ route('penawaran.destroy', $kegiatan['id']) }}" method="post" >
-                                        @csrf
-                                        @method('DELETE')
-                                        <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
-                                    </form>
-                                    <a target="_blank" href="{{ route('penawaran.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">Cetak</x-bladewind::button></a>
-                                </li>
-                                <li class="mb-4"><x-bladewind::tag outline="true" shade="dark" label="Negosiasi Harga dengan Penyedia Terpilih"  /><br>
-                                <form class="inline" action="{{ route('negosiasi.create', $kegiatan['id']) }}" method="post">
-                                    @csrf
-                                    @method('post')
-                                    <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green" >Buat</x-bladewind::button>
-                                </form>
-                                <form class="inline" action="{{ route('negosiasi.edit', $kegiatan['id']) }}" method="post">
-                                    @csrf
-                                    @method('POST')
-                                    <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow" >Ubah</x-bladewind::button>
-                                </form>
-                                    <form class="inline" action="{{ route('negosiasi.destroy', $kegiatan['id']) }}" method="post" >
-                                        @csrf
-                                        @method('DELETE')
-                                        <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
-                                    </form>
-                                    <a target="_blank" href="{{ route('negosiasi.render', $kegiatan['id']) }}" class="text-blue-500 hover:underline"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo" >cetak</x-bladewind::button></a>
-                                </li>
-                                <li class="mb-4"><x-bladewind::tag outline="true" shade="dark" label="Pembayaran"  /><br>
-                                <form class="inline" action="{{ route('pembayaran.create', $kegiatan['id']) }}" method="post">
-                                    @csrf
-                                    @method('post')
-                                    <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green" >buat</x-bladewind::button>
-                                </form>
-                                <form class="inline" action="{{ route('pembayaran.edit', $kegiatan['id']) }}" method="post">
-                                    @csrf
-                                    @method('post')
-                                    <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow" >ubah</x-bladewind::button>
-                                </form>
-                                    <form class="inline" action="{{ route('pembayaran.destroy', $kegiatan['id']) }}" method="post" >
-                                        @csrf
-                                        @method('DELETE')
-                                        <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">hapus</x-bladewind::button> 
-                                    </form>
-                                        <a target="_blank" href="{{ route('pembayaran.render', $kegiatan['id']) }}"><x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo" >cetak</x-bladewind::button></a>
-                                    </li>
-                                </ul>
+                                        @endif
+                                </ol>
                             </td>                            
                         </tr>
                             

@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
 use App\Models\NegosiasiHarga;
 use App\Models\PenawaranHarga;
+use App\Models\Penawaran_1;
+use App\Models\Penawaran_2;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
@@ -30,17 +32,21 @@ class PenawaranHargaController extends Controller
      */
     public function create($id)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
+        $kegiatan = Kegiatan::with('pemberitahuan')->with('penawaran')->find($id);
         if (!$kegiatan) {
             noty()->error('Kegiatan tidak ditemukan');
             return redirect()->back();
         }
-        
-        $pemberitahuan = $kegiatan->pemberitahuan;
-        if (!$pemberitahuan) {
+        if($kegiatan->penawaran) {
+            noty()->warning('Penawaran sudah ada, klik ubah untuk mengubah data');
+            return redirect()->back();
+        }
+        if (!$kegiatan->pemberitahuan) {
             noty()->error('Tidak ada pemberitahuan terkait');
             return redirect()->back();
         }
+        
+        $pemberitahuan = $kegiatan->pemberitahuan;
         
         return view('form.penawaran-harga', [
             'kegiatan' => $kegiatan,
@@ -76,35 +82,36 @@ class PenawaranHargaController extends Controller
 
         
         if($request->pemenang){
-            PenawaranHarga::updateOrCreate([
-                'kegiatan_id' => $kegiatan_id ,
-            ], [
+            $penawaran = Penawaran_1::where('kegiatan_id', $kegiatan_id)->first();
+            
+            Penawaran_1::updateOrCreate([
+                'kegiatan_id' => $kegiatan_id ], [
                 'pemberitahuan_id' => $request->pemberitahuan_id ,
-                'penyedia_1' => $request->id_penyedia,
-                'tgl_penawaran_1' => Carbon::parse($request->tgl_surat_penawaran),
-                'no_penawaran_1' => $request->no_penawaran,
-                'harga_penawaran_1' => $totalHarga,
-                'item_penawaran_1' => $item_penawaran
+                'penyedia_id' => $request->penyedia,
+                'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
+                'no_penawaran' => $request->no_penawaran,
+                'nilai_penawaran' => $totalHarga,
+                'item' => $item_penawaran
             ]);
-            // NegosiasiHarga::updateOrCreate([
-            //     'pemberitahuan_id' => $request->pemberitahuan_id ],
-            //     [
-            //     'id_penyedia' => $request->id_penyedia,                
-            // ]);
-                   
-        }
+            // if ($penawaran->penyedia_id != $request->penyedia && $penawaran->exists) {
+            //     noty()->warning('Penawaran pemenang berhasil diubah');
+            //     } else {
+            //     noty()->success('Penawaran pemenang berhasil disimpan');
+                  
+            // }
+        };
         
         if(!$request->pemenang){
-            PenawaranHarga::updateOrCreate([
+            Penawaran_2::create([
                 'kegiatan_id' => $kegiatan_id ,
-            ],[   
                 'pemberitahuan_id' => $request->pemberitahuan_id ,
-                'penyedia_2' => $request->id_penyedia,             
-                'tgl_penawaran_2' => Carbon::parse($request->tgl_surat_penawaran),
-                'no_penawaran_2' => $request->no_penawaran,
-                'harga_penawaran_2' => $totalHarga,
-                'item_penawaran_2' => $item_penawaran
+                'penyedia_id' => $request->penyedia,             
+                'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
+                'no_penawaran' => $request->no_penawaran,
+                'nilai_penawaran' => $totalHarga,
+                'item' => $item_penawaran
             ]);
+            noty()->success('Penawaran pembanding berhasil disimpan');
         }
         
      return redirect()->route('menu.kegiatan');         
@@ -203,14 +210,16 @@ class PenawaranHargaController extends Controller
      */
     public function destroy(string $id)
     {
-        $penawaran = PenawaranHarga::where('kegiatan_id', $id)->first();
+        $penawaran_1 = Penawaran_1::where('kegiatan_id', $id)->first();
+        $penawaran_2 = Penawaran_2::where('kegiatan_id', $id)->first();
 
-        if (!$penawaran) {
+        if (!$penawaran_1 || !$penawaran_2) {
             flash()->error('Penawaran tidak ditemukan.');
             return redirect()->back();
         }
 
-        $penawaran->delete();
+        $penawaran_1->delete();
+        $penawaran_2->delete();
 
         flash()->success('Penawaran berhasil dihapus.');
         return redirect()->route('menu.kegiatan');
@@ -218,25 +227,25 @@ class PenawaranHargaController extends Controller
     public function render(string $id)
     {
         
-            $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($id);
+            $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran_1', 'penawaran_2')->find($id);
             if (!$kegiatan) {
                 flash()->error('Kegiatan tidak ditemukan');
                 return back();
             }       
     
         
-            $penawaran = $kegiatan->penawaran;        
-            if(!$penawaran){
-                flash()->error('Tidak ada penawaran yang relevan');
-                return back();
-            }
+            // $penawaran = $kegiatan->penawaran_1;        
+            // if(!$penawaran){
+            //     flash()->error('Tidak ada penawaran yang relevan');
+            //     return back();
+            // }
                             
-            $penyedia1 = Penyedia::find($penawaran->penyedia_1);
+            $penyedia1 = Penyedia::find($kegiatan->penawaran_1->penyedia_id);
             if(!$penyedia1){
                 flash()->error('Penyedia yang ditunjuk belum diset');
                 return back();
             }
-            $penyedia2 = Penyedia::find($penawaran->penyedia_2);
+            $penyedia2 = Penyedia::find($kegiatan->penawaran_2->penyedia_id);
             if(!$penyedia2){
                 flash()->error('Penyedia pembanding belum diset');
                 return back();
@@ -248,12 +257,13 @@ class PenawaranHargaController extends Controller
             }
             
                 
-            $jumlah = $penawaran->harga_penawaran_1;
-            $jumlah_2 = $penawaran->harga_penawaran_2;
-            $item = $penawaran->item_penawaran_1;
-            $item_2 = $penawaran->item_penawaran_2;
+            $jumlah = $kegiatan->penawaran_1->nilai_penawaran;
+            $jumlah_2 = $kegiatan->penawaran_2->nilai_penawaran;
+            $item = $kegiatan->penawaran_1->item;
+            $item_2 = $kegiatan->penawaran_2->item;
             $pdf = Pdf::loadView('pdf.penawaran-harga', [
-                'penawaran' => $penawaran,
+                'penawaran_1' => $kegiatan->penawaran_1,
+                'penawaran_2' => $kegiatan->penawaran_2,
                 'kegiatan' => $kegiatan,
                 'penyedia1' => $penyedia1,
                 'penyedia2' => $penyedia2,

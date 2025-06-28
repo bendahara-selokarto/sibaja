@@ -32,11 +32,11 @@ onerror="this.src='{{ asset('') }}'"
         <td></td>
         <td style="width: 6cm"></td>
         <td></td>
-        <td style='text-align:right'>{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($penawaran->tgl_penawaran_1)->isoFormat('D MMMM Y') }}</td>
+        <td style='text-align:right'>{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y') }}</td>
     </tr>
     <tr>
         <td>Nomor</td>
-        <td>: {{ $penawaran->no_penawaran_1}}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
+        <td>: {{ $penawaran_1->no_penawaran}}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
         <td></td>
         <td>Kepada</td>
     </tr>
@@ -44,7 +44,7 @@ onerror="this.src='{{ asset('') }}'"
         <td>Lampiran</td>
         <td>: -</td>
         <td>Yth</td>
-        <td rowspan="3">Ketua Tim Pelaksana Kegiatan {{ $penawaran->kegiatan }}</td>
+        <td rowspan="3">Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }}</td>
     </tr>
     <tr>
         <td>Perihal</td>
@@ -93,7 +93,7 @@ onerror="this.src='{{ asset('') }}'"
         </tr> 
     </table>
    
-    <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pelaksana Kegiatan {{ $penawaran->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
+    <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
     <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format($jumlah, 0, ',', '.') }} ({{ Terbilang::make($jumlah)  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
     <p>Sesuai dengan persyaratan yang diminta bersama ini kami sampaikan :</p>
     <ol type="a">

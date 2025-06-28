@@ -6,23 +6,40 @@
     </x-slot>
     <div class="py-12">       
     @foreach ( $pemberitahuan->penyedia as $p )
-        @php
-    
+        @php    
             $nama_penyedia = App\Models\Penyedia::select('nama_penyedia')->where('id', $p)->first();
             
-        @endphp
+        @endphp 
+    @endforeach
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        <h3>Penyedia : {{ $nama_penyedia->nama_penyedia }}</h3>
-                        
-                        <form action="{{ route('penawaran.store') }}" class="survey" method="POST" id="form_id">
+                    <div class="max-w-xl">                        
+                <form action="{{ route('penawaran.store') }}" class="survey" method="POST" id="form_id">
                             @method('post')
                             @csrf
-                        
+                        <div>
+                            <x-input-label for="penyedia" :value="__('Penyedia')" />
+                            <select id="penyedia" name="penyedia" class="mt-1 block w-full" required>
+                                <option value="">pilih penyedia</option>
+                                @foreach ( $pemberitahuan->penyedia as $p )
+                                    @php    
+                                        $nama_penyedia = App\Models\Penyedia::select('nama_penyedia')->where('id', $p)->first();
+                                    @endphp 
+                                        <option value="{{$p}}">{{$nama_penyedia->nama_penyedia}}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error class="mt-2" :messages="$errors->get('penyedia')" />
+                        </div>
+                        <div>
+                        <label for="checkbox" class="inline-flex items-center">
+                            <input type="checkbox" id="checkbox" name="pemenang" value="" class="form-checkbox">
+                            <span class="ml-2">Tetapkan sebagai Pemenang</span>
+                        </label>
+                        </div>
+                        <br>                        
                         <div>
                             <input type="hidden" name="pemberitahuan_id" value="{{ $pemberitahuan->id}}">                            
-                            <input type="hidden" name="id_penyedia" value="{{ $p}}">
+                            <!-- <input type="hidden" name="id_penyedia" value="{{ $p}}"> -->
                         </div>
                         <div>
                             <x-input-label for="tgl_surat_penawaran" :value="__('Tanggal Surat Penawaran')" />
@@ -58,7 +75,7 @@
                                     <td ><input type="hidden" value="" id="total_input" name='total_input'></td>                             
                                                     
                                 </tr>
-                                @endforeach
+                                
                                 <tr>
                                     <td></td>
                                     <td></td>
@@ -67,12 +84,11 @@
                                     <td>Total</td>
                                     <td class="text-right" id="total"></td>
                                 </tr>
-                        </table>
+                        </table>                        
                         <div>
-                        <x-bladewind::checkbox label="Tetapkan {{ $nama_penyedia->nama_penyedia }} sebagai Pemenang" name="pemenang" value="{{ $p }}" />                    
-                        </div>
-                        <div>
-                            <x-primary-button>Simpan</x-primary-button>
+                            <button type="submit" class="btn btn-primary">
+                                Simpan
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -155,7 +171,19 @@ inputsHargaSatuan.forEach(function (input) {
         document.getElementById('total_input').value = total;
     });
 });
-
+document.getElementById('penyedia').addEventListener('change', function() {
+    var selectedOption = this.options[this.selectedIndex];
+    var selectedText = selectedOption.text;
+    var selectedValue = selectedOption.value;
+    var checkbox = document.getElementById('checkbox');
+    var checkboxLabelSpan = document.querySelector('label[for="checkbox"] span.ml-2');
+    if (checkboxLabelSpan) {
+        checkboxLabelSpan.textContent = 'Tetapkan sebagai Pemenang: ' + selectedText;
+    }
+    if (checkbox) {
+        checkbox.value = selectedValue;
+    }
+});
     </script>
 @endPushOnce
 </x-app-layout>

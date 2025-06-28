@@ -13,17 +13,10 @@
                     @csrf                    
                     <div class="py-12">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                            <p>{{ $kegiatan->rekening_apbdes  }}</p>
-                            <p>{{ $kegiatan->kegiatan  }}</p>
+                            <p>{{ $kegiatan->rekening_apbdes  }} : {{ $kegiatan->kegiatan  }}</p>
                             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">                                
                                 <div>
                                     <x-text-input id="id" name="kegiatan_id" type="hidden" class="mt-1 block w-full" value="{{ $kegiatan->id  }}" />
-                                </div>
-                                <div>
-                                    <x-input-label for="harga_negosiasi" :value="__('Harga Negosiasi')" />
-                                    <x-text-input id="harga_negosiasi" name="harga_negosiasi" type="number" value="{{ $kegiatan->harga_penawaran }}" min="0" class="mt-1 inline sm:block" required autocomplete="harga_negosiasi" />
-                                    <div class="mt-1 inline sm:block text-green-700" id="format_curency"></div>
-                                    <x-input-error class="mt-2" :messages="$errors->get('harga_negosiasi')" />
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" /> 
@@ -44,6 +37,35 @@
                                     <x-input-label for="tgl_akhir_perjanjian" :value="__('Tanggal Akhir Perjanjian')" />
                                     <x-text-input id="tgl_akhir_perjanjian" name="tgl_akhir_perjanjian" type="date" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 block" required autocomplete="tgl_akhir_perjanjian" />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
+                                </div>
+                                <div>
+                                    <table class="w-full">
+                                        <tr>
+                                            <th class="w-64">Uraian</th>
+                                            <th class="w-64">Vol/Sat</th>
+                                            <th class="w-64">Harga Penawaran</th>
+                                            <th class="w-64">Harga Negosiasi</th>
+                                        </tr>
+                                        @for ($i = 0; $i < count($item_penawaran['uraian']); $i++) 
+                                        <tr>
+                                            <td>
+                                                {{ $item_penawaran['uraian'][$i]}}
+                                            </td>     
+                                            <td>
+                                                {{ $item_penawaran['volume'][$i]}} {{ $item_penawaran['satuan'][$i]}}
+                                            </td>  
+                                            <!-- <td>
+                                                {{ $item_penawaran['satuan'][$i]}}
+                                            </td>     -->
+                                            <td>
+                                                {{ $item_penawaran['harga_satuan'][$i]}}
+                                            </td>         
+                                            <td>
+                                                <input type="number" name="harga_satuan_negosiasi[]"  required>
+                                            </td>                        
+                                        </tr>                                     
+                                        @endfor
+                                    </table>                                  
                                 </div>
                                 <div>                               
                                     <x-primary-button>Simpan</x-primary-button>

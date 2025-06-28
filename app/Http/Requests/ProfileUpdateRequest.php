@@ -17,6 +17,15 @@ class ProfileUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'desa' => ['nullable', 'string', 'max:255'],
+            'kecamatan' => ['nullable', 'string', 'max:255'],
+            'kepala_desa' => ['nullable', 'string', 'max:255'],
+            'sekretaris_desa' => ['nullable', 'string', 'max:255'],
+            'bendahara_desa' => ['nullable', 'string', 'max:255'],
+            'alamat_kantor' => ['nullable', 'string', 'max:255'],
+            'website' => ['nullable', 'string', 'max:255'],
+            'kode_desa' => ['nullable', 'string', 'max:255'],
+            'tahun_anggaran' => ['nullable', 'string', 'max:255'],
             'email' => [
                 'required',
                 'string',
@@ -25,6 +34,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+
         ];
     }
 }

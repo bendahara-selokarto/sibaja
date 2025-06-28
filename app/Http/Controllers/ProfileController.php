@@ -27,25 +27,27 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // Update user attributes with validated data
+        $user->fill($request->validated());
+
+        // If email changed, reset verification
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
+        // Simpan atribut tambahan jika ada di request
+        $user->desa = $request->input('desa', $user->desa);
+        $user->kecamatan = $request->input('kecamatan', $user->kecamatan);
+        $user->kepala_desa = $request->input('kepala_desa', $user->kepala_desa);
+        $user->sekretaris_desa = $request->input('sekretaris_desa', $user->sekretaris_desa);
+        $user->bendahara_desa = $request->input('bendahara_desa', $user->bendahara_desa);
+        $user->alamat_kantor = $request->input('alamat_kantor', $user->alamat_kantor);
+        $user->website = $request->input('website', $user->website);
+        $user->kode_desa = $request->input('kode_desa', $user->kode_desa);
+        $user->tahun_anggaran = $request->input('tahun_anggaran', $user->tahun_anggaran);
 
-        // Simpan atribut tambahan
-        $user->desa = $request->input('desa');
-        $user->kecamatan = $request->input('kecamatan');
-        $user->kepala_desa = $request->input('kepala_desa');
-        $user->sekretaris_desa = $request->input('sekretaris_desa');
-        $user->bendahara_desa = $request->input('bendahara_desa');
-        $user->alamat_kantor = $request->input('alamat_kantor');
-        $user->website = $request->input('website');
-        $user->kode_desa = $request->input('kode_desa');
-        $user->tahun_anggaran = $request->input('tahun_anggaran');
-
-        $request->user()->save();
+        $user->save();
         // Display a success toast with no title
         flash()->success('profil berhasil diubah.');  
 
