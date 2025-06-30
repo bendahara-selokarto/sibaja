@@ -130,7 +130,7 @@
             Mengetahui,     <br>
             Kepala Desa {{ Auth::user()->desa }}   <br>
             Selaku <br>
-            Pemegang Kekuasaan Keuangan Desa <br>
+            Pemegang Kekuasaan Pengelolaan Keuangan Desa <br>
             <br>
             <br>
             <br>

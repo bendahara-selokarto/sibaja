@@ -2,10 +2,10 @@
     <table style="width:100%">
         <tr>           
             <td style="text-align: center">
-                <h3 style="text-align: center; margin: 4pt;">TIM PELAKSANA KEGIATAN</h3>
-                <h3>DESA {{ strToUpper( Auth::user()->desa )}}</h3>
-                <!-- <h3 style="margin: 4pt;">{{ strToUpper($kegiatan) ?? ''}}</h3> -->
-                <p style="margin: 4pt;">{{ Auth::user()->alamat_kantor }}</p>
+                <h3 style="text-align: center; margin: 2pt;">TIM PELAKSANA KEGIATAN</h3>
+                <h3 style="text-align: center; margin: 2pt;">DESA {{ strToUpper( Auth::user()->desa )}}</h3>
+                <h4 style="text-align: center; margin: 2pt;">KECAMATAN PEALUNGAN</h4>
+                <p  style="text-align: center; margin: 2pt;">{{ Auth::user()->alamat_kantor }}</p>
             </td>
         </tr>       
     </table>
