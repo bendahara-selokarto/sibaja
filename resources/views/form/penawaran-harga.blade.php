@@ -75,6 +75,7 @@
                                     <td ><input type="hidden" value="" id="total_input" name='total_input'></td>                             
                                                     
                                 </tr>
+                                @endforeach
                                 
                                 <tr>
                                     <td></td>
@@ -95,7 +96,7 @@
             </div>
         </div> 
         <br>      
-    @endforeach
+    
 </div>
 @pushOnce('scripts')
     <script>

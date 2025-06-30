@@ -18,25 +18,39 @@
     </style>
    </head>
    <body>   
-   <table style="width: 100%">
+ 
+@if(!empty($penyedia1->kop_surat))
+<img 
+src="storage/{{$penyedia1->kop_surat }}" 
+alt=" " 
+style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
+onerror="this.src='{{ asset('') }}'" 
+>
+@else
+
+<table style="width: 100%">
     <tr>
-        <td style="width: 120px">            
+        <td style="width: 100px">            
             <img 
                 src="storage/{{$penyedia->logo_penyedia }}" 
                 class="logo-kop-desa" 
                 alt=" " 
-                width="120px" 
+                width="100px" 
                 onerror="this.src='{{ asset('') }}'" 
             >
         </td>       
         <td>
            <h2 style="text-align: center; margin: 0cm;">{{ $penyedia->nama_penyedia }}</h2>
-           <h3 style="text-align: center; margin: 0cm;">TOKO BAHAN BANGUNAN</h3>
            <h4 style="text-align: center; margin: 0cm;">{{ $penyedia->alamat_penyedia }}</h4>
            <h4 style="text-align: center; margin: 0cm; color: blue;">HP : {{  $penyedia->nomor_hp}}</h4>
         </td>
     </tr>
 </table>
+<hr>
+@endif
+
+
+
 <hr>
 <table style="widht: 100%">
     <tr>      

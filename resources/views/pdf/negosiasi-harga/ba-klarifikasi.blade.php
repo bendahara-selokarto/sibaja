@@ -83,7 +83,7 @@
     <tr>
         <td>Harga Negosiasi</td>
         <td>:</td>
-        <td>Rp. {{ number_format($data['negosiasiHarga']->harga_negosiasi, 0, ',', '.')  }}</td>
+        <td>Rp. {{ number_format($data['negosiasiHarga']->harga_negosiasi, 0, ',', '.')  }} ( {{ Terbilang::make($data['negosiasiHarga']->harga_negosiasi) }} rupiah )</td>
     </tr>
 </table>
 

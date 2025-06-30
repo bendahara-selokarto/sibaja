@@ -20,10 +20,10 @@
             @include('pdf.penawaran-harga.surat')
         </div>
         <div style="page-break-before: always;">
-            @include('pdf.penawaran-harga.pakta-integritas')
+            @include('pdf.penawaran-harga.isian')
         </div>
         <div style="page-break-before: always;">
-            @include('pdf.penawaran-harga.isian')
+            @include('pdf.penawaran-harga.pakta-integritas')
         </div>
         <div style="page-break-before: always;">
             @include('pdf.penawaran-harga.rincian')
@@ -34,10 +34,10 @@
                 @include('pdf.penawaran-harga2.surat')
             </div>
             <div style="page-break-before: always;">
-                @include('pdf.penawaran-harga2.pakta-integritas')
+                @include('pdf.penawaran-harga2.isian')
             </div>
             <div style="page-break-before: always;">
-                @include('pdf.penawaran-harga2.isian')
+                @include('pdf.penawaran-harga2.pakta-integritas')
             </div>
             <div style="page-break-before: always;">
                 @include('pdf.penawaran-harga2.rincian')

@@ -25,7 +25,7 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td style="text-indent: 2mm; border-bottom: 1px dashed black; width: 3.6cm">No.{{ rand(20, 250) }}</td>
+                            <td style="text-indent: 2mm; border-bottom: 1px dashed black; width: 3.6cm">No. </td>
                             <td style="width: 5mm"></td>                           
                             <td ></td>
                             <td ></td>
@@ -34,7 +34,7 @@
                             <td style="text-indent: 2mm">Telah Terima Dari</td>
                             <td style="width: 5mm">:</td>                           
                             {{-- <td style="border-bottom: 1px dashed black">PKA {{ session('sub_bidang') }}</td> --}}
-                            <td style="border-bottom: 1px dashed black">PKA ..</td>
+                            <td style="border-bottom: 1px dashed black">PKA Desa {{ ucwords(Auth::user()->desa)}}</td>
                             <td style=""></td>
                         </tr>                       
                         <tr>
@@ -77,8 +77,7 @@
                         <tr>
                             <td style="text-indent: 2mm"></td>
                             <td style="width: 5mm"></td>                           
-                            {{-- <td style="text-align:center; text-indent: 2cm">{{ session('penyedia_1') }}</td> --}}
-                            <td style="text-align:center; text-indent: 2cm">{{ ucwords(Auth::user()->desa) . Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</td>
+                            <td style="text-align:center; text-indent: 2cm">{{ ucwords(Auth::user()->desa) .", ". Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</td>
                             <td style=""></td>
                         </tr>                       
                         <tr>
@@ -106,6 +105,5 @@
     </div>
 </body>
 </html>
-@include('pdf.pembayaran.invoice')
-{{-- <div style="page-break-after: always;"></div> --}}
+@include('pdf.pembayaran.new-invoice')
 

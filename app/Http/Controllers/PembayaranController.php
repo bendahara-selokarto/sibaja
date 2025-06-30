@@ -113,7 +113,8 @@ class PembayaranController extends Controller
 
         try {
             $tgl_pembayaran = $kegiatan->pembayaran->tgl_pembayaran_cms;
-            $item = $kegiatan->penawaran_1->item;
+            $items = $kegiatan->negosiasiHarga->item;
+            $item = json_decode($items, true);
             if (!$item) {
                 flash()->error('belum ada item');
                 return redirect()->back();
@@ -122,10 +123,12 @@ class PembayaranController extends Controller
             flash()->error('belum ada pembayaran');
             return redirect()->back();
         }
-        
+        $negosiasiHarga = $kegiatan->negosiasiHarga;
+        $negosiasiHarga->ppn = $negosiasiHarga->harga_negosiasi *  config('pajak.ppn') ;
+        $negosiasiHarga->pph_22 = $negosiasiHarga->harga_negosiasi *  config('pajak.pph_22') ;
+                
 
-
-        $pdf = Pdf::loadView('pdf.pembayaran.kwitansi', compact('kegiatan', 'penyedia' , 'item'));
+        $pdf = Pdf::loadView('pdf.pembayaran.kwitansi', compact('kegiatan', 'negosiasiHarga', 'penyedia' , 'item'));
         $filename = '4. PEMBAYARAN - (' . $kegiatan->kegiatan . ')';
         // Replace invalid filename characters with underscore
         $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
