@@ -32,7 +32,7 @@ onerror="this.src='{{ asset('') }}'"
         <td></td>
         <td style="width: 6cm"></td>
         <td></td>
-        <td style='text-align:right'>{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y') }}</td>
+        <td style='text-align:right'>{{ ucwords($penyedia1->kabupaten) }}, {{ Illuminate\Support\Carbon::parse($penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y') }}</td>
     </tr>
     <tr>
         <td>Nomor</td>
@@ -94,7 +94,7 @@ onerror="this.src='{{ asset('') }}'"
     </table>
    
     <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
-    <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format($jumlah, 0, ',', '.') }} ({{ Terbilang::make($jumlah)  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
+    <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format($jumlah_total_1 , 0, ',', '.') }} ({{ Terbilang::make($jumlah_total_1)  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
     <p>Sesuai dengan persyaratan yang diminta bersama ini kami sampaikan :</p>
     <ol type="a">
         <li>Form isian pengadaan barang/jasa</li>
@@ -113,7 +113,7 @@ dan akan tunduk pada semua ketentuan yang berlaku.
             <td style="width: 50%; text-align: center;"></td>
             <td style="width: 50%; text-align: center;">
                 <p style="padding: 0%">Hormat Kami</p>
-                <p style="padding: 0%">{{ $penyedia1->nama_penyedia }}</p>
+                <p style="padding: 0%">{{ $penyedia1->jabata_pemilik ." " .$penyedia1->nama_penyedia }}</p>
                 <br><br><br>
                 <p><strong>{{ $penyedia1->nama_pemilik }}</strong></p>
             </td>

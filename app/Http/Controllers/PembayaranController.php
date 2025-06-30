@@ -126,6 +126,7 @@ class PembayaranController extends Controller
         $negosiasiHarga = $kegiatan->negosiasiHarga;
         $negosiasiHarga->ppn = $negosiasiHarga->harga_negosiasi *  config('pajak.ppn') ;
         $negosiasiHarga->pph_22 = $negosiasiHarga->harga_negosiasi *  config('pajak.pph_22') ;
+        $negosiasiHarga->total = $negosiasiHarga->harga_negosiasi + $negosiasiHarga->ppn + $negosiasiHarga->pph_22;
                 
 
         $pdf = Pdf::loadView('pdf.pembayaran.kwitansi', compact('kegiatan', 'negosiasiHarga', 'penyedia' , 'item'));

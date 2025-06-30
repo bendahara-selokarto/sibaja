@@ -187,6 +187,15 @@ class NegosiasiHargaController extends Controller
         };
         $pemberitahuan = $kegiatan->pemberitahuan;
         $penawaranHarga = $kegiatan->penawaran_1;
+        $ppn = config('pajak.ppn');
+        $pph_22 = config('pajak.pph_22');
+        $nilai_ppn = $penawaranHarga->nilai_penawaran * $ppn;
+        $nilai_pph_22 = $penawaranHarga->nilai_penawaran * $pph_22;
+        $penawaranHarga->ppn = $nilai_ppn;
+        $penawaranHarga->pph_22 = $nilai_pph_22;
+        $penawaranHarga->harga_total = floor($penawaranHarga->nilai_penawaran + $nilai_ppn + $nilai_pph_22); 
+        
+        $nilai_total_penawaran = $penawaranHarga->nilai_penawaran + ($penawaranHarga->nilai_penawaran * config('pajak.ppn')) + ($penawaranHarga->nilai_penawaran * config('pajak.pph_22'));
         $negosiasiHarga  = $kegiatan->negosiasiHarga ;
         if(!$pemberitahuan){
             flash()->error('pemberitahuna belum diset');
@@ -227,6 +236,7 @@ class NegosiasiHargaController extends Controller
             'pemberitahuan' => $pemberitahuan,
             'negosiasiHarga' => $negosiasiHarga,
             'penawaranHarga' => $penawaranHarga,
+            'nilai_total_penawaran' => $nilai_total_penawaran,
             'item' => json_decode($negosiasi, true),
         ];
         $pdf = Pdf::loadView('pdf.negosiasi-harga', compact('data'));

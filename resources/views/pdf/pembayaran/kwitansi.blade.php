@@ -40,8 +40,7 @@
                         <tr>
                             <td style="text-indent: 2mm">Uang Sebesar</td>
                             <td style="width: 5mm">:</td>                           
-                            {{-- <td style="border-bottom: 1px dashed black" >{{ Terbilang::make(session('harga_negosiasi')) }}.</td> --}}
-                            <td style="border-bottom: 1px dashed black" >{{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah.</td>
+                            <td style="border-bottom: 1px dashed black" >{{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->total) )}} Rupiah.</td>
                             <td style=""></td>
                         </tr>                       
                         <tr>
@@ -65,7 +64,7 @@
                         <tr>
                             <td style="text-indent: 2mm">Terbilang</td>
                             <td style="width: 5mm">:</td>                           
-                            <td style="border-bottom: 1px dashed black">Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>
+                            <td style="border-bottom: 1px dashed black">Rp. {{ number_format($kegiatan->negosiasiHarga->total, 0, ',', '.') }}</td>
                             <td style=""></td>
                         </tr>                       
                         <tr>

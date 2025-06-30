@@ -10,7 +10,7 @@
     tanggal <strong>{{ Terbilang::make($data['negosiasiHarga']->tgl_negosiasi->isoFormat('D')) }}</strong> 
     bulan <strong>{{ $data['negosiasiHarga']->tgl_negosiasi->isoFormat('MMMM')}} </strong>
     tahun <strong> {{ Terbilang::make($data['negosiasiHarga']->tgl_negosiasi->isoFormat('Y')) }} </strong> 
-    pada pukul Sepuluh WIB s.d Selesai,
+    pada pukul Sepuluh Waktu Indonesia Barat sampai dengan Selesai,
     dengan mengambil tempat di Kantor Kepala Desa {{ ucwords(Auth::user()->desa) }} 
     kami yang bertanda tangan di bawah ini  telah melakukan klarifikasi dan negosiasi harga atas pekerjaan Tahun Anggaran {{ Auth::user()->tahun_anggaran }}</p>
 
@@ -22,7 +22,7 @@
         <td style="width: 0.5cm">1.</td>
         <td style="width: 5.5cm">Nama Perusahaan/Rekanan </td>
         <td style="">:</td>
-        <td style="">{{ $data['penyedia']->nama_penyedia }}<</td>
+        <td style="">{{  $data['penyedia']->nama_penyedia }}<</td>
     </tr>
     <tr>
         <td></td>
@@ -34,13 +34,13 @@
         <td></td>
         <td>Harga Penawaran</td>
         <td>:</td>
-        <td>{{ number_format($data['penawaranHarga']->nilai_penawaran, 0, ',', '.') }} ( {{ Terbilang::make($data['penawaranHarga']->nilai_penawaran) }} rupiah )</td>
+        <td>{{ number_format($data['nilai_total_penawaran'], 0, ',', '.') }} ( {{ Terbilang::make($data['penawaranHarga']->nilai_penawaran) }} rupiah )</td>
     </tr>
     <tr>
         <td></td>
         <td>Harga Negosiasi</td>
         <td>:</td>
-        <td>{{ number_format($data['negosiasiHarga']->harga_negosiasi, 0, ',', '.') }} ( {{ Terbilang::make($data['negosiasiHarga']->harga_negosiasi) }} rupiah )</td>
+        <td>{{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }} ( {{ Terbilang::make($data['negosiasiHarga']->harga_total) }} rupiah )</td>
     </tr>
     <!-- <tr>
         <td style="width: 0.5cm">2.</td>
@@ -83,7 +83,7 @@
     <tr>
         <td>Harga Negosiasi</td>
         <td>:</td>
-        <td>Rp. {{ number_format($data['negosiasiHarga']->harga_negosiasi, 0, ',', '.')  }} ( {{ Terbilang::make($data['negosiasiHarga']->harga_negosiasi) }} rupiah )</td>
+        <td>Rp. {{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.')  }} ( {{ Terbilang::make($data['negosiasiHarga']->harga_total) }} rupiah )</td>
     </tr>
 </table>
 
@@ -93,8 +93,8 @@
 <h3 style="text-align:center; text-decoration:underline">MASING-MASING PIHAK</h3>
 <table style="width: 100%">
     <tr>
-        <td style="text-align: center">Menyetujui,<br>{{ $data['penyedia']->nama_penyedia }} <br><br><br><br><span>{{ $data['penyedia']->nama_pemilik}}</span></td>
-        <td style="text-align: center">Tim Pengelola Kegiatan<br> Ketua <br><br><br><br><span>{{ $data['kegiatan']->ketua_tpk}}</span></td>
+        <td style="text-align: center">Menyetujui,<br>{{ $data['penyedia']->jabata_pemilik ." " .$data['penyedia']->nama_penyedia }} <br><br><br><br><span>{{ $data['penyedia']->nama_pemilik}}</span></td>
+        <td style="text-align: center">Tim Pelaksana Kegiatan<br> Ketua <br><br><br><br><span>{{ $data['kegiatan']->ketua_tpk}}</span></td>
    </tr>
 </table>
 </div>

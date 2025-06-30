@@ -28,6 +28,11 @@
                                 <x-input-error class="mt-2" :messages="$errors->get('alamat_penyedia')" />
                             </div>
                             <div>
+                                <x-input-label for="kabupaten" :value="__('Kabupaten')" />
+                                <x-text-input id="kabupaten" name="kabupaten" type="text" class="mt-1 block w-full" :value="old('kabupaten', $penyedia->kabupaten)" required autocomplete="kabupaten" />
+                                <x-input-error class="mt-2" :messages="$errors->get('kabupaten')" />
+                            </div>
+                            <div>
                                 <x-input-label for="nama_pemilik" :value="__('Nama Pemilik')" />
                                 <x-text-input id="nama_pemilik" name="nama_pemilik" type="text" class="mt-1 block w-full" :value="old('nama_pemilik', $penyedia->nama_pemilik)" required autocomplete="nama_pemilik" />
                                 <x-input-error class="mt-2" :messages="$errors->get('nama_pemilik')" />

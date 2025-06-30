@@ -69,6 +69,7 @@ class PenyediaController extends Controller
             'atas_nama' => $request->atas_nama,
             'logo_penyedia' => $path,
             'kop_surat' => $path_kop,
+            'kabupaten' => $request->kabupaten,
             ];
 
         $penyedia = Penyedia::create($data);
@@ -154,6 +155,7 @@ class PenyediaController extends Controller
             'atas_nama' => $request->atas_nama,
             'logo_penyedia' => $path,
             'kop_surat' => $path_kop,
+            'kabupaten' => $request->kabupaten,
                 ];
 
             $penyedia->update($data);

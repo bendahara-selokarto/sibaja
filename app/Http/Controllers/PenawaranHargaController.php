@@ -259,6 +259,13 @@ class PenawaranHargaController extends Controller
                 
             $jumlah = $kegiatan->penawaran_1->nilai_penawaran;
             $jumlah_2 = $kegiatan->penawaran_2->nilai_penawaran;
+            $ppn_1 = $jumlah * config('pajak.ppn');
+            $ppn_2 = $jumlah_2 * config('pajak.ppn');
+            $pph_22_1 = $jumlah * config('pajak.pph_22');
+            $pph_22_2 = $jumlah_2 * config('pajak.pph_22');
+            $jumlah_total_1 = $jumlah + $ppn_1 + $pph_22_1;
+            $jumlah_total_2 = $jumlah_2 + $ppn_2 + $pph_22_2;
+
             $item = $kegiatan->penawaran_1->item;
             $item_2 = $kegiatan->penawaran_2->item;
             $pdf = Pdf::loadView('pdf.penawaran-harga', [
@@ -269,6 +276,12 @@ class PenawaranHargaController extends Controller
                 'penyedia2' => $penyedia2,
                 'jumlah' => $jumlah,
                 'jumlah_2' => $jumlah_2,
+                'ppn_1' => $ppn_1,
+                'ppn_2' => $ppn_2,
+                'pph_22_1' => $pph_22_1,
+                'pph_22_2' => $pph_22_2, 
+                'jumlah_total_1' => $jumlah_total_1,
+                'jumlah_total_2' => $jumlah_total_2,              
                 'pemberitahuan' => $pemberitahuan,
                 'item' => $item,
                 'item_2' => $item_2

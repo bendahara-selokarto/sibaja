@@ -31,7 +31,7 @@
         <td></td>
         <td style="width: 6cm"></td>
         <td></td>
-        <td style='text-align:right'>{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y') }}</td>
+        <td style='text-align:right'>{{ ucwords($penyedia2->kabupaten) }}, {{ Illuminate\Support\Carbon::parse($penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y') }}</td>
     </tr>
     <tr>
         <td>Nomor</td>
@@ -93,7 +93,7 @@
     </table>
    
     <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pelaksana Kegiatan Nomor {{ $pemberitahuan->no_pbj }}/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
-    <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format($jumlah_2 * (114/100), 0, ',', '.') }} ({{ Terbilang::make($jumlah_2 * (114/100))  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
+    <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format($jumlah_total_2 , 0, ',', '.') }} ({{ Terbilang::make($jumlah_total_2)  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
     <p>Sesuai dengan persyaratan yang diminta bersama ini kami sampaikan :</p>
     <ol type="a">
         <li>Form isian pengadaan barang/jasa</li>
@@ -111,7 +111,7 @@
             <td style="width: 50%; text-align: center;"></td>
             <td style="width: 50%; text-align: center;">
                 <p>Hormat Kami</p>
-                <p>{{ $penyedia2->nama_penyedia }}</p>
+                <p>{{ $penyedia2->jabata_pemilik ." " .$penyedia2->nama_penyedia }}</p>
                 <br><br>
                 <p><strong>{{ $penyedia2->nama_pemilik }}</strong></p>
             </td>

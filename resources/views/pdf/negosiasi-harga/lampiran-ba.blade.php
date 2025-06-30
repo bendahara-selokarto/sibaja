@@ -39,14 +39,43 @@
             <td style="text-align: right"> {{ $data['item']['harga_negosiasi'][$k], 0, ',', '.' }}</td>
             <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_negosiasi'][$k], 0, ',', '.') }}</td>
             </tr>
-             @endforeach            
+             @endforeach
+             <tr>
+            <td style="text-align: right" colspan="4">Jumlah</td>
+            <td style="text-align: right">{{ number_format($data['penawaranHarga']['nilai_penawaran'] , 0, ',', '.') }}</td>
+            <td style="text-align: right; background-color:rgb(209, 206, 206);"></td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_negosiasi , 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+            <td style="text-align: right" colspan="4">PPN</td>
+            <td style="text-align: right">{{ number_format($data['penawaranHarga']->ppn, 0, ',', '.') }}</td>
+            <td style="text-align: right; background-color:rgb(209, 206, 206);"></td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->ppn, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+            <td style="text-align: right" colspan="4">PPh Pasal 22</td>
+            <td style="text-align: right">{{ number_format($data['penawaranHarga']->pph_22, 0, ',', '.') }}</td>
+            <td style="text-align: right; background-color:rgb(209, 206, 206);"></td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->pph_22, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+            <td style="text-align: right" colspan="4">Jumlah Total</td>
+            <td style="text-align: right">{{ number_format($data['penawaranHarga']->harga_total, 0, ',', '.') }}</td>
+            <td style="text-align: right; background-color:rgb(209, 206, 206);"></td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+            <td style="text-align: center" colspan="7">( {{ ucwords(Terbilang::make($data['negosiasiHarga']->harga_total)) }} Rupiah )</td>
+            </tr>         
         </tbody>
     </table> 
-    <h3 style="text-align:center; text-decoration:underline">MASING-MASING PIHAK</h3>
+    <br>
+    <br>
+    <br>
     <table style="width: 100%">
         <tr>
-            <td style="text-align: center">Menyetujui,<br>{{ $data['penyedia']->nama_penyedia }} <br><br><br><br><span>{{ $data['penyedia']->nama_pemilik}}</span></td>
-            <td style="text-align: center">Tim Pengelola Kegiatan<br> Ketua <br><br><br><br><span>{{ $data['kegiatan']->ketua_tpk}}</span></td>
+            <td style="text-align: center">{{ $data['penyedia']->jabata_pemilik . " ".$data['penyedia']->nama_penyedia }} <br><br><br><br><span>{{ $data['penyedia']->nama_pemilik}}</span></td>
+            <td style="text-align: center">Tim Pelaksana Kegiatan<br> Ketua <br><br><br><br><span>{{ $data['kegiatan']->ketua_tpk}}</span></td>
     </tr>
     </table>   
     

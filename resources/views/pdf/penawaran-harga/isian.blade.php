@@ -106,7 +106,7 @@
 <table style="width: 100%">
     <tr>
         <td style="width: 8cm"><br></td>
-        <td style="text-align: center;">{{$penyedia1->nama_penyedia}}
+        <td style="text-align: center;">{{$penyedia1->jabata_pemilik ." " .$penyedia1->nama_penyedia}}
             <br><br><br><br>
             <strong style="text-decoration: underline">{{ $penyedia1->nama_pemilik}}</strong></td>
     </tr>

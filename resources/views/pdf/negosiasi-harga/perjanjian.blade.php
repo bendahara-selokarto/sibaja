@@ -96,7 +96,7 @@
 <p style="text-align: center">JANGKA WAKTU PELAKSANAAN PEKERJAAN</p>
 
 <p style="text-align: justify">Jangka waktu untuk menyelesaikan pekerjaan dalam penyediaan material adalah <strong> {{ $data['negosiasiHarga']->jumlah_hari_kerja }} ( {{ Terbilang::make($data['negosiasiHarga']->jumlah_hari_kerja) }} ) </strong> hari kerja mulai tanggal <strong>{{ $data['negosiasiHarga']->tgl_perjanjian->isoFormat('D MMMM Y') }}</strong> sampai dengan tanggal <strong>{{ $data['negosiasiHarga']->tgl_akhir_perjanjian->isoFormat('D MMMM Y') }} </strong> sehingga pekerjaan harus selesai dan diserahkan pada tanggal <strong> {{ $data['negosiasiHarga']->tgl_akhir_perjanjian->isoFormat('D MMMM Y')  }}</strong>.</p>
-<br><br><br>
+
 <p style="text-align: center">Pasal 5</p>
 <p style="text-align: center">FORCE MAJEURE</p>
 <ol>
@@ -110,16 +110,16 @@
 
 <p style="text-align: center">Pasal 6</p>
 <p style="text-align: center">SANKSI</p>
-<p style="text-align: justify">Apabila pekerjaan melebihi batas waktu yang disepakati maka PIHAK KEDUA harus membayar denda sebesar 10% dari nilai pekerjaan dengan nominal pengadaan material dari jumlah total yang akan dikirim sebesar Rp{{ number_format($data['penawaranHarga']->nilai_penawaran, 0, ',', '.') }}. ( {{ Terbilang::make($data['penawaranHarga']->nilai_penawaran) }}) rupiah.</p>
+<p style="text-align: justify">Apabila pekerjaan melebihi batas waktu yang disepakati maka PIHAK KEDUA harus membayar denda sebesar 10% dari nilai pekerjaan dengan nominal pengadaan material dari jumlah total yang akan dikirim sebesar Rp. {{ number_format($data['negosiasiHarga']->jumlah_total * 0.1, 0, ',', '.') }},- ( {{ Terbilang::make($data['negosiasiHarga']->jumlah_total * 0.1) }} rupiah ).</p>
 
 <p style="text-align: center">Pasal 7</p>
 <p style="text-align: center">KETENTUAN PENUTUP</p>
 <p style="text-align: justify">Perjanjian ini dibuat rangkap 2 (dua) masing-masing bermeterai cukup dan mempunyai kekuatan hukum yang sama untuk dipertanggungjawabkan sesuai peraturan perundang-undangan yang berlaku.</p>
-
+<br>
 <table style="width: 100%; text-align: center">
     <tr>
         <td style="vertical-align: top;">PIHAK KEDUA <br> {{ $data['penyedia']->jabata_pemilik }} ({{ $data['penyedia']->nama_penyedia }}) </td>
-        <td style="vertical-align: top;"><br>PIHAK PERTAMA <br> <br> <br> <br>    </td>
+        <td style="vertical-align: top;">PIHAK PERTAMA <br>PKA<br><br> <br> <br>    </td>
     </tr>
     <tr>
         <td><strong style="text-decoration: underline">{{ strToUpper($data['penyedia']->nama_pemilik) }}</strong></td>

@@ -36,8 +36,8 @@
                     <td ><br></td>
                     <td></td>
                     <td style="text-align: center; argin-right: 40px;">
-                        {{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->modify('+1 days')->isoFormat('D MMMM Y') }} <br>
-                        {{ $penyedia1->nama_penyedia }}
+                        {{ ucwords($penyedia1->kabupaten) }}, {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->modify('+1 days')->isoFormat('D MMMM Y') }} <br>
+                        {{ $penyedia1->jabata_pemilik ." " .$penyedia1->nama_penyedia }}
                         <br><br><br><br>
                         <strong> {{ $penyedia1->nama_pemilik }} </strong>
                     </td>

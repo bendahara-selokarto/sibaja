@@ -70,7 +70,7 @@ onerror="this.src='{{ asset('') }}'"
     <table style="width: 100%">
         <tr>
             <td style="width: 8cm"><br></td>
-            <td style="text-align: center">{{ ucwords($penyedia->alamat_penyedia)}}, {{ Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</td>
+            <td style="text-align: center">{{ ucwords($penyedia->kabupaten)}}, {{ Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</td>
         </tr>
             <tr>
                 <td style="width: 8cm"><br></td>

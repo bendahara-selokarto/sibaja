@@ -101,7 +101,7 @@
         </tr>
         <tr>
           <td >NILAI PEKERJAAN</td>
-            <td >: Rp. {{ number_format($data['negosiasiHarga']->harga_negosiasi, 0, ',', '.') }}</td>
+            <td >: Rp. {{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }}</td>
         </tr>
       </tbody>
       </table>
@@ -168,7 +168,7 @@
           <td>PIHAK PERTAMA</td>
         </tr>
         <tr>
-          <td>{{ $data['penyedia']->nama_penyedia }}</td>
+          <td>{{ $data['penyedia']->jabata_pemilik ." ". $data['penyedia']->nama_penyedia }}</td>
           <td>PKA</td>
         </tr>
         <tr>
