@@ -39,11 +39,18 @@
                                 <li>{{ $i['nomor_npwp'] }}</li>                                
                             </ol></td>
                             <td>
+                                {{-- 
+                                    Mengecek apakah user yang sedang login memiliki peran 'administrator'.
+                                    Jika ya, maka konten di dalam blok ini hanya akan ditampilkan untuk administrator.
+                                    Biasanya digunakan untuk membatasi akses menu atau fitur tertentu di tampilan.
+                                --}}
+                                @if(Auth::user()->role == 'administrator')
                                 <form action="{{ route('penyedia.destroy', $i['id']) }}" method="post">
                                     @csrf
                                     @method('DELETE')
                                     <x-bladewind::button can_submit="true" size='tiny' color="red">hapus</x-bladewind::button>
                                 </form>
+                                @endif
                                 <form action="{{ route('penyedia.edit', $i['id']) }}" method="get">
                                     @csrf
                                     @method('GET')

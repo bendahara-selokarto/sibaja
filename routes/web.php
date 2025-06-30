@@ -9,6 +9,7 @@ use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PemberitahuanController;
 use App\Http\Controllers\NegosiasiHargaController;
 use App\Http\Controllers\PenawaranHargaController;
+use App\Http\Middleware\UserAccess;
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('penyedia/edit/{id}', [PenyediaController::class , 'edit'])->name('penyedia.edit');
     Route::patch('penyedia/update/{id}', [PenyediaController::class , 'update'])->name('penyedia.update');
     Route::post('penyedia/store', [PenyediaController::class , 'store'])->name('penyedia.store');
-    Route::delete('menu/penyedia/{id}', [PenyediaController::class , 'destroy'])->name('penyedia.destroy');
+    Route::delete('menu/penyedia/{id}', [PenyediaController::class , 'destroy'])->name('penyedia.destroy')->middleware([UserAccess::class . ':administrator']);
     
     Route::get('menu/pemberitahuan', [PemberitahuanController::class , 'index'])->name('menu.pemberitahuan');
     Route::post('pemberitahuan/create/{id}', [PemberitahuanController::class , 'create'])->name('pemberitahuan.create');
