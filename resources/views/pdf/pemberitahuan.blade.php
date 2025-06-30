@@ -139,7 +139,7 @@
     <td colspan="5" >
         <div style="margin-left: 2.6cm; text-align:justify">
         <p >Maka apabila Saudara berminat dan bersedia melaksanakan pekerjaan  <strong>{{ $kegiatan->kegiatan }}</strong> tersebut, diminta segera mengajukan surat penawaran harga.</p>
-        <p style=" text-align:justify">Surat penawaran dialamatkan kepada Bapak  <strong>{{ $kegiatan->ketua_tpk }} </strong>, selaku Tim Pengelola Kegiatan dengan ketentuan sebagai berikut :</p>
+        <p style=" text-align:justify">Surat penawaran dialamatkan kepada Bapak  <strong>{{ $kegiatan->ketua_tpk }} </strong>, selaku Tim Pelaksana Kegiatan dengan ketentuan sebagai berikut :</p>
         <ol>
            
             <li>Surat penawaran dibuat rangkap 3 (tiga) asli, 1 (satu) bermeterai Rp. 10.000 dan sudah harus kami terima tanggal <strong>{{ Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->isoFormat('D MMMM Y')}}</strong></li>
@@ -168,10 +168,42 @@
         </td>
     </tr>
     <tr>
-        <x-double-signature left-keterangan="Kepala Desa Selokarto" left="{{ strToUpper(Auth::user()->kepala_desa) }}" right="{{ strToUpper($kegiatan->ketua_tpk) }}" right-keterangan="TPK Desa"></x-double-signature>
+        <!-- <x-double-signature left-keterangan="Kepala Desa Selokarto" left="{{ strToUpper(Auth::user()->kepala_desa) }}" right="{{ strToUpper($kegiatan->ketua_tpk) }}" right-keterangan="TPK Desa"></x-double-signature> -->
     </tr>
+    
 
 </table>
+<div style="margin-left:0cm">
+        <table style="width: 100%">
+            <tr>
+                <td style="text-align: center; width:69%">
+                    Mengetahui,                    
+                 <br>Kepala Desa {{ Auth::user()->desa }}
+                 <br>Selaku 
+                 <br>Pemegang Kekuasaan Pengelolaan
+                <br>Keuangan Desa
+                <br>
+                <br>
+                <br>
+                <br>
+                <br><strong>{{ strToUpper(Auth::user()->kepala_desa) }}</strong>
+                </td>
+                <td style="text-align: center; width:31%">
+                <br> 
+                <br>
+                Tim Pelaksana Kegiatan
+                <br>Ketua
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br><strong>{{ $kegiatan->ketua_tpk}} </strong>              
+                </td>
+            </tr>
+        </table>
+        
+    </div>
 
 </body>
 </html>

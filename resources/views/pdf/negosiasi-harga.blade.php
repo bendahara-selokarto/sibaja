@@ -89,20 +89,33 @@
     <table>
 
     <p style="margin-left:2.6cm">Demikian atas perhatian dan kerjasamanya diucapkan terima kasih.</p>
-    <div style="margin-left:4cm">
+    <div style="margin-left:0cm">
         <table style="width: 100%">
             <tr>
-                <td style="text-align: center">Mengetahui,<br>                    
-                <x-sign-kades></x-sign-kades>
-                </td>
-                <td>
+                <td style="text-align: center; width:69%">
+                    Mengetahui,                    
+                 <br>Kepala Desa {{ Auth::user()->desa }}
+                 <br>Selaku 
+                 <br>Pemegang Kekuasaan Pengelolaan
+                <br>Keuangan Desa
                 <br>
-                <x-sign-tpk>
-                <x-slot name="nama_tpk">
-                {{ $data['kegiatan']->ketua_tpk}}
-                </x-slot>
-                </x-sign-tpk>
-            </td>
+                <br>
+                <br>
+                <br>
+                <br><strong>{{ strToUpper(Auth::user()->kepala_desa) }}</strong>
+                </td>
+                <td style="text-align: center; width:31%">
+                <br> 
+                <br>
+                Tim Pelaksana Kegiatan
+                <br>Ketua
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br><strong>{{ $data['kegiatan']->ketua_tpk}} </strong>              
+                </td>
             </tr>
         </table>
         
