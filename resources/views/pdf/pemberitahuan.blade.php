@@ -161,14 +161,18 @@
         </td>
     </tr>
 </table>
-<p style="margin-left: 2.5cm">Demikian surat permintaan penawaran ini kami sampaikan atas perhatian Saudara diucapkan terima kasih. </p>
 <table>
     <tr>
-        {{-- <td style="text-align: center">Mengetahui,<br><x-sign-kades></x-sign-kades></td> --}}
-        {{-- <td><br><x-sign-tpk>{{ strToUpper($pemberitahuan['kegiatan']->ketua_tpk) }}</x-sign-tpk></td> --}}
+        <td>
+            <p style="margin-left: 2.5cm">Demikian surat permintaan penawaran ini kami sampaikan atas perhatian Saudara diucapkan terima kasih. </p>
+        </td>
     </tr>
+    <tr>
+        <x-double-signature left-keterangan="Kepala Desa Selokarto" left="{{ strToUpper(Auth::user()->kepala_desa) }}" right="{{ strToUpper($kegiatan->ketua_tpk) }}" right-keterangan="TPK Desa"></x-double-signature>
+    </tr>
+
 </table>
-<x-double-signature left-keterangan="Kepala Desa Selokarto" left="{{ strToUpper(Auth::user()->kepala_desa) }}" right="{{ strToUpper($kegiatan->ketua_tpk) }}" right-keterangan="TPK Desa"></x-double-signature>
+
 </body>
 </html>
 

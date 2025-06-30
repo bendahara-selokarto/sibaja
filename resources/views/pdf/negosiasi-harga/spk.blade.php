@@ -121,12 +121,12 @@
           <td style="text-align: center">{{ $loop->iteration }}</td>
             <td >{{ $data['item']['uraian'][$k] }}</td>
             <td style="text-align: center">{{ $data['item']['volume'][$k] . ' '. $data['item']['satuan'][$k]  }}</td>
-            <td style="text-align: right"> {{ number_format($data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
-            <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
+            <td style="text-align: right"> {{ number_format($data['item']['harga_negosiasi'][$k], 0, ',', '.') }}</td>
+            <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_negosiasi'][$k], 0, ',', '.') }}</td>
         </tr>
         @endforeach
         <tr>
-          <td style="text-align: right" colspan="4">Sub Jumlah</td>
+          <td style="text-align: right" colspan="4">Jumlah</td>
             <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_negosiasi , 0, ',', '.') }}</td>
         </tr>
         <tr>
@@ -146,31 +146,37 @@
         </tr>
       </tbody>
       </table>
-      <div style="page-break-before: always;"></div>
+      <!-- <div style="page-break-before: always;"></div> -->
 
-      <table style="width: 100%; border: 1px solid black; text-align: center;">
-       <tr style="border-bottom: 1px solid black">
-         <td  colspan="2"><p style="text-align: justify; margin:2mm; font-size:10pt"><strong>INSTRUKSI KEPADA PENYEDIA BARANG DAN JASA : </strong>Penagihan hanya dapat dilakukan setelah penyelesaian pekerjaan yang diperintahkan dalam SPK ini dan hasil pekerjaan tersebut dapat diterima secara memuaskan oleh Tim Pengelola Kegiatan dan dibuktikan dengan Berita Acara Serah Terima. Jika pengadaan tidak dapat diselesaikan dalam jangka waktu pengiriman karena kesalahan atau kelalaian Penyedia Barang maka Penyedia Barang berkewajiban untuk membayar denda kepada TPK sebesar 1/1000 (satu per seribu) dari nilai SPK sebelum PPN setiap hari kalender keterlambatan. Selain tunduk kepada ketentuan dalam SPK ini, Penyedia Barang dan Jasa berkewajiban untuk mematuhi Standar Ketentuan dan Syarat Umum SPK terlampir.</p></td>
-       </tr>
+      <table style="width: 100%; border-top: 2px solid black; border-left: 1px solid black; border-right: 1px solid black; border-collapse: collapse; text-align: center;">
+       <tr>
+         <td  colspan="2"><p style="text-align: justify; margin:2mm; font-size:10pt"><strong>INSTRUKSI KEPADA PENYEDIA BARANG DAN JASA : </strong>Penagihan hanya dapat dilakukan setelah penyelesaian pekerjaan yang diperintahkan dalam SPK ini dan hasil pekerjaan tersebut dapat diterima secara memuaskan oleh Tim Pengelola Kegiatan dan dibuktikan dengan Berita Acara Serah Terima. Jika pengadaan tidak dapat diselesaikan dalam jangka waktu pengiriman karena kesalahan atau kelalaian Penyedia Barang maka Penyedia Barang berkewajiban untuk membayar denda kepada TPK sebesar 1/1000 (satu per seribu) dari nilai SPK sebelum PPN setiap hari kalender keterlambatan. Selain tunduk </p></td>
+        </tr>
       <tr>
         <td></td>
-        <td>{{ ucwords(Auth::user()->desa) .', '. $data['negosiasiHarga']->tgl_perjanjian->isoFormat('D MMMM Y') }}</td>
       </tr>
-      <tr>
-        <td>PIHAK KEDUA</td>
-        <td>PIHAK PERTAMA</td>
-      </tr>
-      <tr>
-        <td>{{ $data['penyedia']->nama_penyedia }}</td>
-        <td>PKA</td>
-      </tr>
-      <tr>
-        <td><br><br><br></td>
-        <td></td> 
-      </tr>
-      <tr>
-        <td>{{ $data['penyedia']->nama_pemilik }}</td>
-        <td>{{ $data['kegiatan']->pka }}</td>
-      </tr>
-
+      
+    </table>
+    <table style="width: 100%; border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; text-align: center;">
+    <tr>kepada ketentuan dalam SPK ini, Penyedia Barang dan Jasa berkewajiban untuk mematuhi Standar Ketentuan dan Syarat Umum SPK terlampir.</tr>  
+    <tr >
+        <td></td>
+        <td style="text-align:center">{{ ucwords(Auth::user()->desa) .', '. $data['negosiasiHarga']->tgl_perjanjian->isoFormat('D MMMM Y') }}</td>
+        </tr>
+        <tr>
+          <td>PIHAK KEDUA</td>
+          <td>PIHAK PERTAMA</td>
+        </tr>
+        <tr>
+          <td>{{ $data['penyedia']->nama_penyedia }}</td>
+          <td>PKA</td>
+        </tr>
+        <tr>
+          <td><br><br><br></td>
+          <td></td> 
+        </tr>
+        <tr>
+          <td>{{ $data['penyedia']->nama_pemilik }}</td>
+          <td>{{ $data['kegiatan']->pka }}</td>
+        </tr>
      </table>

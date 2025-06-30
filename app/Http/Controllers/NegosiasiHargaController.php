@@ -210,7 +210,11 @@ class NegosiasiHargaController extends Controller
         $negosiasiHarga->tgl_akhir_perjanjian = Carbon::parse($negosiasiHarga->tgl_akhir_perjanjian);
         $negosiasiHarga->jumlah_hari_kerja = $negosiasiHarga->tgl_akhir_perjanjian->diffInDays($negosiasiHarga->tgl_perjanjian) * -1;
         
-        $item = $kegiatan->penawaran_1->item;
+        // $item = $kegiatan->penawaran_1->item;
+        $negosiasi = $negosiasiHarga->item;
+        // $item['harga_negosiasi'] = json_decode($negosiasi, true);       
+       
+
 
         $pemberitahuan->no_spk = $pemberitahuan->no_pbj . '/SPK' . $nomor_surat;
         $pemberitahuan->no_ba_negosiasi = $pemberitahuan->no_pbj . '/BA-NEGO' . $nomor_surat;
@@ -223,8 +227,8 @@ class NegosiasiHargaController extends Controller
             'pemberitahuan' => $pemberitahuan,
             'negosiasiHarga' => $negosiasiHarga,
             'penawaranHarga' => $penawaranHarga,
-            'item' => $item
-        ];        
+            'item' => json_decode($negosiasi, true),
+        ];
         $pdf = Pdf::loadView('pdf.negosiasi-harga', compact('data'));
         // Replace invalid filename characters with underscore
         $filename = '3. NEGOSIASI HARGA - (' . $kegiatan->kegiatan . ')';

@@ -34,7 +34,7 @@
         <td></td>
         <td>Harga Penawaran</td>
         <td>:</td>
-        <td>{{ number_format($data['penawaranHarga']->harga_penawaran_1, 0, ',', '.') }} ( {{ Terbilang::make($data['penawaranHarga']->nilai_penawaran) }} rupiah )</td>
+        <td>{{ number_format($data['penawaranHarga']->nilai_penawaran, 0, ',', '.') }} ( {{ Terbilang::make($data['penawaranHarga']->nilai_penawaran) }} rupiah )</td>
     </tr>
     <tr>
         <td></td>
@@ -42,7 +42,7 @@
         <td>:</td>
         <td>{{ number_format($data['negosiasiHarga']->harga_negosiasi, 0, ',', '.') }} ( {{ Terbilang::make($data['negosiasiHarga']->harga_negosiasi) }} rupiah )</td>
     </tr>
-    <tr>
+    <!-- <tr>
         <td style="width: 0.5cm">2.</td>
         <td style="width: 5.5cm">Nama Perusahaan/Rekanan </td>
         <td style="">:</td>
@@ -65,7 +65,7 @@
         <td>Harga Negosiasi</td>
         <td>:</td>
         <td>.....................</td>
-    </tr>
+    </tr> -->
 </table>
 <p>Berdasarkan hasil negosiasi disepakati harga terendah yang wajar maupun secara teknis dapat dipertanggungjawabkan dan dinyatakan sebagai pemenang adalah sebagai berikut :</p>
 

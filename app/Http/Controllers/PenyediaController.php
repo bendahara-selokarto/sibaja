@@ -37,14 +37,19 @@ class PenyediaController extends Controller
                 Auth::user()->kode_desa . $request->file('kop_surat')->getClientOriginalName(), 
                 'public'
             );
-        } 
+        } else {
+            $path_kop = '';
+        }
+
         if ($request->hasFile('data_dukung')) {
-            $path_kop = $request->file('data_dukung')->storePubliclyAs(
+            $path_data_dukung = $request->file('data_dukung')->storePubliclyAs(
                 'data_dukung', 
                 Auth::user()->kode_desa . $request->file('data_dukung')->getClientOriginalName(), 
                 'public'
             );
-        } 
+        } else {
+            $path_data_dukung = '';
+        }   
         
     
         $nama_penyedia = $request->nama_penyedia;
@@ -59,6 +64,9 @@ class PenyediaController extends Controller
             'nomor_izin_usaha' => $request->no_siup,
             'jabata_pemilik' => $request->jabatan_pemilik,
             'instansi_pemberi_izin_usaha' => $request->penerbit_siup,
+            'rekening' => $request->rekening,
+            'bank' => $request->bank,
+            'atas_nama' => $request->atas_nama,
             'logo_penyedia' => $path,
             'kop_surat' => $path_kop,
             ];
@@ -141,6 +149,9 @@ class PenyediaController extends Controller
             'nomor_izin_usaha' => $request->no_siup,
             'jabata_pemilik' => $request->jabatan_pemilik,
             'instansi_pemberi_izin_usaha' => $request->penerbit_siup,
+            'rekening' => $request->rekening,
+            'bank' => $request->bank,
+            'atas_nama' => $request->atas_nama,
             'logo_penyedia' => $path,
             'kop_surat' => $path_kop,
                 ];

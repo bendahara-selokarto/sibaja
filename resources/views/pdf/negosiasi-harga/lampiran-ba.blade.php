@@ -6,9 +6,11 @@
     <title>Lampiran</title>
 </head>
 <body>
+    
     <!-- <div style="page-break-before: always;"></div> -->
     <div style="margin-left: 40%; text-align: left;">
-        <p>Lampiran Berita Acara Klarifikasi dan Negosiasi Harga <br><span>Nomor : </span></p>
+        <p style="padding: 0.4px;">Lampiran Berita Acara Klarifikasi dan Negosiasi Harga <br><span>Nomor : {{ $data['pemberitahuan']->no_pbj }} /BA-KLNH/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }}</span><br><span>Tangal : {{ $data['negosiasiHarga']->tgl_negosiasi->isoFormat('D MMMM Y')}}</span></p>
+        
     </div>
     <table border="1" cellspacing="0" cellpadding="5" style="width:100%; border-collapse: collapse; margin-top: 20px;">
         <thead>
@@ -34,10 +36,23 @@
                  <td>{{ $data['item']['volume'][$k] . ' '. $data['item']['satuan'][$k] }}</td>
                  <td style="text-align: right"> {{ number_format($data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
             <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
+            <td style="text-align: right"> {{ $data['item']['harga_negosiasi'][$k], 0, ',', '.' }}</td>
+            <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_negosiasi'][$k], 0, ',', '.') }}</td>
             </tr>
              @endforeach            
         </tbody>
-    </table>
+    </table> 
+    <h3 style="text-align:center; text-decoration:underline">MASING-MASING PIHAK</h3>
+    <table style="width: 100%">
+        <tr>
+            <td style="text-align: center">Menyetujui,<br>{{ $data['penyedia']->nama_penyedia }} <br><br><br><br><span>{{ $data['penyedia']->nama_pemilik}}</span></td>
+            <td style="text-align: center">Tim Pengelola Kegiatan<br> Ketua <br><br><br><br><span>{{ $data['kegiatan']->ketua_tpk}}</span></td>
+    </tr>
+    </table>   
+    
+    
+      
+    
 </body>
 </html>
 
