@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        @page {
-            margin: 0;
-        }
-        body {
-            margin: 5mm 5mm 5mm 5mm;
+    <style>     
+        .ketentuan-umum {
+            margin-top: 10px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            margin-left: 25px;
+
             padding: 1cm;
             font-size: 10pt;
             line-height: 1.5;
@@ -17,21 +18,14 @@
             font-family: serif;
             text-align: justify;
         }
-        h1, h2, h3, h4, h5, h6 {
-            margin: 0;
-            padding: 0;
-        }
-        table, tr, td {
-            margin: 0;
-            padding: 0;
-        }
-       
+              
       
     </style>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
 <body>
+    <div class="ketentuan-umum">
     <h1 style="font-size: 11pt; text-decoration: underline; text-align: center;">STANDAR KETENTUAN DAN SYARAT UMUM</h1>
     <span style="display: block; text-align: center; margin-top: 1px; font-weight: bold;">SURAT PERINTAH KERJA (SPK)</span>
 
@@ -261,5 +255,6 @@
             Penyedia menjamin bahwa tidak satu pun personil Desa telah atau akan menerima komisi atau keuntungan tidak sah lainnya baik langsung maupun tidak langsung dari SPK ini. Penyedia menyetujui bahwa pelanggaran syarat ini merupakan pelanggaran yang mendasar terhadap SPK ini.
         </li>
     </ol>
+    </div>
 </body>
 </html>

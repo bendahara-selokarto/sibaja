@@ -180,3 +180,4 @@
           <td>{{ $data['kegiatan']->pka }}</td>
         </tr>
      </table>
+@include('pdf.negosiasi-harga.standar-ketentuan-dan-syarat-umum')
