@@ -7,74 +7,71 @@
     <title>Invoice</title>
     <style>
         @page {
-            margin: 2cm;
+            margin: 0;
         }
-        table, tr, th, td {
-            /* border: 1px solid black; */
+        .invoice {
+            font-size: 12pt;
+            margin-top: 20px;
+            margin-right: 60px;
+            margin-bottom: 60px;
+            margin-left: 120px;
+        }
+        table {
+            width: 100%;
             border-collapse: collapse;
         }
+
+        table:nth-of-type(2) th,
+        table:nth-of-type(2) td {
+            border: 1px solid black;
+            padding: 2px;
+        }
+        table:nth-of-type(3) td {
+            line-height: 2px;
+        }
+          
         
         
     </style>
    </head>
-   <body>   
-   <table style="width: 100%">
-    <tr>
-        <td style="width: 120px">            
-            <img 
-                src="storage/{{$penyedia->logo_penyedia }}" 
-                class="logo-kop-desa" 
-                alt=" " 
-                width="120px" 
-                onerror="this.src='{{ asset('') }}'" 
-            >
-        </td>       
-        <td>
-           <h2 style="text-align: center; margin: 0cm;">{{ $penyedia->nama_penyedia }}</h2>
-           <h3 style="text-align: center; margin: 0cm;">TOKO BAHAN BANGUNAN</h3>
-           <h4 style="text-align: center; margin: 0cm;">{{ $penyedia->alamat_penyedia }}</h4>
-           <h4 style="text-align: center; margin: 0cm; color: blue;">HP : {{  $penyedia->nomor_hp}}</h4>
-        </td>
-    </tr>
-</table>
-<hr>
-<table style="widht: 100%">
-    <tr>      
-        <td style="width: 10cm; text-align:center; vertical-align:middle">
-            <h2>INVOICE</h2>
-       </td>
-        <td><div style="width: 5cm;">
-            <table>
-                <tr>
-                    <td>Nomor</td>
-                    <td style="border-bottom: 1px dashed black;">: {{ 'INV-' . strtoupper(rand(10, 300) ) . '/' . Auth::user()->tahun_anggaran}}</td>
-                
-                </tr>
-                <tr>
-                    <td>Tanggal</td>
-                    <td style="border-bottom: 1px dashed black;">: {{  Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</td>
-                </tr>
-                <tr>
-                    <td>Metode</td>
-                    <td style="border-bottom: 1px dashed black;">: cash/bank</td>
-                </tr>
-            </table>
-        </div></td>
-    </tr>
-</table>
-<p>Kepada Yth: PKA Desa {{ Auth::user()->desa }} Kecamatan Pecalungan</p>
-<p>di-</p>
-<p>TEMPAT</p>
-<br>
-<table style="margin-left: 4cm">
+   <body>
+    <div class="invoice">   
+    <img 
+        src="storage/{{$penyedia->kop_surat }}" 
+        alt=" " 
+        style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
+        onerror="this.src='{{ asset('') }}'" 
+        >
+    <p style="text-align: right">{{ $penyedia->kabupaten }}, {{  Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</p>
+    
+    <table style="line-height: 2px;" >
+        <tr>
+            <td style="width: 70px">Nomor</td>
+            <td>: {{ 'INV-' . strtoupper(rand(10, 300) ) . '/' . Auth::user()->tahun_anggaran}}</td>
+        </tr>
+        <tr>
+            <td>Hal</td>
+            <td>: Invoice</td>
+        </tr>
+    </table>
+    
+    
+    <div style="width: 40%; margin-left:auto">
+        <p>Kepada Yth: PKA Desa {{ Auth::user()->desa }} Kecamatan Pecalungan</p>
+        <p>di-</p>
+        <p>TEMPAT</p>
+    </div>
+    <h2 style="text-align: center">INVOICE</h2>  
+    <br>
+<table>
     <thead>
         <tr>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">No.</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Jenis Barang</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Vol</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Sat</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Harga Satuan</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Jumlah</th>
+            <th style=" ">No.</th>
+            <th style=" ">Jenis Barang</th>
+            <th style=" ">Vol</th>
+            <th style=" ">Sat</th>
+            <th style=" ">Harga Satuan</th>
+            <th style=" ">Jumlah</th>
         </tr>
     </thead>
     <tbody>
@@ -91,22 +88,15 @@
         @endforeach        
         <tr>
            
-            <td style="border-top: 1px dashed black; text-align:right" colspan="5">Sub Total</td>
-            <td style="border-top: 1px dashed black; text-align:right">{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>   </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="text-align:right">PPN dan PPh Pasal 22</td>
-            <td style="text-align:right">{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/111)), 0, ',', '.') }}</td>
+            <td style="text-indent: 300px"  colspan="5">Jumlah</td>
+            <td >{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>   </tr>
+        <tr>            
+            <td style="text-indent: 300px" colspan="5">PPN dan PPh Pasal 22</td>
+            <td >{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/111)), 0, ',', '.') }}</td>
         </tr>   <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-bottom: 1px dashed black; text-align:right">Total</td>
-            <td style="border-bottom: 1px dashed black; text-align:right">
+           
+            <td style="text-indent: 300px" colspan="5">Jumlah Total</td>
+            <td>
                 {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi - ($kegiatan->negosiasiHarga->harga_negosiasi * (14/111))), 0, ',', '.') }}
             </td>   </tr>   </tbody>
 </table>
@@ -131,7 +121,7 @@
 </table>
 <br>
 <h6><strong>Pembayaran via Transfer dianggap lunasi setelah terkonfirmasi</strong></h6>
-
+</div>
 </body>
 </html>
 
