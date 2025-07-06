@@ -130,6 +130,7 @@ class PembayaranController extends Controller
                 
 
 
+        $kegiatan->nomor = $kegiatan->pemberitahuan->no_pbj;
         $pdf = Pdf::loadView('pdf.pembayaran.kuitansi', compact('kegiatan', 'penyedia' , 'item'));
         $filename = '4. PEMBAYARAN - (' . $kegiatan->kegiatan . ')';
         // Replace invalid filename characters with underscore

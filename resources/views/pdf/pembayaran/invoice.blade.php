@@ -4,35 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Invoice</title>
-    <style>
-        @page {
-            margin: 0;
-        }
-        .invoice {
-            font-size: 12pt;
-            margin-top: 20px;
-            margin-right: 60px;
-            margin-bottom: 60px;
-            margin-left: 120px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table:nth-of-type(2) th,
-        table:nth-of-type(2) td {
-            border: 1px solid black;
-            padding: 2px;
-        }
-        table:nth-of-type(3) td {
-            line-height: 2px;
-        }
-          
-        
-        
-    </style>
+    <title>Invoice</title>  
    </head>
    <body>
     <div class="invoice">   
@@ -44,7 +16,7 @@
         >
     <p style="text-align: right">{{ $penyedia->kabupaten }}, {{  Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</p>
     
-    <table style="line-height: 2px;" >
+    <table style="line-height: 1;" >
         <tr>
             <td style="width: 70px">Nomor</td>
             <td>: {{ 'INV-' . strtoupper(rand(10, 300) ) . '/' . Auth::user()->tahun_anggaran}}</td>
@@ -63,7 +35,7 @@
     </div>
     <h2 style="text-align: center">INVOICE</h2>  
     <br>
-<table>
+<table class="invoice">
     <thead>
         <tr>
             <th style=" ">No.</th>

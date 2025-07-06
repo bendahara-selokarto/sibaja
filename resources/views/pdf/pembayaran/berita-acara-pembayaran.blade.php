@@ -3,44 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style>
-        @page {
-            margin: 0;
-        }
-        body {
-            font-size: 12pt;
-            margin-top: 20px;
-            margin-right: 60px;
-            margin-bottom: 20px;
-            margin-left: 120px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        td {
-            padding: 5px;
-        }
     <title>Document</title>
+
 </head>
-<body>
-    <h2 style="text-align: center;">BERITA ACARA PEMBAYARAN</h2>
-    <p style="text-align: center;">NOMOR ……………………</p>
+<body style="line-height: 1.5">
+    <div class="ba-pembayaran">
+    <h2 style="text-align: center; margin-bottom: 0">BERITA ACARA PEMBAYARAN</h2>
+    <p style="text-align: center; margin-top: 0">NOMOR : {{$kegiatan->nomor }} /BA-Pembayaran/{{Auth::user()->tahun_anggaran}}</p>
 
-    <br>
 
-    <p>Pada hari ini ……………tanggal………..bulan…………tahun……..bertempat di ………, telah dilaksanakan pembayaran atas pekerjaan …………antara :</p>
+    <p>Pada hari ini <strong></strong> tanggal <strong></strong> bulan <strong></strong> tahun <strong>{{Auth::user()->tahun_anggaran}}</strong> bertempat di <strong>  Balaidesa {{ Auth::user()->desa}} </strong>, telah dilaksanakan pembayaran atas pekerjaan <strong>{{ $kegiatan->kegiatan}} </strong>antara :</p>
 
-    <ol type="I">
+    <ol type="I" style="line-height: 1">
         <li>
-            <table>
-                <tr>
-                    <td>Nama</td>
-                    <td>:</td>
-                    <td>…………………………</td>
+            <table >
+                <tr style="height: 3px">
+                    <td style="height: 3px">Nama</td>
+                    <td style="height: 3px">:</td>
+                    <td style="height: 3px">…………………………</td>
                 </tr>
-                <tr>
+                <tr style="height: 3px">
                     <td>Jabatan</td>
                     <td>:</td>
                     <td>…………………………</td>
@@ -80,7 +62,7 @@
         PIHAK KEDUA berdasarkan Surat Perjanjian Nomor ………. atas pekerjaan …… telah melaksanakan pekerjaan ……………. sesuai permintaan PIHAK PERTAMA dan telah menerima pembayaran atas pekerjaan tersebut sebesar Rp…………… (…………..)
     </p>
     <p>
-        Pembayaran tersebut disaksikan oleh …………. Jabatan Kepala Desa ……. selaku Pemegang Kekuasaan Pengelolaan Keuangan Desa.
+        Pembayaran tersebut disaksikan oleh {{ Auth::user()->kepala_desa}}  Jabatan Kepala Desa {{Auth::user()->desa }} selaku Pemegang Kekuasaan Pengelolaan Keuangan Desa.
     </p>
     <p>
         Demikian Berita Acara ini dibuat rangkap 2 (dua) masing-masing bermeterai cukup dan mempunyai kekuatan hukum yang sama untuk dipertanggungjawabkan sesuai peraturan perundang-undangan yang berlaku.
@@ -100,22 +82,22 @@
             <td style="text-align: center;">PKA</td>
         </tr>
         <tr>
-            <td style="text-align: center;">…………………………</td>
+            <td style="text-align: center;">{{$penyedia->nama_pemilik}}</td>
             <td></td>
-            <td style="text-align: center;">…………………………</td>
+            <td style="text-align: center;">{{ $kegiatan->pka }}</td>
         </tr>
     </table>
-
-    
-
-    <p>Mengetahui <br>
-    Kepala Desa……………<br>
-    Selaku<br>
-    Pemegang Kekuasaan Pengelolaan Keuangan Desa
-    </p>
-
-    <br>
-
-    <p>……………………………………………</p>
+    <div style="text-align:center">    
+        <p>Mengetahui, <br>
+            Kepala Desa {{ Auth::user()->desa }} <br>
+            Selaku<br>
+            Pemegang Kekuasaan Pengelolaan Keuangan Desa
+        </p>
+        
+        <br>
+        
+        <p>{{ Auth::user()->kepala_desa }}</p>
+    </div>   
+    </div>
 </body>
 </html>
