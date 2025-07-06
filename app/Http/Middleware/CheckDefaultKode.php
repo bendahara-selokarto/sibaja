@@ -31,12 +31,16 @@ class CheckDefaultKode
             'selokarto',
             'gemuh',
             'randu',
+            'pretek',
+            'siguci',
             'Selokarto',
             'Gemuh',
             'Randu',
+            'Pretek',
             'SELOKARTO',
             'GEMUH',
             'RANDU',
+            'PRETEK'
             // Tambahkan email pengguna lain yang diijinkan di sini
         ];
 

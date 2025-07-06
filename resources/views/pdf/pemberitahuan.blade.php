@@ -7,6 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pemberitahuan</title>
     <style>
+        @page {
+            padding: 0;
+        }
+        .pemberitahuan {
+            margin-top: 20px;
+            margin-right: 40px;
+            margin-bottom: 40px;
+            margin-left: 60px;
+        }
         table {
             border-collapse: collapse;
         }
@@ -15,7 +24,8 @@
         }
     </style>
 </head>
-<body>   
+<body>
+    <div class="pemberitahuan">   
     <x-kop-tpk >
         <!-- <x-slot name="kegiatan">{{ $kegiatan->kegiatan }}</x-slot> -->
     </x-kop-tpk>
@@ -37,7 +47,7 @@
     <tr>
         <td style="width: 2.5cm">Lamp</td>
         <td style="width: 1mm">:</td>
-        <td>-</td>
+        <td>1 bandel</td>
         <td style="text-align: right">Kepada :</td>
         <td></td>
         
@@ -69,32 +79,23 @@
         <td></td>
         <td style="text-align: center">TEMPAT</td>
     </tr>
-    <tr>
-        <td><br><br><br><br></td>
-        <td colspan="4">
-                <p style="text-align: justify; text-indent: 1cm;">Sehubungan dengan akan dilaksanakan kegiatan <strong> {{ $kegiatan->kegiatan }}</strong>, dengan pekerjaan Belanja Material ( <strong> {{ $pemberitahuan['pekerjaan'] }}</strong> ).</p>
-                <p style="text-align: justify; text-indent: 1cm;">Adapun spesifikasi teknis yang kami persyaratkan yaitu :</p>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-    <td colspan="4">
-        <ol>
-            <li>Ruang lingkup pekerjaan <strong> Pengadaan Material</li>
-            <li>Daftar Barang/Jasa ;</li>
-        </ol>
-    </td>
-    </tr>
-    
-</table>
+            
+        </table>
+        <div style="margin-left: auto; width: 80%">
+        <p style="text-align: justify; text-indent: 1cm;">Sehubungan dengan akan dilaksanakan kegiatan <strong> {{ $kegiatan->kegiatan }}</strong>, dengan pekerjaan Belanja Material ( <strong> {{ $pemberitahuan['pekerjaan'] }}</strong> ).</p>
+        <p style="text-align: justify; text-indent: 1cm;">Adapun spesifikasi teknis yang kami persyaratkan yaitu :</p>
+<ol>
+    <li>Ruang lingkup pekerjaan <strong> Pengadaan Material</li>
+    <li>Daftar Barang/Jasa ;</li>
+</ol>
 
-<table style="margin-left: 2.6cm; width: 15cm;">
+<table style="margin-left: auto; width: 100%;">
   <tr>
     <td style="border: 1px solid black; text-align:center; width: 0.6cm">No</td>
-    <td style="border: 1px solid black; text-align:center; ">Jenis Barang/jasa</td>
-    <td style="border: 1px solid black; text-align:center; width: 2cm">vol/Satuan</td>
-    <td style="border: 1px solid black; text-align:center; width: 3cm">Harga</td>
-    <td style="border: 1px solid black; text-align:center; width: 3cm; ">Jumlah</td>
+    <td style="border: 1px solid black; text-align:center; width: auto; ">Jenis Barang/jasa</td>
+    <td style="border: 1px solid black; text-align:center; width: auto; ">vol/Sat</td>
+    <td style="border: 1px solid black; text-align:center; width: auto; min-width: 60px" >Harga</td>
+    <td style="border: 1px solid black; text-align:center; width: auto; min-width: 60px">Jumlah</td>
   </tr>
   @php
       $no = 1;      
@@ -131,48 +132,23 @@
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
 
-    </table>
-    <!-- <div style=" page-break-after: always"></div> -->
-    <table>
-   <tr>
-    <td></td>
-    <td colspan="5" >
-        <div style="margin-left: 2.6cm; text-align:justify">
-        <p >Maka apabila Saudara berminat dan bersedia melaksanakan pekerjaan  <strong>{{ $kegiatan->kegiatan }}</strong> tersebut, diminta segera mengajukan surat penawaran harga.</p>
-        <p style=" text-align:justify">Surat penawaran dialamatkan kepada Bapak  <strong>{{ $kegiatan->ketua_tpk }} </strong>, selaku Tim Pelaksana Kegiatan dengan ketentuan sebagai berikut :</p>
-        <ol>
-           
-            <li>Surat penawaran dibuat rangkap 3 (tiga) asli, 1 (satu) bermeterai Rp. 10.000 dan sudah harus kami terima tanggal <strong>{{ Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->isoFormat('D MMMM Y')}}</strong></li>
-            <li>Surat penawaran dilampiri :</li>
-            <ol type="a">
-                <li>Form isian pengadaan barang/jasa,</li>
-                <li>Pakta integritas</li>
-                <li>Daftar penawaran harga termasuk pajak, bea meterai dan jasa penggandaan,</li>
-                <li>Foto copy Surat Ijin Usaha Perdagangan (SIUP),</li>
-                <li>Foto copy Nomor Pokok Wajib Pajak (NPWP).</li>
-            </ol>
+    </table>    
+    <p >Maka apabila Saudara berminat dan bersedia melaksanakan pekerjaan  <strong>{{ $kegiatan->kegiatan }}</strong> tersebut, diminta segera mengajukan surat penawaran harga.</p>
+    <p style=" text-align:justify">Surat penawaran dialamatkan kepada Bapak  <strong>{{ $kegiatan->ketua_tpk }} </strong>, selaku Tim Pelaksana Kegiatan dengan ketentuan sebagai berikut :</p>
+    <ol>
+       
+        <li>Surat penawaran dibuat rangkap 3 (tiga) asli, 1 (satu) bermeterai Rp. 10.000 dan sudah harus kami terima tanggal <strong>{{ Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->isoFormat('D MMMM Y')}}</strong></li>
+        <li>Surat penawaran dilampiri :</li>
+        <ol type="a">
+            <li>Form isian pengadaan barang/jasa,</li>
+            <li>Pakta integritas</li>
+            <li>Daftar penawaran harga termasuk pajak, bea meterai dan jasa penggandaan,</li>
+            <li>Foto copy Surat Ijin Usaha Perdagangan (SIUP),</li>
+            <li>Foto copy Nomor Pokok Wajib Pajak (NPWP).</li>
         </ol>
+    </ol>
+    <p>Demikian surat permintaan penawaran ini kami sampaikan atas perhatian Saudara diucapkan terima kasih. </p>
     </div>
-    </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td colspan="5">
-        </td>
-    </tr>
-</table>
-<table>
-    <tr>
-        <td>
-            <p style="margin-left: 2.5cm">Demikian surat permintaan penawaran ini kami sampaikan atas perhatian Saudara diucapkan terima kasih. </p>
-        </td>
-    </tr>
-    <tr>
-        <!-- <x-double-signature left-keterangan="Kepala Desa Selokarto" left="{{ strToUpper(Auth::user()->kepala_desa) }}" right="{{ strToUpper($kegiatan->ketua_tpk) }}" right-keterangan="TPK Desa"></x-double-signature> -->
-    </tr>
-    
-
-</table>
 <div style="margin-left:0cm">
         <table style="width: 100%">
             <tr>
@@ -204,7 +180,7 @@
         </table>
         
     </div>
-
+</div>
 </body>
 </html>
 

@@ -104,11 +104,14 @@ onerror="this.src='{{ asset('') }}'"
         <li>Foto copy Nomor Pokok Wajib Pajak (NPWP)</li>
     </ol>
     <p>Harga penawaran tersebut di atas sudah termasuk Pajak Pertambahan Nilai serta biaya lainnya yang wajib dilunasi oleh kami.</p>
-    <p>Demikian di sampaikannya Surat Penawaran ini, maka kami  menyatakan sanggup
-dan akan tunduk pada semua ketentuan yang berlaku.
+    
 </p>
 
     <table style="width: 100%">
+        <tr>
+            <td colspan="3"><p>Demikian di sampaikannya Surat Penawaran ini, maka kami  menyatakan sanggup
+dan akan tunduk pada semua ketentuan yang berlaku.</td>
+        </tr>
         <tr>
             <td style="width: 50%; text-align: center;"></td>
             <td style="width: 50%; text-align: center;">
