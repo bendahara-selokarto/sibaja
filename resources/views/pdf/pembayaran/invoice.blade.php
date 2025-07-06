@@ -7,16 +7,34 @@
     <title>Invoice</title>
     <style>
         @page {
-            margin: 2cm;
+            margin: 0;
         }
-        table, tr, th, td {
-            /* border: 1px solid black; */
+        .invoice {
+            font-size: 12pt;
+            margin-top: 20px;
+            margin-right: 60px;
+            margin-bottom: 60px;
+            margin-left: 120px;
+        }
+        table {
+            width: 100%;
             border-collapse: collapse;
         }
+
+        table:nth-of-type(2) th,
+        table:nth-of-type(2) td {
+            border: 1px solid black;
+            padding: 2px;
+        }
+        table:nth-of-type(3) td {
+            line-height: 2px;
+        }
+          
         
         
     </style>
    </head>
+<<<<<<< HEAD
    <body>   
  
 @if(!empty($penyedia1->kop_surat))
@@ -81,14 +99,46 @@ onerror="this.src='{{ asset('') }}'"
 <p>TEMPAT</p>
 <br>
 <table style="margin-left: 4cm">
+=======
+   <body>
+    <div class="invoice">   
+    <img 
+        src="storage/{{$penyedia->kop_surat }}" 
+        alt=" " 
+        style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
+        onerror="this.src='{{ asset('') }}'" 
+        >
+    <p style="text-align: right">{{ $penyedia->kabupaten }}, {{  Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</p>
+    
+    <table style="line-height: 2px;" >
+        <tr>
+            <td style="width: 70px">Nomor</td>
+            <td>: {{ 'INV-' . strtoupper(rand(10, 300) ) . '/' . Auth::user()->tahun_anggaran}}</td>
+        </tr>
+        <tr>
+            <td>Hal</td>
+            <td>: Invoice</td>
+        </tr>
+    </table>
+    
+    
+    <div style="width: 40%; margin-left:auto">
+        <p>Kepada Yth: PKA Desa {{ Auth::user()->desa }} Kecamatan Pecalungan</p>
+        <p>di-</p>
+        <p>TEMPAT</p>
+    </div>
+    <h2 style="text-align: center">INVOICE</h2>  
+    <br>
+<table>
+>>>>>>> farida
     <thead>
         <tr>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">No.</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Jenis Barang</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Vol</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Sat</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Harga Satuan</th>
-            <th style="border-bottom: 1px dashed black; border-top: 1px dashed black; ">Jumlah</th>
+            <th style=" ">No.</th>
+            <th style=" ">Jenis Barang</th>
+            <th style=" ">Vol</th>
+            <th style=" ">Sat</th>
+            <th style=" ">Harga Satuan</th>
+            <th style=" ">Jumlah</th>
         </tr>
     </thead>
     <tbody>
@@ -105,22 +155,15 @@ onerror="this.src='{{ asset('') }}'"
         @endforeach        
         <tr>
            
-            <td style="border-top: 1px dashed black; text-align:right" colspan="5">Sub Total</td>
-            <td style="border-top: 1px dashed black; text-align:right">{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>   </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="text-align:right">PPN dan PPh Pasal 22</td>
-            <td style="text-align:right">{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/111)), 0, ',', '.') }}</td>
+            <td style="text-indent: 300px"  colspan="5">Jumlah</td>
+            <td >{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>   </tr>
+        <tr>            
+            <td style="text-indent: 300px" colspan="5">PPN dan PPh Pasal 22</td>
+            <td >{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/111)), 0, ',', '.') }}</td>
         </tr>   <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="border-bottom: 1px dashed black; text-align:right">Total</td>
-            <td style="border-bottom: 1px dashed black; text-align:right">
+           
+            <td style="text-indent: 300px" colspan="5">Jumlah Total</td>
+            <td>
                 {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi - ($kegiatan->negosiasiHarga->harga_negosiasi * (14/111))), 0, ',', '.') }}
             </td>   </tr>   </tbody>
 </table>
@@ -145,7 +188,7 @@ onerror="this.src='{{ asset('') }}'"
 </table>
 <br>
 <h6><strong>Pembayaran via Transfer dianggap lunasi setelah terkonfirmasi</strong></h6>
-
+</div>
 </body>
 </html>
 

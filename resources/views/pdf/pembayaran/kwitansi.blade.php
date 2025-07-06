@@ -104,5 +104,14 @@
     </div>
 </body>
 </html>
+<<<<<<< HEAD
 @include('pdf.pembayaran.new-invoice')
+=======
+@include('pdf.pembayaran.invoice')
+@include('pdf.kuitansi')
+
+
+{{-- Uncomment the following line if you want to add a page break after the kwitansi --}}
+{{-- <div style="page-break-after: always;"></div> --}}
+>>>>>>> farida
 

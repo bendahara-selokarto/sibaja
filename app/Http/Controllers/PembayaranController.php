@@ -129,7 +129,12 @@ class PembayaranController extends Controller
         $negosiasiHarga->total = $negosiasiHarga->harga_negosiasi + $negosiasiHarga->ppn + $negosiasiHarga->pph_22;
                 
 
+<<<<<<< HEAD
         $pdf = Pdf::loadView('pdf.pembayaran.kwitansi', compact('kegiatan', 'negosiasiHarga', 'penyedia' , 'item'));
+=======
+
+        $pdf = Pdf::loadView('pdf.pembayaran.kuitansi', compact('kegiatan', 'penyedia' , 'item'));
+>>>>>>> farida
         $filename = '4. PEMBAYARAN - (' . $kegiatan->kegiatan . ')';
         // Replace invalid filename characters with underscore
         $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
