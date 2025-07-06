@@ -64,7 +64,6 @@
     <h2 style="text-align: center">INVOICE</h2>  
     <br>
 <table>
->>>>>>> farida
     <thead>
         <tr>
             <th style=" ">No.</th>
@@ -90,14 +89,14 @@
         <tr>
            
             <td style="text-indent: 300px"  colspan="5">Jumlah</td>
-            <td >{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>   </tr>
+            <td style="text-align: right">{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>   </tr>
         <tr>            
             <td style="text-indent: 300px" colspan="5">PPN dan PPh Pasal 22</td>
-            <td >{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/111)), 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/111)), 0, ',', '.') }}</td>
         </tr>   <tr>
            
             <td style="text-indent: 300px" colspan="5">Jumlah Total</td>
-            <td>
+            <td style="text-align: right">
                 {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi - ($kegiatan->negosiasiHarga->harga_negosiasi * (14/111))), 0, ',', '.') }}
             </td>   </tr>   </tbody>
 </table>

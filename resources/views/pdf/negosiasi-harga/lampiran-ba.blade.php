@@ -32,12 +32,12 @@
              @foreach ($data['item']['uraian'] as $k => $v )
              <tr>
                 <td style="text-align: center">{{ $loop->iteration }}</td>
-                 <td>{{ $data['item']['uraian'][$k] }}</td>
-                 <td>{{ $data['item']['volume'][$k] . ' '. $data['item']['satuan'][$k] }}</td>
-                 <td style="text-align: right"> {{ number_format($data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
-            <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
-            <td style="text-align: right"> {{ $data['item']['harga_negosiasi'][$k], 0, ',', '.' }}</td>
-            <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_negosiasi'][$k], 0, ',', '.') }}</td>
+                <td>{{ $data['item']['uraian'][$k] }}</td>
+                <td>{{ $data['item']['volume'][$k] . ' '. $data['item']['satuan'][$k] }}</td>
+                <td style="text-align: right"> {{ number_format($data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
+                <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_satuan'][$k], 0, ',', '.') }}</td>
+                <td style="text-align: right"> {{ number_format($data['item']['harga_negosiasi'][$k], 0, ',', '.' )}}</td>
+                <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_negosiasi'][$k], 0, ',', '.') }}</td>
             </tr>
              @endforeach
              <tr>
