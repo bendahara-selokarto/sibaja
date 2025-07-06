@@ -104,15 +104,13 @@
     </ol>
     <p>Harga penawaran tersebut di atas sudah termasuk Pajak Pertambahan Nilai serta biaya lainnya yang wajib dilunasi oleh kami.</p>
     
-    <p>Demikian di sampaikannya Surat Penawaran ini, maka kami menyatakan sanggup dan akan tunduk pada semua ketentuan yang berlaku.</p>
-
-    <table style="width: 100%">
-        <tr>
-            <td style="width: 50%; text-align: center;"></td>
-            <td style="width: 50%; text-align: center;">
-                <p>Hormat Kami</p>
-                <p>{{ $penyedia2->jabata_pemilik ." " .$penyedia2->nama_penyedia }}</p>
-                <br><br>
-                <p><strong>{{ $penyedia2->nama_pemilik }}</strong></p>
-            </td>
-        </tr>
+    
+    <table>
+        <p>Demikian di sampaikannya Surat Penawaran ini, maka kami menyatakan sanggup dan akan tunduk pada semua ketentuan yang berlaku.</p>
+        <div style="text-align:center; margin-left: auto; width:300px">
+            <p>Hormat Kami</p>
+            <p>{{ $penyedia2->jabata_pemilik ." " .$penyedia2->nama_penyedia }}</p>
+            <br><br>
+            <p><strong>{{ $penyedia2->nama_pemilik }}</strong></p>
+        </div>
+    </table>

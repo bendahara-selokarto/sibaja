@@ -107,17 +107,15 @@ onerror="this.src='{{ asset('') }}'"
     
 </p>
 
-    <table style="width: 100%">
-        <tr>
-            <td colspan="3"><p>Demikian di sampaikannya Surat Penawaran ini, maka kami  menyatakan sanggup
-dan akan tunduk pada semua ketentuan yang berlaku.</td>
-        </tr>
-        <tr>
-            <td style="width: 50%; text-align: center;"></td>
-            <td style="width: 50%; text-align: center;">
-                <p style="padding: 0%">Hormat Kami</p>
-                <p style="padding: 0%">{{ $penyedia1->jabata_pemilik ." " .$penyedia1->nama_penyedia }}</p>
-                <br><br><br>
-                <p><strong>{{ $penyedia1->nama_pemilik }}</strong></p>
-            </td>
-        </tr>
+        <table>
+            <div>
+                <p>Demikian di sampaikannya Surat Penawaran ini, maka kami  menyatakan sanggup dan akan tunduk pada semua ketentuan yang berlaku. </p>
+                <div style="margin-left: auto; width: 300px; text-align:center">
+                    <p style="padding: 0%">Hormat Kami</p>
+                    <p style="padding: 0%">{{ $penyedia1->jabata_pemilik ." " .$penyedia1->nama_penyedia }}</p>
+                    <br><br><br>
+                    <p><strong>{{ $penyedia1->nama_pemilik }}</strong></p>
+            </div>  
+
+        </table>
+</div>
