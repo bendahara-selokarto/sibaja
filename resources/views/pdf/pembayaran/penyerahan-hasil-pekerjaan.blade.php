@@ -50,7 +50,7 @@
     
     <br><br><br>
     <div style="text-align: center; width: 300px; margin-left: auto">
-        <p>{{ $penyedia->jabata_pemilik}}</p>
+        <p>{{ $penyedia->jabata_pemilik}} ({{ $penyedia->nama_penyedia}})</p>
         <br><br>
         <p>{{ $penyedia->nama_pemilik}}</p>
     </div>
