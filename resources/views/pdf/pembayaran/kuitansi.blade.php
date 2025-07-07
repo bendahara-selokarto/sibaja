@@ -80,12 +80,12 @@
             <tr>
                 <td>Uang sebanyak</td>
                 <td style="width: 10px">: </td>
-                <td><strong>Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-</strong></td>
+                <td><strong>Rp. {{ number_format(round($kegiatan->negosiasiHarga->total, -2), 0, ',', '.') }},-</strong></td>
             </tr>
             <tr>
                 <td>Terbilang</td>
                 <td>: </td>
-                <td><i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i></td>
+                <td><i>( {{ ucwords(Terbilang::make(round($kegiatan->negosiasiHarga->total, -2)) )}} Rupiah. )</i></td>
             </tr>
             <tr>
                 <td>Untuk Keperluan</td>
@@ -108,7 +108,7 @@
             <p style="line-height: 2; ">
                 Yang Menerima;
                 <br>
-                {{ strtoupper($penyedia->nama_penyedia) }}
+                {{ strtoupper($penyedia->jabata_pemilik) }} ({{ strtoupper($penyedia->nama_penyedia) }})
                 <br><br><br>
                 <i>materai</i>
                 <br><br>

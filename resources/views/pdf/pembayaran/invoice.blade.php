@@ -19,19 +19,22 @@
     <table style="line-height: 1;" >
         <tr>
             <td style="width: 70px">Nomor</td>
-            <td>: {{ 'INV-' . strtoupper(rand(10, 300) ) . '/' . Auth::user()->tahun_anggaran}}</td>
+            <td style="width: 300px">: {{ 'INV-' . strtoupper(rand(10, 300) ) . '/' . Auth::user()->tahun_anggaran}}</td>
+            <td>
+                Kepada Yth:
+            </td>
         </tr>
         <tr>
             <td>Hal</td>
             <td>: Invoice</td>
+            <td>
+                PKA Desa {{ Auth::user()->desa }} <br>Kecamatan Pecalungan
+            </td>
         </tr>
-    </table>
-    
-    
-    <div style="width: 40%; margin-left:auto">
-        <p>Kepada Yth: PKA Desa {{ Auth::user()->desa }} Kecamatan Pecalungan</p>
-        <p>di-</p>
-        <p>TEMPAT</p>
+    </table>   
+    <div style="width: 37%; margin-left:auto"><br>
+        di- <br>
+        <p style="text-align: center; text-indent: 5pt">TEMPAT</p>
     </div>
     <h2 style="text-align: center">INVOICE</h2>  
     <br>
@@ -54,30 +57,30 @@
             <td style="text-align: left">{{ $item['uraian'][$key] }}</td>         
             <td style="text-align: right">{{ $item['volume'][$key]  }}</td>         
             <td style="text-align: left">{{ $item['satuan'][$key] }}</td>         
-            <td style="text-align: right">{{ number_format($item['harga_negosiasi'][$key], 0, ',', '.') }}</td>         
-            <td style="text-align: right">{{ number_format($item['volume'][$key] * $item['harga_negosiasi'][$key], 0, ',', '.') }}</td>         
+            <td style="text-align: right">{{ number_format($item['harga_negosiasi'][$key], 0, ',', '.') }},-</td>         
+            <td style="text-align: right">{{ number_format($item['volume'][$key] * $item['harga_negosiasi'][$key], 0, ',', '.') }},-</td>         
         </tr>              
         @endforeach        
         <tr>
            
             <td style="text-indent: 300px"  colspan="5">Jumlah</td>
-            <td style="text-align: right">{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>   </tr>
+            <td style="text-align: right">{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-</td>   </tr>
         <tr>            
             <td style="text-indent: 300px" colspan="5">PPN dan PPh Pasal 22</td>
-            <td style="text-align: right">{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/100)), 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/100)), 0, ',', '.') }},-</td>
         </tr>
         <tr>
            
             <td style="text-indent: 300px" colspan="5">Jumlah Total</td>
             <td style="text-align: right">
-                {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi + ($kegiatan->negosiasiHarga->harga_negosiasi * (14/100))), 0, ',', '.') }}
+                {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi + ($kegiatan->negosiasiHarga->harga_negosiasi * (14/100))), 0, ',', '.') }},-
             </td>   
         </tr>
         <tr>
            
             <td style="text-indent: 300px" colspan="5">Dibulatkan</td>
             <td style="text-align: right">
-                {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi + ($kegiatan->negosiasiHarga->harga_negosiasi * (14/100)), -2  ), 0, ',', '.') }}
+                {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi + ($kegiatan->negosiasiHarga->harga_negosiasi * (14/100)), -2  ), 0, ',', '.') }},-
             </td>   
         </tr>
     </tbody>
@@ -102,7 +105,7 @@
     </tr>
 </table>
 <br>
-<h4><strong>Pembayaran via Transfer dianggap lunasi setelah terkonfirmasi</strong></h4>
+<h4><strong>Pembayaran via Transfer dianggap lunas setelah terkonfirmasi</strong></h4>
 </div>
 </body>
 </html>

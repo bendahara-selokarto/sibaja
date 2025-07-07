@@ -130,7 +130,7 @@ class PembayaranController extends Controller
         $negosiasiHarga->total = $negosiasiHarga->harga_negosiasi + $negosiasiHarga->ppn + $negosiasiHarga->pph_22;
                 
 
-
+        // dd($kegiatan);
         $kegiatan->nomor = $kegiatan->pemberitahuan->no_pbj;
         $pdf = Pdf::loadView('pdf.pembayaran.kuitansi', compact('kegiatan', 'penyedia' , 'item', 'tgl'));
         $filename = '4. PEMBAYARAN - (' . $kegiatan->kegiatan . ')';
