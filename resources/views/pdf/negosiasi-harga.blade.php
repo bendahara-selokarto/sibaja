@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Negosiasi Harga</title>
 </head>
 <body>
    
@@ -125,6 +124,7 @@
 </html>
 @include('pdf.negosiasi-harga.ba-klarifikasi') 
 @include('pdf.negosiasi-harga.lampiran-ba') 
+@include('pdf.negosiasi-harga.persetujuan-penawaran') 
 @include('pdf.negosiasi-harga.perjanjian')
 @include('pdf.negosiasi-harga.spk') 
 
