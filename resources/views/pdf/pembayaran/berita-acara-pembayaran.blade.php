@@ -58,8 +58,8 @@
     </ol>
 
     <p style="text-align: justify">
-        PIHAK PERTAMA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/Perj/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah membayar untuk pekerjaan {{ $kegiatan->kegiatan }}. kepada PIHAK KEDUA sebesar Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i> <br>
-        PIHAK KEDUA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/Perj/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah melaksanakan pekerjaan {{ $kegiatan->kegiatan }} sesuai permintaan PIHAK PERTAMA dan telah menerima pembayaran atas pekerjaan tersebut sebesar Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i>
+        PIHAK PERTAMA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/PERJ/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah membayar untuk pekerjaan {{ $kegiatan->kegiatan }}. kepada PIHAK KEDUA sebesar Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i> <br>
+        PIHAK KEDUA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/PERJ/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah melaksanakan pekerjaan {{ $kegiatan->kegiatan }} sesuai permintaan PIHAK PERTAMA dan telah menerima pembayaran atas pekerjaan tersebut sebesar Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i>
     </p>
     <p style="text-align: justify">
         Pembayaran tersebut disaksikan oleh {{ Auth::user()->kepala_desa}}  Jabatan Kepala Desa {{Auth::user()->desa }} selaku Pemegang Kekuasaan Pengelolaan Keuangan Desa.
