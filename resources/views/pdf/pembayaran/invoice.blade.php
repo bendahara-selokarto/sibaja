@@ -65,12 +65,22 @@
         <tr>            
             <td style="text-indent: 300px" colspan="5">PPN dan PPh Pasal 22</td>
             <td style="text-align: right">{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/100)), 0, ',', '.') }}</td>
-        </tr>   <tr>
+        </tr>
+        <tr>
            
             <td style="text-indent: 300px" colspan="5">Jumlah Total</td>
             <td style="text-align: right">
                 {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi + ($kegiatan->negosiasiHarga->harga_negosiasi * (14/100))), 0, ',', '.') }}
-            </td>   </tr>   </tbody>
+            </td>   
+        </tr>
+        <tr>
+           
+            <td style="text-indent: 300px" colspan="5">Dibulatkan</td>
+            <td style="text-align: right">
+                {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi + ($kegiatan->negosiasiHarga->harga_negosiasi * (14/100)), -2  ), 0, ',', '.') }}
+            </td>   
+        </tr>
+    </tbody>
 </table>
 <br>
 <table>

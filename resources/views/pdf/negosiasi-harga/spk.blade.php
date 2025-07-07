@@ -140,7 +140,7 @@
         </tr>
         <tr>
           <td >NILAI PEKERJAAN</td>
-            <td >: Rp. {{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }},-</td>
+            <td >: Rp. {{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }},-</td>
         </tr>
       </tbody>
       </table>
@@ -181,7 +181,11 @@
             <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }}</td>
         </tr>
         <tr>
-          <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make($data['negosiasiHarga']->harga_total)) }} Rupiah )</td>
+          <td style="text-align: right" colspan="4">Dibulatkan</td>
+            <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+          <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, -2))) }} Rupiah )</td>
         </tr>
       </tbody>
       </table>

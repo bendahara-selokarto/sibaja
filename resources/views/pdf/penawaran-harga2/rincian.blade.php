@@ -91,10 +91,14 @@ onerror="this.src='{{ asset('') }}'"
             
             <tr>
                 <td colspan="4" style="border: 1px solid black; text-align:right">Jumlah Total (Harga + Pajak) </td>
-                <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_2 * (114/100) , 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_total_2 , 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" style="border: 1px solid black; text-align:right">Dibulatkan</td>
+                <td style="border: 1px solid black; text-align:right">{{ number_format(round($jumlah_total_2 ,-2), 0, ',', '.') }}</td>
             </tr>
           </table>
-          <strong><p>Terbilang : {{ Terbilang::make($jumlah_2 * (114/100)) }} rupiah</p></strong>
+          <strong><p>Terbilang : {{ Terbilang::make(round($jumlah_total_2, -2)) }} rupiah</p></strong>
           <br><br><br>
           <table style="width: 100%">
             <tr>

@@ -34,13 +34,13 @@
         <td></td>
         <td>Harga Penawaran</td>
         <td>:</td>
-        <td>{{ number_format($data['nilai_total_penawaran'], 0, ',', '.') }} ( {{ Terbilang::make($data['penawaranHarga']->nilai_penawaran) }} rupiah )</td>
+        <td>{{ number_format(round($data['nilai_total_penawaran'], -2), 0, ',', '.') }} ( {{ Terbilang::make(round($data['penawaranHarga']->nilai_penawaran, -2)) }} rupiah )</td>
     </tr>
     <tr>
         <td></td>
         <td>Harga Negosiasi</td>
         <td>:</td>
-        <td>{{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }} ( {{ Terbilang::make($data['negosiasiHarga']->harga_total) }} rupiah )</td>
+        <td>{{ number_format(round($data['negosiasiHarga']->harga_total,-2), 0, ',', '.') }} ( {{ Terbilang::make(round($data['negosiasiHarga']->harga_total, -2)) }} rupiah )</td>
     </tr>
     <!-- <tr>
         <td style="width: 0.5cm">2.</td>
@@ -83,7 +83,7 @@
     <tr>
         <td>Harga Negosiasi</td>
         <td>:</td>
-        <td>Rp. {{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.')  }} ( {{ Terbilang::make($data['negosiasiHarga']->harga_total) }} rupiah )</td>
+        <td>Rp. {{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.')  }} ( {{ Terbilang::make(round($data['negosiasiHarga']->harga_total, -2)) }} rupiah )</td>
     </tr>
 </table>
 

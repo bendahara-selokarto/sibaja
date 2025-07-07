@@ -131,6 +131,10 @@
         <td colspan="4" style="border: 1px solid black; text-align:right">Jumlah Total</td>
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
+    <tr>
+        <td colspan="4" style="border: 1px solid black; text-align:right">Dibulatkan</td>
+        <td style="border: 1px solid black; text-align:right"></td>
+    </tr>
 
     </table>    
     <p >Maka apabila Saudara berminat dan bersedia melaksanakan pekerjaan  <strong>{{ $kegiatan->kegiatan }}</strong> tersebut, diminta segera mengajukan surat penawaran harga.</p>

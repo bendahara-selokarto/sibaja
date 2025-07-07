@@ -59,10 +59,16 @@
             <td style="text-align: right">{{ number_format($data['negosiasiHarga']->pph_22, 0, ',', '.') }}</td>
             </tr>
             <tr>
-            <td style="text-align: right" colspan="4">Jumlah Total</td>
-            <td style="text-align: right">{{ number_format($data['penawaranHarga']->harga_total, 0, ',', '.') }}</td>
-            <td style="text-align: right; background-color:rgb(209, 206, 206);"></td>
-            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }}</td>
+                <td style="text-align: right" colspan="4">Jumlah Total</td>
+                <td style="text-align: right">{{ number_format($data['penawaranHarga']->harga_total, 0, ',', '.') }}</td>
+                <td style="text-align: right; background-color:rgb(209, 206, 206);"></td>
+                <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td style="text-align: right" colspan="4">Dibulatkan</td>
+                <td style="text-align: right">{{ number_format(round($data['penawaranHarga']->harga_total, -2), 0, ',', '.') }}</td>
+                <td style="text-align: right; background-color:rgb(209, 206, 206);"></td>
+                <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
             </tr>
             <tr>
             <td style="text-align: center" colspan="7">( {{ ucwords(Terbilang::make($data['negosiasiHarga']->harga_total)) }} Rupiah )</td>
