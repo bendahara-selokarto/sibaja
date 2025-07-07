@@ -64,6 +64,15 @@
             width: 15mm;
         }
        
+        table.ba-pembayaran {
+            padding: 0px;
+            height: 1px;
+            vertical-align: top;
+        }
+        table.ba-pembayaran td {
+            padding: 0px;
+            height: 15px;
+        }
         </style>
     <title>Document</title>
 </head>

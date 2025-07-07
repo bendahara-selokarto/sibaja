@@ -14,10 +14,9 @@
 
     <p>Pada hari ini <strong>{{ $tgl->isoFormat('dddd') }}</strong> tanggal <strong>{{ Terbilang::make($tgl->isoFormat('D')) }}</strong> bulan <strong>{{ $tgl->isoFormat('MMMM')}}</strong> tahun <strong>{{Auth::user()->tahun_anggaran}}</strong> bertempat di <strong>  Balaidesa {{ Auth::user()->desa}} </strong>, telah dilaksanakan pembayaran atas pekerjaan <strong>{{ $kegiatan->kegiatan}} </strong>antara :</p>
 
-    <ol type="I">
-        <li >
-            <table>
-                <tr style="height: 3px">
+            <table class="ba-pembayaran">
+                <tr>
+                    <td rowspan="3" style="vertical-align: top; width: 20px">I.</td>
                     <td style="width: 100px">Nama</td>
                     <td style="">:</td>
                     <td style="">{{ Auth::user()->kepala_desa}}</td>
@@ -33,11 +32,10 @@
                     <td>{{Auth::user()->desa}}</td>
                 </tr>
             </table>
-        </li>
-        <p>Selanjutnya disebut <strong>PIHAK PERTAMA</strong></p>
-        <li>
+        <p style="margin-top: 0">Selanjutnya disebut <strong>PIHAK PERTAMA</strong></p>
             <table>
                 <tr>
+                    <td rowspan="3" style="vertical-align: top; width: 20px">II.</td>
                     <td style="width: 100px">Nama</td>
                     <td>:</td>
                     <td>{{ $penyedia->nama_pemilik}}</td>
@@ -53,13 +51,11 @@
                     <td>{{ $penyedia->alamat_penyedia}}</td>
                 </tr>
             </table>
-        </li>
-        <p>Selanjutnya disebut <strong>PIHAK KEDUA</strong></p>
-    </ol>
-
+        <p style="margin-top: 0">Selanjutnya disebut <strong>PIHAK KEDUA</strong></p>
+<div style="line-height: 1">
     <p style="text-align: justify">
-        PIHAK PERTAMA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/PERJ/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah membayar untuk pekerjaan {{ $kegiatan->kegiatan }}. kepada PIHAK KEDUA sebesar Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i> <br>
-        PIHAK KEDUA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/PERJ/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah melaksanakan pekerjaan {{ $kegiatan->kegiatan }} sesuai permintaan PIHAK PERTAMA dan telah menerima pembayaran atas pekerjaan tersebut sebesar Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i>
+        PIHAK PERTAMA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/PERJ/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah membayar untuk pekerjaan {{ $kegiatan->kegiatan }}. kepada PIHAK KEDUA sebesar Rp. {{ number_format(round($kegiatan->negosiasiHarga->total, -2), 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make(round($kegiatan->negosiasiHarga->total, -2)) )}} Rupiah. )</i> <br>
+        PIHAK KEDUA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/PERJ/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah melaksanakan pekerjaan {{ $kegiatan->kegiatan }} sesuai permintaan PIHAK PERTAMA dan telah menerima pembayaran atas pekerjaan tersebut sebesar Rp. {{ number_format(round($kegiatan->negosiasiHarga->total,-2), 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make(round($kegiatan->negosiasiHarga->total, -2)) )}} Rupiah. )</i>
     </p>
     <p style="text-align: justify">
         Pembayaran tersebut disaksikan oleh {{ Auth::user()->kepala_desa}}  Jabatan Kepala Desa {{Auth::user()->desa }} selaku Pemegang Kekuasaan Pengelolaan Keuangan Desa.
@@ -67,21 +63,15 @@
     <p style="text-align: justify">
         Demikian Berita Acara ini dibuat rangkap 2 (dua) masing-masing bermeterai cukup dan mempunyai kekuatan hukum yang sama untuk dipertanggungjawabkan sesuai peraturan perundang-undangan yang berlaku.
     </p>
+</div>
 
     <table width="100%">
         <tr>
-            <td style="text-align: center;">PIHAK KEDUA</td>
-            <td></td>
-            <td style="text-align: center;">PIHAK PERTAMA</td>
-        </tr>
-        <tr>
-            <td style="height: 60px;"></td>
-            <td></td>
-            <td style="text-align: center;">PKA</td>
+            <td style="text-align: center;">PIHAK KEDUA <br><br><br><br></td>
+            <td style="text-align: center;">PIHAK PERTAMA <br>PKA <br><br><br></td>
         </tr>
         <tr>
             <td style="text-align: center;">{{$penyedia->nama_pemilik}}</td>
-            <td></td>
             <td style="text-align: center;">{{ $kegiatan->pka }}</td>
         </tr>
     </table>
