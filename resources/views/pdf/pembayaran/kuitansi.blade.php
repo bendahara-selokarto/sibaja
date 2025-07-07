@@ -25,8 +25,9 @@
 
         }
 
-        table.kuitansi > td {
+        table.kuitansi td {
             padding: 10px;
+            vertical-align: text-top;
         }
 
         table.invoice th, 
@@ -66,7 +67,7 @@
 </head>
 <body>
     <div class="kuitansi">
-        <h1 style="text-align: center;">KUITANSI</h1>
+        <h1 style="text-align: center; margin-top: 130px">KUITANSI</h1>
         <br><br>
         <table class="kuitansi">
             <tr style="margin-bottom: 20px;">
@@ -77,12 +78,12 @@
             <tr>
                 <td>Uang sebanyak</td>
                 <td style="width: 10px">: </td>
-                <td>Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-</td>
+                <td><strong>Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-</strong></td>
             </tr>
             <tr>
                 <td>Terbilang</td>
                 <td>: </td>
-                <td>{{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah.</td>
+                <td><i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i></td>
             </tr>
             <tr>
                 <td>Untuk Keperluan</td>

@@ -54,8 +54,8 @@
             <td style="text-align: left">{{ $item['uraian'][$key] }}</td>         
             <td style="text-align: right">{{ $item['volume'][$key]  }}</td>         
             <td style="text-align: left">{{ $item['satuan'][$key] }}</td>         
-            <td style="text-align: right">{{ number_format($item['harga_satuan'][$key], 0, ',', '.') }}</td>         
-            <td style="text-align: right">{{ number_format($item['volume'][$key] * $item['harga_satuan'][$key], 0, ',', '.') }}</td>         
+            <td style="text-align: right">{{ number_format($item['harga_negosiasi'][$key], 0, ',', '.') }}</td>         
+            <td style="text-align: right">{{ number_format($item['volume'][$key] * $item['harga_negosiasi'][$key], 0, ',', '.') }}</td>         
         </tr>              
         @endforeach        
         <tr>
@@ -64,12 +64,12 @@
             <td style="text-align: right">{{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }}</td>   </tr>
         <tr>            
             <td style="text-indent: 300px" colspan="5">PPN dan PPh Pasal 22</td>
-            <td style="text-align: right">{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/111)), 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi * (14/100)), 0, ',', '.') }}</td>
         </tr>   <tr>
            
             <td style="text-indent: 300px" colspan="5">Jumlah Total</td>
             <td style="text-align: right">
-                {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi - ($kegiatan->negosiasiHarga->harga_negosiasi * (14/111))), 0, ',', '.') }}
+                {{ number_format(round($kegiatan->negosiasiHarga->harga_negosiasi + ($kegiatan->negosiasiHarga->harga_negosiasi * (14/100))), 0, ',', '.') }}
             </td>   </tr>   </tbody>
 </table>
 <br>
@@ -88,11 +88,11 @@
     </tr>
     <tr>
         <td>Nama Bank</td>
-        <td>: {{ $penyedia->bank }}</td>s
+        <td>: {{ $penyedia->bank }}</td>
     </tr>
 </table>
 <br>
-<h6><strong>Pembayaran via Transfer dianggap lunasi setelah terkonfirmasi</strong></h6>
+<h4><strong>Pembayaran via Transfer dianggap lunasi setelah terkonfirmasi</strong></h4>
 </div>
 </body>
 </html>
