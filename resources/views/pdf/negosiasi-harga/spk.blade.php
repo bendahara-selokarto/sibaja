@@ -22,6 +22,45 @@
         }     
        
     </style>
+    <style>
+      div.daftar-hadir {
+        margin-top: 40px;
+        margin-right:40px;
+        margin-bottom: 40px;
+        margin-left: 60px;
+      }
+      table.daftar-hadir {
+        width: 100%;
+        vertical-align: top;
+        text-align: center;
+        border-collapse: collapse;
+        border: 1px solid black;
+      }
+      table.daftar-hadir th {      
+        border: 1px solid black;
+      }
+      table.daftar-hadir td {      
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+        height: 50px;
+      }
+      table.daftar-hadir:nth-child(1) {
+        width: 10%;      
+        
+      }
+      table.daftar-hadir:nth-child(2) {
+        width: 27%;      
+        
+      }
+      table.daftar-hadir:nth-child(2) {
+        width: 27%;      
+        
+      }
+      table.daftar-hadir:nth-child(2) {
+        width: auto;      
+        
+      }
+    </style>
 </head>
 <body>
     

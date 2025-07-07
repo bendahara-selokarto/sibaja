@@ -98,3 +98,4 @@
    </tr>
 </table>
 </div>
+@include('pdf.negosiasi-harga.daftar-hadir')
