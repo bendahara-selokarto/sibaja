@@ -36,27 +36,30 @@
         </tr>
        <tr>
             <td>1</td>
-            <td>{{ $data['kegiatan']->ketua_tpk }}</td>
+            {{-- <td>{{ $data['kegiatan']->ketua_tpk }}</td> --}}
+            <td> .............. </td>
             <td>Ketua TPK</td>
-            <td>..............</td>
+            <td> .............. </td>
        </tr>
        <tr>
             <td>2</td>
-            <td>..</td>
-            <td>Sekretaris TPK</td>
-            <td>..............</td>
-       </tr>
-       <tr>
+            <td> .............. </td>
+            <td> .............. </td>
+            <td> .............. </td>
+        </tr>
+        <tr>
             <td>3</td>
-            <td>..</td>
-            <td>Anggota TPK</td>
-            <td>..............</td>
-       </tr>
-       <tr>
+            <td> .............. </td>
+            <td> .............. </td>
+            <td> .............. </td>
+        </tr>
+        <tr>
             <td>4</td>
-            <td>{{ $data['penyedia']->nama_pemilik}}</td>
-            <td>{{ $data['penyedia']->jabata_pemilik}} <br> ({{ $data['penyedia']->nama_penyedia}})</td>
-            <td>..............</td>
+            {{-- <td>{{ $data['penyedia']->nama_pemilik}}</td> --}}
+            {{-- <td>{{ $data['penyedia']->jabata_pemilik}} <br> ({{ $data['penyedia']->nama_penyedia}})</td> --}}
+            <td> .............. </td>
+            <td> .............. </td>
+            <td> .............. </td>
        </tr>
     </table>
     <div style="text-align: center; width: 300px; margin-left:auto">
