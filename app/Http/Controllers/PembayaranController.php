@@ -6,6 +6,7 @@ use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PembayaranController extends Controller
@@ -112,7 +113,7 @@ class PembayaranController extends Controller
         $penyedia = Penyedia::find($id_penyedia);
 
         try {
-            $tgl_pembayaran = $kegiatan->pembayaran->tgl_pembayaran_cms;
+            $tgl =  Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms);
             $items = $kegiatan->negosiasiHarga->item;
             $item = json_decode($items, true);
             if (!$item) {
@@ -131,7 +132,7 @@ class PembayaranController extends Controller
 
 
         $kegiatan->nomor = $kegiatan->pemberitahuan->no_pbj;
-        $pdf = Pdf::loadView('pdf.pembayaran.kuitansi', compact('kegiatan', 'penyedia' , 'item'));
+        $pdf = Pdf::loadView('pdf.pembayaran.kuitansi', compact('kegiatan', 'penyedia' , 'item', 'tgl'));
         $filename = '4. PEMBAYARAN - (' . $kegiatan->kegiatan . ')';
         // Replace invalid filename characters with underscore
         $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);

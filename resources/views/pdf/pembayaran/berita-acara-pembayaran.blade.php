@@ -12,63 +12,61 @@
     <p style="text-align: center; margin-top: 0">NOMOR : {{$kegiatan->nomor }} /BA-Pembayaran/{{Auth::user()->tahun_anggaran}}</p>
 
 
-    <p>Pada hari ini <strong></strong> tanggal <strong></strong> bulan <strong></strong> tahun <strong>{{Auth::user()->tahun_anggaran}}</strong> bertempat di <strong>  Balaidesa {{ Auth::user()->desa}} </strong>, telah dilaksanakan pembayaran atas pekerjaan <strong>{{ $kegiatan->kegiatan}} </strong>antara :</p>
+    <p>Pada hari ini <strong>{{ $tgl->isoFormat('dddd') }}</strong> tanggal <strong>{{ Terbilang::make($tgl->isoFormat('D')) }}</strong> bulan <strong>{{ $tgl->isoFormat('MMMM')}}</strong> tahun <strong>{{Auth::user()->tahun_anggaran}}</strong> bertempat di <strong>  Balaidesa {{ Auth::user()->desa}} </strong>, telah dilaksanakan pembayaran atas pekerjaan <strong>{{ $kegiatan->kegiatan}} </strong>antara :</p>
 
-    <ol type="I" style="line-height: 1">
-        <li>
-            <table >
+    <ol type="I">
+        <li >
+            <table>
                 <tr style="height: 3px">
-                    <td style="height: 3px">Nama</td>
-                    <td style="height: 3px">:</td>
-                    <td style="height: 3px">…………………………</td>
+                    <td style="width: 100px">Nama</td>
+                    <td style="">:</td>
+                    <td style="">{{ Auth::user()->kepala_desa}}</td>
                 </tr>
-                <tr style="height: 3px">
+                <tr style="">
                     <td>Jabatan</td>
                     <td>:</td>
-                    <td>…………………………</td>
+                    <td>Kepala Desa</td>
                 </tr>
                 <tr>
                     <td>Alamat</td>
                     <td>:</td>
-                    <td>…………………………</td>
+                    <td>{{Auth::user()->desa}}</td>
                 </tr>
             </table>
-            <p>Selanjutnya disebut <strong>PIHAK PERTAMA</strong></p>
         </li>
+        <p>Selanjutnya disebut <strong>PIHAK PERTAMA</strong></p>
         <li>
             <table>
                 <tr>
-                    <td>Nama</td>
+                    <td style="width: 100px">Nama</td>
                     <td>:</td>
-                    <td>…………………………</td>
+                    <td>{{ $penyedia->nama_pemilik}}</td>
                 </tr>
                 <tr>
                     <td>Jabatan</td>
                     <td>:</td>
-                    <td>…………………………</td>
+                    <td>{{ $penyedia->jabata_pemilik}}</td>
                 </tr>
                 <tr>
                     <td>Alamat</td>
                     <td>:</td>
-                    <td>…………………………</td>
+                    <td>{{ $penyedia->alamat_penyedia}}</td>
                 </tr>
             </table>
-            <p>Selanjutnya disebut <strong>PIHAK KEDUA</strong></p>
         </li>
+        <p>Selanjutnya disebut <strong>PIHAK KEDUA</strong></p>
     </ol>
 
-    <p>
-        PIHAK PERTAMA berdasarkan Surat Perjanjian Nomor ………. atas pekerjaan …… telah membayar untuk pekerjaan ……………. kepada PIHAK KEDUA sebesar Rp…………… (…………..) <br>
-        PIHAK KEDUA berdasarkan Surat Perjanjian Nomor ………. atas pekerjaan …… telah melaksanakan pekerjaan ……………. sesuai permintaan PIHAK PERTAMA dan telah menerima pembayaran atas pekerjaan tersebut sebesar Rp…………… (…………..)
+    <p style="text-align: justify">
+        PIHAK PERTAMA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/Perj/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah membayar untuk pekerjaan {{ $kegiatan->kegiatan }}. kepada PIHAK KEDUA sebesar Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i> <br>
+        PIHAK KEDUA berdasarkan Surat Perjanjian Nomor {{ $kegiatan->nomor }}/Perj/{{Auth::user()->tahun_anggaran }} atas pekerjaan {{ $kegiatan->kegiatan }} telah melaksanakan pekerjaan {{ $kegiatan->kegiatan }} sesuai permintaan PIHAK PERTAMA dan telah menerima pembayaran atas pekerjaan tersebut sebesar Rp. {{ number_format($kegiatan->negosiasiHarga->harga_negosiasi, 0, ',', '.') }},-  <i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->harga_negosiasi) )}} Rupiah. )</i>
     </p>
-    <p>
+    <p style="text-align: justify">
         Pembayaran tersebut disaksikan oleh {{ Auth::user()->kepala_desa}}  Jabatan Kepala Desa {{Auth::user()->desa }} selaku Pemegang Kekuasaan Pengelolaan Keuangan Desa.
     </p>
-    <p>
+    <p style="text-align: justify">
         Demikian Berita Acara ini dibuat rangkap 2 (dua) masing-masing bermeterai cukup dan mempunyai kekuatan hukum yang sama untuk dipertanggungjawabkan sesuai peraturan perundang-undangan yang berlaku.
     </p>
-
-    <br>
 
     <table width="100%">
         <tr>
