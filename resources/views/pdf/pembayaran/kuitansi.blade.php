@@ -128,4 +128,7 @@
 </body>
 </html>
 @include('pdf.pembayaran.invoice')
-{{-- @include('pdf.pembayaran.new-invoice') --}}
+@include('pdf.pembayaran.ba-pemeriksaan-barang')
+@include('pdf.pembayaran.daftar-nama-barang-yang-diperiksa')
+@include('pdf.pembayaran.laporan-hasil-pekerjaan')
+@include('pdf.pembayaran.penerimaan-hasil-pekerjaan')
