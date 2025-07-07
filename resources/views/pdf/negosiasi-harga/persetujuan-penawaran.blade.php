@@ -1,7 +1,7 @@
 
 <div class="persetujuan-penawaran" style="margin: 10px 20px 20px 50px">
 <x-kop-tpk/>
-<p style="text-align: right">{{Auth::user()->desa .", "}}</p>
+<p style="text-align: right">{{Auth::user()->desa .", "}}{{illuminate\support\Carbon::parse($data['penawaranHarga']->tgl_penawaran)->isoFormat('D MMMM Y') }} </p>
 <table style="margin-bottom: 40px">
     <tr>
         <td style="width: 60px">Nomor</td>
