@@ -4,11 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        div.papan-pengumuman {
+            line-height: 1;
+        }
+        table.papan-pengumuman {
+            width: 100%;
+            border-collapse: collapse;            
+        }
+        table.papan-pengumuman th,
+        table.papan-pengumuman td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
-   
-    
-
     <x-kop-tpk>
         <x-slot name="kegiatan">
             {{ $data['kegiatan']->kegiatan }}
@@ -127,4 +138,5 @@
 @include('pdf.negosiasi-harga.persetujuan-penawaran') 
 @include('pdf.negosiasi-harga.perjanjian')
 @include('pdf.negosiasi-harga.spk') 
+@include('pdf.negosiasi-harga.papan-pengumuman') 
 
