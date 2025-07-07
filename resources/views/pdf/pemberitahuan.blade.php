@@ -1,4 +1,5 @@
 @include('cover.pbj') 
+@include('pdf.check-list-PBJ') 
 <!DOCTYPE html>
 <html lang="en">
 <head>

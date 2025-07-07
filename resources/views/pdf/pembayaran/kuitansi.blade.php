@@ -1,6 +1,11 @@
-@include('pdf.pembayaran.ba-serah-terima-hasil-pekerjaan')
 @include('pdf.pembayaran.penyerahan-hasil-pekerjaan')
+@include('pdf.pembayaran.ba-pemeriksaan-barang')
+@include('pdf.pembayaran.daftar-nama-barang-yang-diperiksa')
+@include('pdf.pembayaran.penerimaan-hasil-pekerjaan')
+@include('pdf.pembayaran.laporan-hasil-pekerjaan')
+@include('pdf.pembayaran.ba-serah-terima-hasil-pekerjaan')
 @include('pdf.pembayaran.berita-acara-pembayaran')
+@include('pdf.pembayaran.invoice')
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -127,8 +132,3 @@
     </div>
 </body>
 </html>
-@include('pdf.pembayaran.invoice')
-@include('pdf.pembayaran.ba-pemeriksaan-barang')
-@include('pdf.pembayaran.daftar-nama-barang-yang-diperiksa')
-@include('pdf.pembayaran.laporan-hasil-pekerjaan')
-@include('pdf.pembayaran.penerimaan-hasil-pekerjaan')

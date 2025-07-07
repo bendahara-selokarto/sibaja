@@ -1,2 +1,1 @@
-<div style="page-break-before: always;">
-</div>
+<h3>BERITA ACARA PENERIMAAN HASIL PEKERJAAN</h3>
