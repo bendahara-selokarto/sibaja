@@ -1,3 +1,5 @@
+@include('pdf.pembayaran.ba-serah-terima-hasil-pekerjaan')
+@include('pdf.pembayaran.penyerahan-hasil-pekerjaan')
 @include('pdf.pembayaran.berita-acara-pembayaran')
 <!DOCTYPE html>
 <html lang="en">
@@ -117,3 +119,4 @@
 </body>
 </html>
 @include('pdf.pembayaran.invoice')
+{{-- @include('pdf.pembayaran.new-invoice') --}}
