@@ -223,4 +223,6 @@
           <td>{{ $data['kegiatan']->pka }}</td>
         </tr>
      </table>
+<div style="page-break-before: always;">
 @include('pdf.negosiasi-harga.standar-ketentuan-dan-syarat-umum')
+</div>
