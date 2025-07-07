@@ -9,7 +9,7 @@
 <body style="line-height: 1.5">
     <div class="ba-pembayaran">
     <h2 style="text-align: center; margin-bottom: 0">BERITA ACARA PEMBAYARAN</h2>
-    <p style="text-align: center; margin-top: 0">NOMOR : {{$kegiatan->nomor }} /BA-Pembayaran/{{Auth::user()->tahun_anggaran}}</p>
+    <p style="text-align: center; margin-top: 0">NOMOR : {{$kegiatan->nomor }} /BA-Pemb/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran}}</p>
 
 
     <p>Pada hari ini <strong>{{ $tgl->isoFormat('dddd') }}</strong> tanggal <strong>{{ Terbilang::make($tgl->isoFormat('D')) }}</strong> bulan <strong>{{ $tgl->isoFormat('MMMM')}}</strong> tahun <strong>{{Auth::user()->tahun_anggaran}}</strong> bertempat di <strong>  Balaidesa {{ Auth::user()->desa}} </strong>, telah dilaksanakan pembayaran atas pekerjaan <strong>{{ $kegiatan->kegiatan}} </strong>antara :</p>
