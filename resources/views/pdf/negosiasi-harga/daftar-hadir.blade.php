@@ -8,7 +8,7 @@
         <tr>
             <td>Tanggal</td>
             <td>: </td>
-            <td>{{ $tgl_negosiasi ?? ""}}</td>
+            <td>{{ $data['negosiasiHarga']->tgl_negosiasi->isoFormat('D MMMM Y') ?? ""}}</td>
         </tr>
         <tr>
             <td>Jam</td>
@@ -29,10 +29,10 @@
     <br>
     <table class="daftar-hadir">
         <tr>
-            <th>No.</th>
-            <th>N a m a</th>
-            <th>Jabatan</th>
-            <th >Tanda Tangan</th>            
+            <th style="width: 10%">No.</th>
+            <th style="width: 30%">N a m a</th>
+            <th style="width: 30%">Jabatan</th>
+            <th style="width: 30%">Tanda Tangan</th>            
         </tr>
        <tr>
             <td>1</td>
@@ -44,13 +44,13 @@
        <tr>
             <td>2</td>
             <td> .............. </td>
-            <td> .............. </td>
+            <td> Sekretaris TPK </td>
             <td> .............. </td>
         </tr>
         <tr>
             <td>3</td>
             <td> .............. </td>
-            <td> .............. </td>
+            <td> Anggota TPK </td>
             <td> .............. </td>
         </tr>
         <tr>
@@ -60,7 +60,19 @@
             <td> .............. </td>
             <td> .............. </td>
             <td> .............. </td>
-       </tr>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td> .............. </td>
+            <td> .............. </td>
+            <td> .............. </td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td> .............. </td>
+            <td> .............. </td>
+            <td> .............. </td>
+        </tr>
     </table>
     <div style="text-align: center; width: 300px; margin-left:auto">
         <p>{{Auth::user()->desa}}, {{$data['negosiasiHarga']->tgl_negosiasi->isoFormat('D MMMM Y') }}</p>

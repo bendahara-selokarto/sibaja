@@ -41,7 +41,7 @@
     <br><br>
     <div style="margin-left: 40px; ">
     <p style="text-align:justify; line-height: 2">
-        Berdasarkan surat perjanjian Nomor : <strong>  {{ $kegiatan->nomor }}/PERJ/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }}</strong> dan <strong>{{ $kegiatan->nomor }}/SPK/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }}</strong> maka kami sampaikan bahwa pekerjaan <strong>Pengadaan Material {{ $kegiatan->kegiatan }}</strong> telah selesai dan dengan ini kami kirimkan hasil pelaksanaan pekerjaan <strong>Pengadaan Material {{ $kegiatan->kegiatan }}</strong>, untuk dapat diteliti apakah sudah sesuai dengan spesifikasi teknis atau belum.
+        Berdasarkan surat perjanjian Nomor : <strong>  {{ $kegiatan->nomor }}/PERJ/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }}</strong>dan <strong>{{ $kegiatan->nomor }}/SPK/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }}</strong> maka kami sampaikan bahwa pekerjaan <strong>Pengadaan Material {{ $kegiatan->kegiatan }}</strong> telah selesai dan dengan ini kami kirimkan hasil pelaksanaan pekerjaan <strong>Pengadaan Material {{ $kegiatan->kegiatan }}</strong>, untuk dapat diteliti apakah sudah sesuai dengan spesifikasi teknis atau belum.
     </p>
 
     <p style="text-align:justify; line-height: 2">
