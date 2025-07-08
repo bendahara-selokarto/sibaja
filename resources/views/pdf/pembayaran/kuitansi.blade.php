@@ -6,6 +6,7 @@
 @include('pdf.pembayaran.ba-serah-terima-hasil-pekerjaan')
 @include('pdf.pembayaran.berita-acara-pembayaran')
 @include('pdf.pembayaran.invoice')
+@include('pdf.pembayaran.A2')
 <!DOCTYPE html>
 <html lang="en">
     <head>
