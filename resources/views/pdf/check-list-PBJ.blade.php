@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<body style="margin-left: 100px">
+<body style="margin: 0 0 0 100px">
     <p>Check List Dokumen PBJ sesuai Perbup no. 06 Tahun 2020</p>
     <strong> Kegiatan {{ $kegiatan->kegiatan ?? " .... "}} </strong>
 

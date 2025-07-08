@@ -11,12 +11,7 @@
         @page {
             padding: 0;
         }
-        .pemberitahuan {
-            margin-top: 20px;
-            margin-right: 40px;
-            margin-bottom: 40px;
-            margin-left: 60px;
-        }
+        
         table {
             border-collapse: collapse;
         }
@@ -26,12 +21,12 @@
         }
     </style>
 </head>
-<body>
+<body style="margin: 0 20px 20px 60px">
     <div class="pemberitahuan">   
     <x-kop-tpk >
         <!-- <x-slot name="kegiatan">{{ $kegiatan->kegiatan }}</x-slot> -->
     </x-kop-tpk>
-    <table style="width: 100%">
+    <table style="width: 100%; ">
     <tr>
         <td></td>
         <td></td>
@@ -81,6 +76,7 @@
     </tr>
             
         </table>
+        <br><br><br><br>
         <div style="margin-left: auto; width: 80%">
         <p style="text-align: justify; text-indent: 1cm;">Sehubungan dengan akan dilaksanakan kegiatan <strong> {{ $kegiatan->kegiatan }}</strong>, dengan pekerjaan Pengadaan Material.
         <br> Adapun spesifikasi teknis yang kami persyaratkan yaitu :</p>
@@ -89,7 +85,7 @@
     <li>Daftar Barang/Jasa ;</li>
 </ol>
 
-<table style="margin-left: auto; width: 100%;">
+<table style="margin-left: auto; width: 100%; min-height: 190px;">
   <tr>
     <td style="border: 1px solid black; text-align:center; width: 0.6cm">No</td>
     <td style="border: 1px solid black; text-align:center; width: auto; ">Jenis <br>Barang/Bahan/Jasa</td>
