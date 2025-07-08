@@ -53,9 +53,8 @@ class NegosiasiHargaController extends Controller
             return redirect()->back()->with('error', 'Kegiatan not found');
         };
         $request->validate([
-            'tgl_persetujuan' => 'required|date',
             'tgl_negosiasi' => 'required|date',
-            'tgl_perjanjian' => 'required|date',
+            'tgl_persetujuan' => 'required|date',
             'tgl_akhir_perjanjian' => 'required|date',
             'harga_satuan_negosiasi' => 'required|array',
             'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
@@ -187,6 +186,7 @@ class NegosiasiHargaController extends Controller
         };
         $pemberitahuan = $kegiatan->pemberitahuan;
         $penawaranHarga = $kegiatan->penawaran_1;
+        $penawaranHarga->tgl_penawaran =  Carbon::parse($penawaranHarga->tgl_penawaran);
         $ppn = config('pajak.ppn');
         $pph_22 = config('pajak.pph_22');
         $nilai_ppn = $penawaranHarga->nilai_penawaran * $ppn;
@@ -211,11 +211,11 @@ class NegosiasiHargaController extends Controller
         };
 
         $negosiasiHarga->ppn = $negosiasiHarga->harga_negosiasi *  config('pajak.ppn') ;
-        $negosiasiHarga->pph_22 = $negosiasiHarga->harga_negosiasi *  config('pajak.pph_22') ;
-        $negosiasiHarga->harga_total = floor($negosiasiHarga->harga_negosiasi + $negosiasiHarga->ppn + $negosiasiHarga->pph_22);      
+        $negosiasiHarga->pph_22 = $negosiasiHarga->harga_negosiasi *  config('pajak.pph_22');
+        $negosiasiHarga->harga_total = round($negosiasiHarga->harga_negosiasi + $negosiasiHarga->ppn + $negosiasiHarga->pph_22, -2);      
         $negosiasiHarga->tgl_persetujuan = Carbon::parse($negosiasiHarga->tgl_persetujuan);
         $negosiasiHarga->tgl_negosiasi = Carbon::parse($negosiasiHarga->tgl_negosiasi);
-        $negosiasiHarga->tgl_perjanjian = Carbon::parse($negosiasiHarga->tgl_perjanjian);
+        $negosiasiHarga->tgl_perjanjian = $negosiasiHarga->tgl_persetujuan;
         $negosiasiHarga->tgl_akhir_perjanjian = Carbon::parse($negosiasiHarga->tgl_akhir_perjanjian);
         $negosiasiHarga->jumlah_hari_kerja = $negosiasiHarga->tgl_akhir_perjanjian->diffInDays($negosiasiHarga->tgl_perjanjian) * -1;
         
@@ -234,8 +234,8 @@ class NegosiasiHargaController extends Controller
             'kegiatan' => $kegiatan,
             'penyedia' => $penyedia,
             'pemberitahuan' => $pemberitahuan,
-            'negosiasiHarga' => $negosiasiHarga,
             'penawaranHarga' => $penawaranHarga,
+            'negosiasiHarga' => $negosiasiHarga,
             'nilai_total_penawaran' => $nilai_total_penawaran,
             'item' => json_decode($negosiasi, true),
         ];

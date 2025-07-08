@@ -12,7 +12,7 @@
     tahun <strong> {{ Terbilang::make($data['negosiasiHarga']->tgl_negosiasi->isoFormat('Y')) }} </strong> 
     pada pukul Sepuluh Waktu Indonesia Barat sampai dengan Selesai,
     dengan mengambil tempat di Kantor Kepala Desa {{ ucwords(Auth::user()->desa) }} 
-    kami yang bertanda tangan di bawah ini  telah melakukan klarifikasi dan negosiasi harga atas pekerjaan Tahun Anggaran {{ Auth::user()->tahun_anggaran }}</p>
+    kami yang bertanda tangan di bawah ini  telah melakukan klarifikasi dan negosiasi harga atas pekerjaan pengadaan material kegiatan {{ $data['kegiatan']->kegiatan }} Tahun Anggaran {{ Auth::user()->tahun_anggaran }}</p>
 
 
 

@@ -42,8 +42,8 @@
     <tr>
         <td>Lampiran</td>
         <td>: -</td>
-        <td>Yth</td>
-        <td rowspan="3">Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }}</td>
+        <td style="width: 40px">Yth. </td>
+        <td rowspan="3" style="vertical-align: top">Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }}</td>
     </tr>
     <tr>
         <td>Perihal</td>
@@ -108,7 +108,7 @@
     <table>
         <p>Demikian di sampaikannya Surat Penawaran ini, maka kami menyatakan sanggup dan akan tunduk pada semua ketentuan yang berlaku.</p>
         <div style="text-align:center; margin-left: auto; width:300px">
-            <p>Hormat Kami</p>
+            <p>Hormat Kami, </p>
             <p>{{ $penyedia2->jabata_pemilik ." " .$penyedia2->nama_penyedia }}</p>
             <br><br>
             <p><strong>{{ $penyedia2->nama_pemilik }}</strong></p>

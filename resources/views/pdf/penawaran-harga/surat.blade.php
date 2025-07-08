@@ -7,7 +7,7 @@ onerror="this.src='{{ asset('') }}'"
 >
 @else
 
-<table style="width: 100%">
+<table style="width: 100%;">
     <tr>
         <td style="width: 100px">            
             <img 
@@ -30,7 +30,7 @@ onerror="this.src='{{ asset('') }}'"
 <table style="width: 100%">
     <tr>
         <td></td>
-        <td style="width: 6cm"></td>
+        <td></td>
         <td></td>
         <td style='text-align:right'>{{ ucwords($penyedia1->kabupaten) }}, {{ Illuminate\Support\Carbon::parse($penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y') }}</td>
     </tr>
@@ -42,9 +42,9 @@ onerror="this.src='{{ asset('') }}'"
     </tr>
     <tr>
         <td>Lampiran</td>
-        <td>: -</td>
-        <td>Yth</td>
-        <td rowspan="3">Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }}</td>
+        <td>: 1 (satu) berkas</td>
+        <td>Yth. </td>
+        <td rowspan="3" style="vertical-align: top">Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }}</td>
     </tr>
     <tr>
         <td>Perihal</td>
@@ -111,7 +111,7 @@ onerror="this.src='{{ asset('') }}'"
             <div>
                 <p>Demikian di sampaikannya Surat Penawaran ini, maka kami  menyatakan sanggup dan akan tunduk pada semua ketentuan yang berlaku. </p>
                 <div style="margin-left: auto; width: 300px; text-align:center">
-                    <p style="padding: 0%">Hormat Kami</p>
+                    <p style="padding: 0%">Hormat Kami,</p>
                     <p style="padding: 0%">{{ $penyedia1->jabata_pemilik ." " .$penyedia1->nama_penyedia }}</p>
                     <br><br><br>
                     <p><strong>{{ $penyedia1->nama_pemilik }}</strong></p>

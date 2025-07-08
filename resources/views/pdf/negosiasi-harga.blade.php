@@ -30,7 +30,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td style="text-align: right">{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($data['pemberitahuan']->tgl_batas_akhir_penawaran)->isoFormat('D MMMM Y') }}</td>
+            <td style="text-align: right">{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_negosiasi)->isoFormat('D MMMM Y') }}</td>
         </tr>
         <tr>
             <td>Nomor</td>
@@ -58,7 +58,7 @@
         </tr>       
     </table>
     <br>
-    {{-- <p style="margin-left:2.6cm; text-align:justify">Menanggapi surat penawaran harga Saudara Nomor {{ session('no_penyedia') }} tanggal {{ session('tgl_penyedia')->isoFormat('D MMMM Y') }} hal : Penawaran harga, bersama ini kami sampaikan hal-hal sebagai berikut :</p> --}}
+    <p style="margin-left:2.6cm; text-align:justify">Menanggapi surat penawaran harga Saudara Nomor {{ $data['penawaranHarga']->no_penawaran }}/SPH/{{Auth::user()->tahun_anggaran }} tanggal {{ $data['penawaranHarga']->tgl_penawaran->isoFormat('D MMMM Y') ?? "tidak ada" }} hal : Penawaran harga, bersama ini kami sampaikan hal-hal sebagai berikut :</p>
     <ol style="margin-left: 2.6cm">
             <li style="text-align:justify">Setelah menerima dan mempelajari isi surat penawaran harga Saudara pada prinsipnya kami tidak keberatan, tetapi berdasarkan harga penawaran yang Saudara ajukan perlu melakukan klarifikasi dan negoisasi harga terhadap penawaran Saudara tersebut;</li>
             <li style="text-align:justify">Untuk keperlua dimaksud kami mengharap kehadiran Saudara besok pada :</li>

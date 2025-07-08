@@ -22,7 +22,7 @@
         </tr>
     </table>
     <div style="line-height: 1.8;">
-    <p>Dalam rangka pelaksanaan Pekerjaan Pengadaan Material untuk paket pekerjaan <strong> {{ $pemberitahuan->kegiatan->kegiatan}}</strong>, dengan ini menyatakan bahwa saya:</p>
+    <p style="text-align: justify">Dalam rangka pelaksanaan Pekerjaan <i>Pengadaan Bahan Material untuk </i> paket pekerjaan <strong> {{ $pemberitahuan->kegiatan->kegiatan}}</strong>, dengan ini menyatakan bahwa saya:</p>
         <ol>
             <li>Tidak Akan melakukan praktek Korupsi, Kolusi dan Nepotisme (KKN);</li>
             <li>Akan melaporkan kepada Inspektorat kab. Batang  dan /atau Intansi yang berwenang apabila mengetahui ada indikasi KKN di dalam proses pengadaan ini;</li>
@@ -38,7 +38,7 @@
                     <td style="text-align: center; argin-right: 40px;">
                         {{ ucwords($penyedia1->kabupaten) }}, {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->modify('+1 days')->isoFormat('D MMMM Y') }} <br>
                         {{ $penyedia1->jabata_pemilik ." " .$penyedia1->nama_penyedia }}
-                        <br><br><br><br>
+                        <br><br><br><br><i>materai</i><br><br><br>
                         <strong> {{ $penyedia1->nama_pemilik }} </strong>
                     </td>
                 </tr>

@@ -16,16 +16,16 @@
         <thead>
             <tr>
                 <th rowspan="2">No</th>
-                <th rowspan="2">Jenis Barang/Jasa</th>
-                <th rowspan="2">Vol/Sat</th>
+                <th rowspan="2">Jenis Pekerjaan <br> Yang Dikerjakan </th>
+                <th rowspan="2">Volume / <br> Satuan</th>
                 <th colspan="2">Harga Penawaran</th>
                 <th colspan="2">Harga Negosiasi</th>
             </tr>
             <tr>
-                <th>Harga Satuan</th>
-                <th>Jumlah Harga</th>
-                <th>Harga Satuan</th>
-                <th>Jumlah Harga</th>
+                <th>Harga Satuan <br> (Rp.)</th>
+                <th>Jumlah Harga <br>(Rp.)</th>
+                <th>Harga Satuan <br>(Rp.)</th>
+                <th>Jumlah Harga <br>(Rp.)</th>
             </tr>
         </thead>
         <tbody>
@@ -43,13 +43,13 @@
              <tr>
             <td style="text-align: right" colspan="4">Jumlah</td>
             <td style="text-align: right">{{ number_format($data['penawaranHarga']['nilai_penawaran'] , 0, ',', '.') }}</td>
-            <td style="text-align: right; background-color:rgb(209, 206, 206);"></td>
+            <td style="text-align: right; background-color:rgb(216, 216, 216);"></td>
             <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_negosiasi , 0, ',', '.') }}</td>
             </tr>
             <tr>
             <td style="text-align: right" colspan="4">PPN</td>
             <td style="text-align: right">{{ number_format($data['penawaranHarga']->ppn, 0, ',', '.') }}</td>
-            <td style="text-align: right; background-color:rgb(209, 206, 206);"></td>
+            <td style="text-align: right; background-color:rgb(216, 216, 216);"></td>
             <td style="text-align: right">{{ number_format($data['negosiasiHarga']->ppn, 0, ',', '.') }}</td>
             </tr>
             <tr>

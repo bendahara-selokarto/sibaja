@@ -33,7 +33,7 @@ onerror="this.src='{{ asset('') }}'"
 
     <table>
         <tr>
-            <td>Kegiatan</td>
+            <td style="width: 40mm">Kegiatan</td>
             <td>:</td>
             <td>{{ $kegiatan->kegiatan }}</td>
         </tr>
@@ -51,11 +51,11 @@ onerror="this.src='{{ asset('') }}'"
 
     <table style="width: 100%;">
         <tr>
-          <td style="border: 1px solid black; text-align:center; width: 0.6cm">No</td>
-          <td style="border: 1px solid black; text-align:center; ">Jenis Barang/jasa</td>
-          <td style="border: 1px solid black; text-align:center; width: 2cm">vol/Satuan</td>
-          <td style="border: 1px solid black; text-align:center; width: 3cm">Harga</td>
-          <td style="border: 1px solid black; text-align:center; width: 3cm; ">Jumlah</td>
+          <td style="border: 1px solid black; text-align:center; width: 6mm">No</td>
+          <td style="border: 1px solid black; text-align:center; ">Jenis Pekerjaan <br> yang dikerjakan</td>
+          <td style="border: 1px solid black; text-align:center; width: 20mm">Volume / Satuan <br>(Meter, Unit, Btg, Kg)</td>
+          <td style="border: 1px solid black; text-align:center; width: 30mm">Harga Satuan</td>
+          <td style="border: 1px solid black; text-align:center; width: 30mm; ">Jumlah</td>
         </tr>
         @php
        
@@ -96,8 +96,8 @@ onerror="this.src='{{ asset('') }}'"
             </tr>
             <tr>
                 {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
-                <td colspan="4" style="border: 1px solid black; text-align:right">Dibulatkan</td>
-                <td style="border: 1px solid black; text-align:right">{{ number_format(round($jumlah * (114/100), -2 ), 0, ',', '.') }}</td>
+                <td colspan="4" style="border: 1px solid black; text-align:right; background-color: rgb(216,216,216)">Dibulatkan</td>
+                <td style="border: 1px solid black; text-align:right; background-color: rgb(216,216,216)">{{ number_format(round($jumlah * (114/100), -2 ), 0, ',', '.') }}</td>
             </tr>
           </table>
           <strong><p>Terbilang : {{ Terbilang::make(round($jumlah_total_1, -2)) }} rupiah</p></strong>

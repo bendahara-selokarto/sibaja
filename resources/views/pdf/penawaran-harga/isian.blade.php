@@ -31,9 +31,8 @@
         <li>Saya tidak masuk dalam daftar hitam, tidak dalam pengawasan pengadilan, tidak pailit atau kegiatan usaha saya tidak sedang dihentikan;</li>
         <li>Data-data saya adalah sebagai berikut :</li>
     </ol>
-    <ol type="A">
-        <strong><li>Data Administrasi</li></strong>
-        <table style="border: 1px solid black; width: 100%">
+        <strong>A. Data Administrasi</strong>
+        <table style="border: 1px solid black; width: 100%" class="form-isian">
             <tr>
                 <td style="width: 5mm">1.</td>
                 <td style="width: 5cm">Nama</td>
@@ -71,13 +70,13 @@
                 <td>{{ $penyedia1->alamat_penyedia }}</td>
             </tr>
             <tr>
-                <td>5.</td>
+                <td></td>
                 <td>Nomor Telepon</td>
                 <td>:</td>
                 <td>{{ $penyedia1->nomor_hp }}</td>
             </tr>
             <tr>
-                <td>6.</td>
+                <td>5.</td>
                 <td>Nomor Identitas (KTP/SIM/Pasport)</td>
                 <td>:</td>
                 <td>{{ $penyedia1->nomor_identitas }}</td>
@@ -88,9 +87,10 @@
                 <td></td>
             </tr>
         </table>
-        <strong><li>Surat Izin Usaha/melaksanakan kegiatan (apabila dipersyaratkan)</li></strong>
+        <br>
+        <strong>B. Surat Izin Usaha/melaksanakan kegiatan (apabila dipersyaratkan)</strong>
     
-    <table style="border: 1px solid black; width: 100%">
+    <table style="border: 1px solid black; width: 100%" >
         <tr>
             <td style="width: 5mm">1.</td>
             <td style="width: 4cm">No. Surat Izin Usaha</td>
@@ -102,7 +102,8 @@
             <td>: {{ $penyedia1->instansi_pemberi_izin_usaha }} </td>
         </tr>
     </table>
-</ol>
+    <br>
+    <br>
 <table style="width: 100%">
     <tr>
         <td style="width: 8cm"><br></td>

@@ -6,6 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Penawaran Harga</title>
     <style>
+        table tr, td {
+            border: 1px solid black;
+        }
+        table.form-isian td {
+            vertical-align: top;
+        }
+    </style>
+    <style>
         @page {
             margin: 0.5cm 2cm 1cm 2cm;
         }

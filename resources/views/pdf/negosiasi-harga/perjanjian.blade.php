@@ -74,7 +74,7 @@
 <p style="text-align: center">Pasal 2</p>
 <p style="text-align: center">NILAI PEKERJAAN</p>
 
-<p style="text-align: justify">Nilai yang disepakati untuk menyelesaikan pekerjaan ( Menyediakan Material ) dalam perjanjian ini adalah ( Daftar Rincian Harga terlampir ) termasuk pajak dan bea materai.</p>
+<p style="text-align: justify">Nilai yang disepakati untuk menyelesaikan pekerjaan dalam perjanjian ini adalah Rp. {{number_format($data['negosiasiHarga']->harga_total, 0, ",", '.')}},- <i>( {{ Terbilang::make($data['negosiasiHarga']->harga_total)}} rupiah )</i>termasuk pajak dan bea materai.</p>
 
 <p style="text-align: center">Pasal 3</p>
 <p style="text-align: center">HAK DAN KEWAJIBAN</p>
@@ -110,7 +110,7 @@
 
 <p style="text-align: center">Pasal 6</p>
 <p style="text-align: center">SANKSI</p>
-<p style="text-align: justify">Apabila pekerjaan melebihi batas waktu yang disepakati maka PIHAK KEDUA harus membayar denda sebesar 10% dari nilai pekerjaan dengan nominal pengadaan material dari jumlah total yang akan dikirim sebesar Rp. {{ number_format($data['negosiasiHarga']->jumlah_total * 0.1, 0, ',', '.') }},- ( {{ Terbilang::make($data['negosiasiHarga']->jumlah_total * 0.1) }} rupiah ).</p>
+<p style="text-align: justify">Apabila pekerjaan melebihi batas waktu yang disepakati maka PIHAK KEDUA harus membayar denda sebesar 10% dari nilai pekerjaan dengan nominal pengadaan material dari jumlah total yang akan dikirim sebesar Rp. {{ number_format(round(($data['negosiasiHarga']->jumlah_total * 0.1), -2), 0, ',', '.') }},- ( {{ Terbilang::make(round(($data['negosiasiHarga']->jumlah_total * 0.1), -2) )}} rupiah ).</p>
 
 <p style="text-align: center">Pasal 7</p>
 <p style="text-align: center">KETENTUAN PENUTUP</p>

@@ -22,6 +22,7 @@
         }
         table, tr, td {
             vertical-align: top;
+            /* border: 1px solid black; */
         }
     </style>
 </head>
@@ -30,7 +31,7 @@
     <x-kop-tpk >
         <!-- <x-slot name="kegiatan">{{ $kegiatan->kegiatan }}</x-slot> -->
     </x-kop-tpk>
-    <table>
+    <table style="width: 100%">
     <tr>
         <td></td>
         <td></td>
@@ -41,30 +42,28 @@
     <tr>
         <td style="width: 2.5cm">Nomor</td>
         <td style="width: 1mm">:</td>
-        <td>{{ $pemberitahuan['no_pbj'] }}/Pemb/{{ Auth::user()->kode_desa }}/{{  Auth::user()->tahun_anggaran }}</td>
-        <td></td> 
+        <td style="60mm">{{ $pemberitahuan['no_pbj'] }}/Pemb/{{ Auth::user()->kode_desa }}/{{  Auth::user()->tahun_anggaran }}</td>
+        <td style="text-align: right">Kepada :</td>
         <td></td>
     </tr>
     <tr>
         <td style="width: 2.5cm">Lamp</td>
         <td style="width: 1mm">:</td>
-        <td>1 bandel</td>
-        <td style="text-align: right">Kepada :</td>
-        <td></td>
+        <td> -</td>
+        <td style="text-align: right">Yth;</td>
         
+        <td style="vertical-align: top; padding: 0px" rowspan="2">
+                @foreach ($pemberitahuan['penyedia'] as $p)
+                {{ $loop->iteration}}. 
+                {{ App\Models\Penyedia::find($p)->nama_penyedia }} <br>
+                @endforeach
+        </td>
     </tr>
     <tr>
         <td style="width: 2.5cm">Hal</td>
         <td style="width: 1mm">:</td>
         <td style="text-decoration: underline">Pemberitahuan</td>
-        <td style="text-align: right">Yth;</td>
-        <td>
-            <ol>
-            @foreach ($pemberitahuan['penyedia'] as $p)
-                <li>{{ App\Models\Penyedia::find($p)->nama_penyedia }}</li>
-                @endforeach
-            </ol>            
-    </td>
+        <td></td> 
     </tr>    
     <tr>
         <td></td>
@@ -83,8 +82,8 @@
             
         </table>
         <div style="margin-left: auto; width: 80%">
-        <p style="text-align: justify; text-indent: 1cm;">Sehubungan dengan akan dilaksanakan kegiatan <strong> {{ $kegiatan->kegiatan }}</strong>, dengan pekerjaan Belanja Material ( <strong> {{ $pemberitahuan['pekerjaan'] }}</strong> ).</p>
-        <p style="text-align: justify; text-indent: 1cm;">Adapun spesifikasi teknis yang kami persyaratkan yaitu :</p>
+        <p style="text-align: justify; text-indent: 1cm;">Sehubungan dengan akan dilaksanakan kegiatan <strong> {{ $kegiatan->kegiatan }}</strong>, dengan pekerjaan Pengadaan Material.
+        <br> Adapun spesifikasi teknis yang kami persyaratkan yaitu :</p>
 <ol>
     <li>Ruang lingkup pekerjaan <strong> Pengadaan Material</li>
     <li>Daftar Barang/Jasa ;</li>
@@ -93,10 +92,10 @@
 <table style="margin-left: auto; width: 100%;">
   <tr>
     <td style="border: 1px solid black; text-align:center; width: 0.6cm">No</td>
-    <td style="border: 1px solid black; text-align:center; width: auto; ">Jenis Barang/jasa</td>
-    <td style="border: 1px solid black; text-align:center; width: auto; ">vol/Sat</td>
-    <td style="border: 1px solid black; text-align:center; width: auto; min-width: 60px" >Harga</td>
-    <td style="border: 1px solid black; text-align:center; width: auto; min-width: 60px">Jumlah</td>
+    <td style="border: 1px solid black; text-align:center; width: auto; ">Jenis <br>Barang/Bahan/Jasa</td>
+    <td style="border: 1px solid black; text-align:center; width: auto; ">Volume / <br>Satuan</td>
+    <td style="border: 1px solid black; text-align:center; width: auto; min-width: 60px" >Harga Satuan<br> ( Rp. )</td>
+    <td style="border: 1px solid black; text-align:center; width: auto; min-width: 60px">Jumlah Harga <br>( Rp. )</td>
   </tr>
   @php
       $no = 1;      
@@ -133,13 +132,13 @@
         <td style="border: 1px solid black; text-align:right"></td>
     </tr>
     <tr>
-        <td colspan="4" style="border: 1px solid black; text-align:right">Dibulatkan</td>
-        <td style="border: 1px solid black; text-align:right"></td>
+        <td colspan="4" style="border: 1px solid black; text-align:right; background-color:rgb(216, 216, 216)">Dibulatkan</td>
+        <td style="border: 1px solid black; text-align:right; background-color:rgb(216, 216, 216)"></td>
     </tr>
 
     </table>    
-    <p >Maka apabila Saudara berminat dan bersedia melaksanakan pekerjaan  <strong>{{ $kegiatan->kegiatan }}</strong> tersebut, diminta segera mengajukan surat penawaran harga.</p>
-    <p style=" text-align:justify">Surat penawaran dialamatkan kepada Bapak  <strong>{{ $kegiatan->ketua_tpk }} </strong>, selaku Tim Pelaksana Kegiatan dengan ketentuan sebagai berikut :</p>
+    <p style=" text-align:justify">Maka apabila Saudara berminat dan bersedia melaksanakan pekerjaan pengadaan material kegiatan <strong>{{ $kegiatan->kegiatan }}</strong> tersebut, diminta segera mengajukan surat penawaran harga.</p>
+    <p style=" text-align:justify">Surat penawaran dialamatkan kepada Bapak  <strong>{{ $kegiatan->ketua_tpk }}</strong>, selaku Tim Pelaksana Kegiatan dengan ketentuan sebagai berikut :</p>
     <ol>
        
         <li>Surat penawaran dibuat rangkap 3 (tiga) asli, 1 (satu) bermeterai Rp. 10.000 dan sudah harus kami terima tanggal <strong>{{ Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->isoFormat('D MMMM Y')}}</strong></li>
