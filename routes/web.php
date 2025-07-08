@@ -8,6 +8,7 @@ use App\Http\Controllers\PenyediaController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PemberitahuanController;
 use App\Http\Controllers\NegosiasiHargaController;
+use App\Http\Controllers\PelaksanaController;
 use App\Http\Controllers\PenawaranHargaController;
 
 Route::get('/', function () {
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('menu/pelaksana', [PelaksanaController::class , 'index'])->middleware(CheckDefaultKode::class)->name('menu.pelaksana');
+    Route::get('pelaksana/create', [PelaksanaController::class , 'create'])->name('pelaksana.create');
+    
     Route::get('menu/kegiatan', [KegiatanController::class , 'index'])->middleware(CheckDefaultKode::class)->name('menu.kegiatan');
     Route::get('kegiatan/create', [KegiatanController::class , 'create'])->name('kegiatan.create');
     Route::get('kegiatan/edit/{id}', [KegiatanController::class , 'edit'])->name('kegiatan.edit');
