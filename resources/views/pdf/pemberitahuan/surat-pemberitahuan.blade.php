@@ -8,7 +8,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td style="text-align: right">{{ ucwords(Auth::user()->desa) }}, {{ \Carbon\Carbon::parse($pemberitahuan['tgl_surat_pemberitahuan'])->isoFormat('D MMMM Y') }}</td>
+        <td style="text-align: right">{{ ucwords(Auth::user()->desa) }}, {{ $pemberitahuan['tgl_surat_pemberitahuan_panjang'];}}</td>
     </tr>    
     <tr>
         <td style="width: 2.5cm">Nomor</td>

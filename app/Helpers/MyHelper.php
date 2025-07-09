@@ -19,3 +19,8 @@ if (!function_exists('tanggal_indo')) {
         return \Carbon\Carbon::parse($tanggal)->translatedFormat('d F Y');
     }
 }
+
+    function formatNumber($number): string
+    {
+        return number_format($number, 0, ',', '.');
+    }

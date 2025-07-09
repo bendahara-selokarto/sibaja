@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+use Carbon\Carbon;
+
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -40,5 +42,25 @@ class Pemberitahuan extends Model
                 }
             });
         }
+    public function getTglSuratPemberitahuanPanjangAttribute(): string
+    {
+        Carbon::setLocale('id'); // Pastikan format bahasa Indonesia
+        return Carbon::parse($this->tgl_surat_pemberitahuan)
+                     ->translatedFormat('j F Y'); // ex: 9 Juli 2025
+    }
+        public function getNoSpkAttribute()
+    {
+        return $this->no_pbj . '/SPK/' . Auth::user()->kode_desa . '/' . Auth::user()->tahun_anggaran;
+    }
+
+    public function getNoPerjanjianAttribute()
+    {
+        return $this->no_pbj . '/PERJ/' . Auth::user()->kode_desa . '/' . Auth::user()->tahun_anggaran;
+    }
+
+    public function getNoBaNegosiasiAttribute()
+    {
+        return $this->no_pbj . '/BA-NEGO/' . Auth::user()->kode_desa . '/' . Auth::user()->tahun_anggaran;
+    }
     }
 
