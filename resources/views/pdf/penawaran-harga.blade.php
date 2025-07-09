@@ -7,7 +7,7 @@
     <title>Penawaran Harga</title>
     <style>
         table tr, td {
-            border: 1px solid black;
+            /* border: 1px solid black; */
         }
         table.form-isian td {
             vertical-align: top;

@@ -32,7 +32,7 @@ onerror="this.src='{{ asset('') }}'"
         <td></td>
         <td></td>
         <td></td>
-        <td style='text-align:right'>{{ ucwords($penyedia1->kabupaten) }}, {{ Illuminate\Support\Carbon::parse($penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y') }}</td>
+        <td style='text-align:right'>{{ ucwords($penyedia1->kabupaten) }}, {{ tanggal_indo($penawaran_1->tgl_penawaran) }}</td>
     </tr>
     <tr>
         <td>Nomor</td>

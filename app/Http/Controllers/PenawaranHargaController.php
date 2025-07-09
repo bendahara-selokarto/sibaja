@@ -288,9 +288,9 @@ class PenawaranHargaController extends Controller
             ]);
             // Replace invalid filename characters with underscore
             $filename = '2. PENAWARAN HARGA - (' . $kegiatan->kegiatan . ')';
-            $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
+            // $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
 
-            return $pdf->stream($filename . '.pdf');
+            return $pdf->stream(sanitize_filename($filename) . '.pdf');
        
     }
 }
