@@ -45,4 +45,36 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+    public function setDesaAttribute($value)
+    {
+        $this->attributes['desa'] = strtolower($value);
+    }
+
+    
+    public function getDesaAttribute($value)
+    {
+        return ucwords($value); 
+    }
+    public function setWebsiteAttribute($value)
+    {
+        $this->attributes['website'] = strtolower($value);
+    }
+
+    
+    public function getWebsiteAttribute($value)
+    {
+        return strtolower($value); 
+    }
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
+
+    
+    public function getEmailAttribute($value)
+    {
+        return strtolower($value); 
+    }
 }
