@@ -138,7 +138,7 @@
 @include('pdf.negosiasi-harga.persetujuan-penawaran') 
 @include('pdf.negosiasi-harga.perjanjian')
 @include('pdf.negosiasi-harga.surat-perjanjian-kerja')
-@include('pdf.negosiasi-harga.surat-perintah-kerja')
+{{-- @include('pdf.negosiasi-harga.surat-perintah-kerja') --}}
 @include('pdf.negosiasi-harga.spk') 
 @include('pdf.negosiasi-harga.papan-pengumuman') 
 
