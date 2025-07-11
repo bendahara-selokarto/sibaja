@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>     
         .ketentuan-umum {
-            margin-top: 10px;
+            margin-top: 0px;
             margin-right: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 0px;
             margin-left: 25px;
 
             padding: 1cm;
