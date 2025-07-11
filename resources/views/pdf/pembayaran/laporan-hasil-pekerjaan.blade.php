@@ -14,7 +14,7 @@
                 onerror="this.src='{{ asset('') }}'" 
                 >
 
-        <table>
+        <table style="width:100%">
             <tr>
                 <td>Nomor</td>
                 <td>:</td>
@@ -34,11 +34,19 @@
                 <td></td>
             </tr>
         </table>
-        <div>
-            Berdasarkan Keputusan Kepala Desa Nomor ..................Tahun ..............tentang Pelaksana Kegiatan Anggaran, maka dengan ini kami laporkan bahwa kegiatan ................telah selesai dilaksanakan pada .............. Adapun dokumen pelaksanaan kegiatan.......... terlampir.
+        <br><br>
+        <div style="text-align: justify; text-indent:300px10px; margin-left:154px">
+            <p>Berdasarkan Keputusan Kepala Desa Nomor ..................Tahun ..............tentang Pelaksana Kegiatan Anggaran, maka dengan ini kami laporkan bahwa kegiatan ................telah selesai dilaksanakan pada .............. Adapun dokumen pelaksanaan kegiatan.......... terlampir.</p>
 
-Demikian untuk menjadikan periksa dan guna seperlunya.
+<p>Demikian untuk menjadikan periksa dan guna seperlunya.</p>
 
+
+        </div>
+        <div style="text-align: center; width: 300px; margin-left:auto">
+            Pelaksana Kegiatan Anggaran <br>
+            Kegiatan {{$kegiatan->kegiatan}}
+            <br><br><br>
+            {{$kegiatan->pka}}
         </div>
 </body>
 </html>
