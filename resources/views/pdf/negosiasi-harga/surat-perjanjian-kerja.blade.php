@@ -114,20 +114,20 @@
 <p>Jangka waktu pelaksanaan adalah selama {{ $data['negosiasiHarga']->jumlah_hari_kerja }} ( {{Terbilang::make($data['negosiasiHarga']->jumlah_hari_kerja)}} ) hari kalender sejak tanggal {{ tanggal_indo($data['negosiasiHarga']->tgl_perjanjian) }} dan harus diselesaikan paling lambat tanggal {{ tanggal_indo($data['negosiasiHarga']->tgl_akhir_perjanjian) }}.</p>
 
 <div class="pasal">Pasal 4 <br> SERAH TERIMA PEKERJAAN</div>
-<ol type="1">
+<ol style="text-align: justify" type="1">
     <li>Setelah pekerjaan selesai 100% (seratus per seratus), penyedia barang mengajukan penyerahan barang secara tertulis kepada Pelaksana Kegiatan Anggaran.</li>
     <li>Pejabat pemeriksa hasil pekerjaan melakukan pemeriksaan terhadap hasil pekerjaan yang telah diselesaikan oleh penyedia barang selambat-lambatnya 7 (tujuh) hari setelah diterimanya surat permintaan dari penyedia barang. Selanjutnya dibuat berita acara pemeriksaan barang.</li>
     <li>Apabila pada waktu serah terima barang dimaksud terdapat kekeliruan, tidak sesuai dan lain sebagainya, maka pihak kedua bersedia untuk memperbaiki sesuai dalam perencanaan yang tertuang dalam dokumen penunjukkan langsung.</li>
 </ol>
 
 <div class="pasal">Pasal 5 <br> CARA PEMBAYARAN</div>
-<ol type="1">
+<ol style="text-align: justify" type="1">
     <li>Pembayaran 100% dilakukan setelah pekerjaan selesai dan dilampiri berita acara.</li>
     <li>Pembayaran dilakukan melalui DPA Desa {{Auth::user()->desa}} untuk belanja modal pengadaan Material kegiatan {{$data['kegiatan']->kegiatan}} kode rekening belanja {{$data['kegiatan']->rekening_apbdes}} secara Non Tunai / Transfer / CMS sejumlah nilai dalam kontrak sebesar Rp {{formatNumber(round($data['negosiasiHarga']->jumlah_total, -2))}} ( {{Terbilang::make(round($data['negosiasiHarga']->jumlah_total, -2))}} rupiah) dipotong pajak sesuai ketentuan Pemerintah.</li>
 </ol>
 
 <div class="pasal">Pasal 6 <br> HAK DAN KEWAJIBAN</div>
-<ol>
+<ol style="text-align: justify">
     <li>Hak dan Kewajiban Tim Pelaksana Kegiatan, sebagai berikut <br>
         <ul type="a">
             <li>Mengawasi pekerjaan yang dilaksanakan oleh penyedia barang.</li>
@@ -149,51 +149,56 @@
     </li>
 </ol>
 
-<div class="pasal">Pasal 7 – SANKSI DAN DENDA</div>
-<ol type="1">
-    <li>Denda dikenakan jika terjadi keterlambatan pekerjaan.</li>
-    <li>Besarnya denda: 1/1000 dari nilai SPK per hari keterlambatan.</li>
+<div class="pasal">Pasal 7 <br> SANKSI DAN DENDA</div>
+<ol style="text-align: justify" type="1">
+    <li>Denda adalah sanksi finansial yang dikenakan kepada penyedia barang karena telah melakukan cidera janji.</li>
+    <li>Besarnya denda yang harus dibayar penyedia barang atas keterlambatan penyelesaian pekerjaan adalah 1 /1000  (satu perseribu) dari nilai SPK atau bagian kontrak lainnya untuk setiap hari keterlambatan. </li>
 </ol>
 
-<div class="pasal">Pasal 8 – KEADAAN KAHAR (FORCE MAJEURE)</div>
-<ul>
-    <li>Termasuk: bencana, peraturan pemerintah, huru-hara, dsb.</li>
-    <li>Penyedia wajib melapor dalam 14 hari sejak kejadian dengan bukti otoritas.</li>
-    <li>Tanpa laporan, keterlambatan tidak dianggap force majeure.</li>
-    <li>Permintaan perpanjangan harus dijawab dalam 7 hari oleh Tim.</li>
-</ul>
-
-<div class="pasal">Pasal 9 – PENGHENTIAN DAN PEMUTUSAN SPK</div>
-<ol type="1">
-    <li>SPK dihentikan jika pekerjaan selesai atau karena force majeure.</li>
-    <li>SPK diputus jika penyedia cidera janji, kolusi, atau korupsi.</li>
+<div class="pasal">Pasal 8 <br> KEADAAN KAHAR (FORCE MAJEURE)</div>
+<ol style="text-align: justify" type="a" style="text-align:justify">
+    <li>Yang dimaksud dengan keadaan kahar (Force Majeure) adalah kejadian di luar kemampuan penyedia barang untuk mengatasinya  termasuk di dalamnya, tetapi tidak terbatas kejadian-kejadian sebagai akibat dari Peraturan Pemerintah baik Pusat maupun Daerah, Departemen, Instansi Sipil atau Militer, halilintar, banjir, gempa bumi, huru-hara, pemberontakan dan epidemi yang secara langsung dapat mengakibatkan keterlambatan penyerahan pekerjaan. </li>
+    <li>Dalam hal terjadinya keadaan kahar (Force Majeure) penyedia barang wajib memberitahukan secara tertulis kepada Pengguna Anggaran, selambat-lambatnya dalam waktu 14 (empat belas) hari kalender terhitung sejak terjadinya  Force Majeure disertai keterangan dari pihak yang berwenang / berwajib. </li>
+    <li>Apabila dalam jangka waktu sebagaimana dimaksud pada huruf b di atas penyedia barang tidak memberitahukan kejadian  Force Majeure tersebut kepada Tim Pengelola Kegiatan, maka keterlambatan penyerahan pekerjaan dianggap bukan sebagai akibat Force Majeure. </li>
+    <li>Apabila dalam jangka waktu sebagaimana dimaksud pada huruf b di atas penyedia barang tidak memberitahukan kejadian  Force Majeure tersebut kepada Tim Pengelola Kegiatan, maka keterlambatan penyerahan pekerjaan dianggap bukan sebagai akibat Force Majeure. </li>
+    <li>Tim Pengelola Kegiatan dalam waktu 7 (tujuh) hari kalender terhitung sejak diterimanya permohonan perpanjangan akan memberikan jawaban mengenai permohonan dimaksud kepada penyedia barang. </li>
+    <li>Apabila dalam jangka waktu sebagaimana dimaksud pada angka huruf e di atas Tim Pengelola Kegiatan tidak memberikan jawaban terhadap permohonan perpanjangan waktu penyerahan pekerjaan dari penyedia barang, maka Tim Pengelola Kegiatan dianggap telah memberikan persetujuan terhadap permohonan dimaksud. </li>
 </ol>
 
-<div class="pasal">Pasal 10 – PENYELESAIAN PERSELISIHAN</div>
-<ol type="1">
-    <li>Diselesaikan secara musyawarah.</li>
-    <li>Jika gagal, maka diselesaikan melalui Pengadilan Negeri Tanah Paser.</li>
+<div class="pasal">Pasal 9 <br> PENGHENTIAN DAN PEMUTUSAN SPK</div>
+<ol style="text-align: justify" type="1">
+    <li>Penghentian SPK dapat dilakukan karena pekerjaan sudah selesai.</li>
+    <li>Penghentian SPK dilakukan karena terjadinya keadaan kahar (force majeure), dan dalam hal ini Tim Pengelola Kegiatan wajib membayar pelaksanaan pekerjaan kepada penyedia barang sesuai dengan kemajuan pelaksanaan pekerjaan yang telah dicapai. </li>
+    <li>Pemutusan SPK dilakukan apabila penyedia  barang cidera janji atau tidak memenuhi kewajiban dan tanggung jawabnya (wanprestasi) dan kepada penyedia barang dikenakan sanksi sesuai dengan ketentuan peraturan yang berlaku.</li>
+    <li>Pemutusan SPK dilakukan bilamana para pihak terbukti melakukan kolusi, kecurangan atau tindak korupsi baik  dalam proses penunjukan langsung maupun pelaksanaan pekerjaan.</li>
 </ol>
 
-<div class="pasal">Pasal 11 – KETENTUAN LAIN-LAIN</div>
-<ol type="1">
-    <li>Biaya administrasi dan materai ditanggung PIHAK KEDUA.</li>
-    <li>SPK dibuat 4 rangkap, 2 asli bermaterai.</li>
+<div class="pasal">Pasal 10 <br> PENYELESAIAN PERSELISIHAN</div>
+<ol style="text-align: justify" type="1">
+    <li>Jika terjadi perselisihan antara  kedua belah pihak, maka pada dasarnya akan diselesaikan secara musyawarah. </li>
+    <li>Jika dalam musyawarah tersebut tidak ditemukan kesepakatan, maka kedua belah pihak sepakat untuk penyelesaikan menurut prosedur hukum yang berlaku melalui Kantor Kepaniteraan Pengadilan. </li>
+    <li>Segala akibat yang terjadi dari pelaksanaan Perjanjian ini, kedua belah pihak telah memilih tempat kedudukan (domisili) yang tetap dan sah di Kantor Kepaniteraan Pengadilan Negeri Tanah Paser. </li>
+    
 </ol>
 
-<div class="pasal">Pasal 12 – PENUTUP</div>
-<p>Demikian Surat Perintah Kerja ini dibuat dan ditandatangani pada tanggal yang telah ditetapkan untuk dipergunakan sebagaimana mestinya.</p>
+<div class="pasal">Pasal 11 <br> KETENTUAN LAIN-LAIN</div>
+<ol style="text-align: justify" type="1">
+    <li>Biaya administrasi dan materai sebagai akibat keluarnya Surat Perintah Kerja ini  menjadi tanggung jawab PIHAK KEDUA.</li>
+    <li>Surat Perintah Kerja (SPK) ini dibuat 4 (empat ) rangkap terdiri dari 2 (dua) asli bermaterai dan  ditandatangani oleh masing masing pihak, dan mempunyai kekuatan hukum yang sama. Selebihnya diberikan kepada pihak yang berkepentingan dan ada hubungannya dengan pekerjaan ini.</li>
+</ol>
 
-<table class="signature">
+<div class="pasal">Pasal 12 <br> PENUTUP</div>
+<p>Demikian Surat Perintah Kerja ini di buat dan ditandatangani pada tanggal yang telah ditetapkan untuk dipergunakan sebagaimana mestinya.</p>
+
+<table style="width:100%; text-align:center">
     <tr>
         <td>
-            PIHAK KEDUA<br><br><br>
-            (TOKO/UD/CV ....................)<br><br><br>
-            ..................................................
+            PIHAK KEDUA<br><br><br><br><br><br>
+            {{$data['penyedia']->nama_pemilik}}
         </td>
         <td>
-            PIHAK KESATU<br>PKA<br><br><br><br>
-            ..................................................
+            PIHAK KESATU<br>PKA<br><br><br><br><br>
+            {{$data['kegiatan']->pka}}
         </td>
     </tr>
 </table>
