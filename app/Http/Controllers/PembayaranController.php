@@ -100,7 +100,7 @@ class PembayaranController extends Controller
     }
 
     public function render($id){
-        $kegiatan = Kegiatan::with('negosiasiHarga')->with('penawaran_1')->find($id);
+        $kegiatan = Kegiatan::with('negosiasiHarga', 'pemberitahuan', 'penawaran_1' )->find($id);
         if (!$kegiatan) {
             flash()->error('Kegiatan tidak ditemukan');
             return redirect()->back();
@@ -128,11 +128,20 @@ class PembayaranController extends Controller
         $negosiasiHarga->ppn = $negosiasiHarga->harga_negosiasi *  config('pajak.ppn') ;
         $negosiasiHarga->pph_22 = $negosiasiHarga->harga_negosiasi *  config('pajak.pph_22') ;
         $negosiasiHarga->total = $negosiasiHarga->harga_negosiasi + $negosiasiHarga->ppn + $negosiasiHarga->pph_22;
+        
+        $pemberitahuan = $kegiatan->pemberitahuan;
                 
 
         // dd($kegiatan);
         $kegiatan->nomor = $kegiatan->pemberitahuan->no_pbj;
-        $pdf = Pdf::loadView('pdf.pembayaran.kuitansi', compact('kegiatan', 'penyedia' , 'item', 'tgl'));
+        $pdf = Pdf::loadView('pdf.pembayaran.kuitansi', compact(
+        'kegiatan',
+        'penyedia',
+        'pemberitahuan',
+        'negosiasiHarga',
+        'item',
+        'tgl'
+        ));
         $filename = '4. PEMBAYARAN - (' . $kegiatan->kegiatan . ')';
         // Replace invalid filename characters with underscore
         $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
