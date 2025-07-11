@@ -12,7 +12,7 @@ src="storage/{{$penyedia->kop_surat }}"
 alt=" " 
 style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
 onerror="this.src='{{ asset('') }}'" 
->
+><br>
     <p style="text-align: right">{{ $penyedia->kabupaten}}, {{ $tgl->isoFormat('D MMM Y')}}</p>
     <table style="width:100%; margin-bottom: 20px;">
         <tr>
@@ -39,9 +39,9 @@ onerror="this.src='{{ asset('') }}'"
     </table>
 
     <br><br>
-    <div style="margin-left: 100px; line-height: 1.5; text-align:justify">
+    <div style="margin-left: 100px; line-height: 1.7; text-align:justify">
     <p>
-        Berdasarkan surat perjanjian Nomor :………………dan ……………maka kami sampaikan bahwa pekerjaan ………….telah selesai dan dengan ini kami kirimkan hasil pelaksanaan pekerjaan ……………., untuk dapat diteliti apakah sudah sesuai dengan spesifikasi teknis atau belum.
+        Berdasarkan surat perjanjian Nomor : {{$pemberitahuan->no_pbj}}/SPK/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran}} maka kami sampaikan bahwa pekerjaan {{$kegiatan->kegiatan }} telah selesai dan dengan ini kami kirimkan hasil pelaksanaan pekerjaan {{$kegiatan->kegiatan }}, untuk dapat diteliti apakah sudah sesuai dengan spesifikasi teknis atau belum.
     </p>
 
     <p>
