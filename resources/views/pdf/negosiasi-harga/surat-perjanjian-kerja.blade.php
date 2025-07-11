@@ -9,9 +9,10 @@
     <x-kop-desa></x-kop-desa>
 
 <h2 style="text-align: center; margin-bottom: 0px">SURAT PERJANJIAN KERJA</h2>
-<p style="margin-top: 0px; text-align:center">NOMOR: / / SPK /<br>TANGGAL:</p>
+<p style="margin-top: 0px; text-align:center">NOMOR : ..... / SPjK/{{ Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran }}
+    <br>TANGGAL : {{tanggal_indo($data['negosiasiHarga']->tgl_perjanjian)}}</p>
 
-<p>Pada hari ini ………….. tanggal …………… bulan ……….. tahun ............... Kami yang bertanda tangan di bawah ini:</p>
+<p>Pada hari ini {{$data['negosiasiHarga']->tgl_perjanjian->isoFormat('dddd')}} tanggal {{ucwords(Terbilang::make($data['negosiasiHarga']->tgl_perjanjian->isoFormat('D')))}} bulan {{$data['negosiasiHarga']->tgl_perjanjian->isoFormat('MMM')}} tahun {{Auth::user()->tahun_anggaran}} Kami yang bertanda tangan di bawah ini:</p>
 
 <ol type="1">
     <li>
