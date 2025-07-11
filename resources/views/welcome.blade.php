@@ -61,15 +61,19 @@
                 </header>
 
                 <main class="mt-6 sm:text-xl items-center text-center">
-                    <h1 class="text-4xl sm:text-center font-bold">S I B A J A</h1>
+                    <h1 class="text-4xl sm:text-center font-bold">S I B A J A</h1><br>
+
+                    <div>
+                        <strong>SISTEM PENGADAAN BARANG DAN JASA DESA </strong>
+                        <p>Tools ( Alat Bantu ) Desa <br> di Kecamatan Pecalungan <br> yang menyajikan From-form di desa <br> yang berulang menjadi lebi elegant dan mudah </p>
+                        
+                    </div>
+                    <br><br><br>                   
                 </main>
                 
                 
                 <footer class="py-16 text-center text-sm text-black dark:text-white/70">
-                    <div>
-                        <strong>SISTEM PENGADAAN BARANG DAN JASA DESA </strong>
-                        <p>Tools ( Alat Bantu ) Desa yang menyajikan From-form di desa yang berulang dan membosankan, menjadi lebi elegant dan mudah  </p>
-                    </div>                   
+                    <p>power by kecamatan pecalungan</p>
                 </footer>
             </div>
         </div>
