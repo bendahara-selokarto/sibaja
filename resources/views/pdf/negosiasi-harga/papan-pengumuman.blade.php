@@ -1,4 +1,4 @@
-<div style="page-break-before: always; margin: 20px 40px 40px 100px">
+<div style="page-break-before: always; margin: 0px 40px 40px 100px">
 <div class="papan-pengumuman">
     <h2 style="text-align: center">PAPAN PENGUMUMAN</h2>
     <br><br>
