@@ -11,7 +11,7 @@
     <div style="border: 2px solid black">
     <table style="width: 100%; border-bottom: 1px solid black; margin:0px">        
         <tr>
-            <td rowspan="5" style="width: 124px">IMG</td>
+            <td rowspan="5" style="width: 124px; text-align:center"><img src="batang.png" alt="batang" style="width: 80px; height:auto;"></td>
             <td colspan="4" style="text-transform: uppercase; font-weight: bold">
                 PEMERINTAH KABUPATEN BATANG               
             </td>
@@ -25,13 +25,13 @@
         <tr>
             <td style="font-weight: bold">DESA</td>
             <td style="font-weight: bold">: </td>
-            <td style="font-weight: bold; text-transform: uppercase;">SELOKARTO</td>
+            <td style="font-weight: bold; text-transform: uppercase;">{{Auth::user()->desa }}</td>
             <td>Lembar ke:</td>
         </tr>
         <tr>
             <td style="font-weight: bold;">TAHUN ANGGARAN</td>
             <td style="font-weight: bold;">: </td>
-            <td style="font-weight: bold;"></td>
+            <td style="font-weight: bold;">{{Auth::user()->tahun_anggaran}}</td>
             <td></td>
         </tr>
         <tr>
