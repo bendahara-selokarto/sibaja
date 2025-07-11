@@ -11,12 +11,12 @@
         <tr>
             <td>2. Lokasi Pekerjaan</td>
             <td>:</td>
-            <td> ......................... </td>
+            <td> {{Auth::user()->desa }} </td>
         </tr>       
         <tr>
             <td>3. Anggaran</td>
             <td>:</td>
-            <td> ......................... </td>
+            <td> {{ number_format(round($data['negosiasiHarga']->harga_total, -2),0 ,"," ,".") }} </td>
         </tr>       
     </table>
     <br><br>
@@ -37,33 +37,33 @@
             <td style="text-align: right"> {{ number_format($data['item']['harga_negosiasi'][$k] * 1.14 , 0, ',', '.') }}</td>
             <td style="text-align: right"> {{ number_format(round($data['item']['volume'][$k] * 1.14 * $data['item']['harga_negosiasi'][$k], -2), 0, ',', '.') }}</td>
         </tr>
+        @endforeach
         <tr>
             <td colspan="4" style="text-align: right">JUMLAH</td>
             <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
         </tr>
-        @endforeach
     </table>
     <br>
     <table>
         <tr>
-            <td>Nama Rekanan</td>
-            <td>: </td>
-            <td>{{ $data['penyedia']->nama_penyedia}}</td>
+            <td style="width: 150px; vertical-align:top">Nama Rekanan</td>
+            <td style="vertical-align:top">: </td>
+            <td style="vertical-align:top">{{ $data['penyedia']->nama_penyedia}}</td>
         </tr>
         <tr>
-            <td>A l a m a t</td>
-            <td>: </td>
-            <td>{{ $data['penyedia']->alamat_penyedia}}</td>
+            <td style="vertical-align:top">A l a m a t</td>
+            <td style="vertical-align:top">: </td>
+            <td style="vertical-align:top">{{ $data['penyedia']->alamat_penyedia}}</td>
         </tr>
         <tr>
-            <td>Harga Penawaran</td>
-            <td>: </td>
-            <td>{{ number_format(round($data['nilai_total_penawaran'], -2),0 ,"," ,".")}} <i> ( {{ Terbilang::make(round($data['nilai_total_penawaran'], -2)) }} rupiah )</i></td>
+            <td style="vertical-align:top">Harga Penawaran</td>
+            <td style="vertical-align:top">: </td>
+            <td style="vertical-align:top">{{ number_format(round($data['nilai_total_penawaran'], -2),0 ,"," ,".")}} <i> ( {{ Terbilang::make(round($data['nilai_total_penawaran'], -2)) }} rupiah )</i></td>
         </tr>
         <tr>
-            <td>Harga Negosiasi</td>
-            <td>:</td>
-            <td>{{ number_format(round($data['negosiasiHarga']->harga_total, -2),0 ,"," ,".") }} <i> ( {{ Terbilang::make(round($data['negosiasiHarga']->harga_total, -2)) }} rupiah )</i></td>
+            <td style="vertical-align:top">Harga Negosiasi</td>
+            <td style="vertical-align:top">:</td>
+            <td style="vertical-align:top">{{ number_format(round($data['negosiasiHarga']->harga_total, -2),0 ,"," ,".") }} <i> ( {{ Terbilang::make(round($data['negosiasiHarga']->harga_total, -2)) }} rupiah )</i></td>
         </tr>
     </table>
     <div style="text-align: center">
