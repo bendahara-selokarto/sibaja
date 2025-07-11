@@ -39,12 +39,14 @@
                                         @csrf
                                         @method('DELETE')
                                         <x-bladewind::button size='tiny' outline="true" can_submit="true" color="red" size='tiny'>Hapus</x-bladewind::button>
-                                </form>                                
+                                </form><br>
+                                <ol>
+                                    <li><a href="">1. download form pekerja</a></li>
+                                    <li><a href="">2. download form buku material</a></li>
+                                </ol>
                             </td>
                             <td>
-                                <!-- <x-bladewind::tag outline="true" shade="dark" label="{{ $kegiatan['kegiatan'] }}"  /><br> -->
-                                <h1>{{ $kegiatan['kegiatan'] }}</h1><br>
-                                                          
+                                <h1>{{ $kegiatan['kegiatan'] }}</h1><br>               
                                 <ol>
                                     <li class="mb-4">                                        
                                         @if(!$kegiatan->pemberitahuan)
