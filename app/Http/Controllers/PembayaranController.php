@@ -24,7 +24,7 @@ class PembayaranController extends Controller
      */
     public function create($id)
     {   
-        $kegiatan = Kegiatan::find($id);        
+        $kegiatan = Kegiatan::with('negosiasiHarga')->find($id);        
         return view ('form.pembayaran', compact('kegiatan'));
     }
 
