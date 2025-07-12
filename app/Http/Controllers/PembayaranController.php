@@ -36,6 +36,7 @@ class PembayaranController extends Controller
         $pembayaran = new Pembayaran([
             'kegiatan_id' => $request->kegiatan_id,
             'tgl_pembayaran_cms' => $request->tgl_pembayaran_cms,
+            'tgl_invoice' => $request->tgl_invoice,
         ]);
         $pembayaran->save();
        
