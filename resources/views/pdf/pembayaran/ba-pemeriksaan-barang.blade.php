@@ -8,13 +8,13 @@
 </head>
 <body style="margin: 60px 40px 40px 100px; line-height:1.5">
     <h3 style="text-align: center;text-decoration:underline;">BERITA ACARA PEMERIKSAAN BARANG/PEKERJAAN</h3><br>
-    <p>Pada hari ini .... tanggal ………………….. bulan ………………… Tahun  {{Terbilang::make(Auth::user()->tahun_anggaran)}}   yang bertanda tangan dibawah ini  :</p>
+    <p>Pada hari ini {{$tgl_invoice->isoFormat('dddd')}} tanggal {{Terbilang::make($tgl_invoice->isoFormat('D'))}} bulan {{$tgl_invoice->isoFormat('MMMM')}} Tahun  {{Terbilang::make(Auth::user()->tahun_anggaran)}}   yang bertanda tangan dibawah ini  :</p>
     <table style="width: 100%">
         <tr>
             <td style="width:6px">1.</td>
             <td style="width: 50px">Nama</td>
             <td>:</td>
-            <td>..........</td>
+            <td>{{$kegiatan->ketua_ tpk}}</td>
             <td style="width:60px">Jabatan</td>
             <td>:</td>
             <td>Ketua</td>

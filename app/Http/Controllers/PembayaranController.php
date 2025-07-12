@@ -101,7 +101,7 @@ class PembayaranController extends Controller
     }
 
     public function render($id){
-        $kegiatan = Kegiatan::with('negosiasiHarga', 'pemberitahuan', 'penawaran_1' )->find($id);
+        $kegiatan = Kegiatan::with('negosiasiHarga', 'pemberitahuan', 'penawaran_1', 'pembayaran' )->find($id);
         if (!$kegiatan) {
             flash()->error('Kegiatan tidak ditemukan');
             return redirect()->back();
@@ -114,6 +114,7 @@ class PembayaranController extends Controller
         $penyedia = Penyedia::find($id_penyedia);
 
         try {
+            $tgl_invoice =  Carbon::parse($kegiatan->pembayaran->tgl_invoice);
             $tgl =  Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms);
             $items = $kegiatan->negosiasiHarga->item;
             $item = json_decode($items, true);
@@ -141,7 +142,8 @@ class PembayaranController extends Controller
         'pemberitahuan',
         'negosiasiHarga',
         'item',
-        'tgl'
+        'tgl',
+        'tgl_invoice'
         ));
         $filename = '4. PEMBAYARAN - (' . $kegiatan->kegiatan . ')';
         // Replace invalid filename characters with underscore

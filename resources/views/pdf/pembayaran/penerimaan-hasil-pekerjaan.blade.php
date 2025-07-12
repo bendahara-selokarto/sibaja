@@ -9,7 +9,7 @@
     <h2 style="text-align: center; text-transform: uppercase;">BERITA ACARA PENERIMAAN HASIL PEKERJAAN</h2>
     <p style="text-align: center;">NOMOR {{$pemberitahuan->no_pbj}}/PHP/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran}}</p>
 
-    <p style="text-align: justify">Pada hari ini …………… tanggal ……….. bulan ………… tahun {{Terbilang::make(Auth::user()->tahun_anggaran)}} bertempat di Kantor Kepala Desa {{Auth::user()->desa}}, telah dilaksanakan pembayaran atas pekerjaan pengadaan material {{$kegiatan->kegiatan}} antara :</p>
+    <p style="text-align: justify">Pada hari ini .... tanggal ……….. bulan ………… tahun {{Terbilang::make(Auth::user()->tahun_anggaran)}} bertempat di Kantor Kepala Desa {{Auth::user()->desa}}, telah dilaksanakan pembayaran atas pekerjaan pengadaan material {{$kegiatan->kegiatan}} antara :</p>
 
     <p style="text-align: justify"><strong>I. PIHAK PERTAMA</strong></p>
     <table style="margin-left: 20px;">

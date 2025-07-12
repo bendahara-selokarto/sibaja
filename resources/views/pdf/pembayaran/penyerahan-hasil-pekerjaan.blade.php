@@ -13,12 +13,12 @@ alt=" "
 style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
 onerror="this.src='{{ asset('') }}'" 
 ><br>
-    <p style="text-align: right">{{ $penyedia->kabupaten}}, {{ $tgl->isoFormat('D MMM Y')}}</p>
+    <p style="text-align: right">{{ $penyedia->kabupaten}}, {{ $tgl_invoice->isoFormat('D MMMM Y')}}</p>
     <table style="width:100%; margin-bottom: 20px;">
         <tr>
             <td style="width: 80px;">Nomor</td>
             <td style="width: 2%;">: </td>
-            <td style="width: auto;">....</td>
+            <td style="width: auto;">{{rand(11,49)}}</td>
             <td style="width: 40%;">Kepada</td>
         </tr>
         <tr>
