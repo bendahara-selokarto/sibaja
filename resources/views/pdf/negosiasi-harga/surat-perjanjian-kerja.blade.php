@@ -159,10 +159,10 @@
 <ol style="text-align: justify" type="a" style="text-align:justify">
     <li>Yang dimaksud dengan keadaan kahar (Force Majeure) adalah kejadian di luar kemampuan penyedia barang untuk mengatasinya  termasuk di dalamnya, tetapi tidak terbatas kejadian-kejadian sebagai akibat dari Peraturan Pemerintah baik Pusat maupun Daerah, Departemen, Instansi Sipil atau Militer, halilintar, banjir, gempa bumi, huru-hara, pemberontakan dan epidemi yang secara langsung dapat mengakibatkan keterlambatan penyerahan pekerjaan. </li>
     <li>Dalam hal terjadinya keadaan kahar (Force Majeure) penyedia barang wajib memberitahukan secara tertulis kepada Pengguna Anggaran, selambat-lambatnya dalam waktu 14 (empat belas) hari kalender terhitung sejak terjadinya  Force Majeure disertai keterangan dari pihak yang berwenang / berwajib. </li>
-    <li>Apabila dalam jangka waktu sebagaimana dimaksud pada huruf b di atas penyedia barang tidak memberitahukan kejadian  Force Majeure tersebut kepada Tim Pengelola Kegiatan, maka keterlambatan penyerahan pekerjaan dianggap bukan sebagai akibat Force Majeure. </li>
-    <li>Apabila dalam jangka waktu sebagaimana dimaksud pada huruf b di atas penyedia barang tidak memberitahukan kejadian  Force Majeure tersebut kepada Tim Pengelola Kegiatan, maka keterlambatan penyerahan pekerjaan dianggap bukan sebagai akibat Force Majeure. </li>
-    <li>Tim Pengelola Kegiatan dalam waktu 7 (tujuh) hari kalender terhitung sejak diterimanya permohonan perpanjangan akan memberikan jawaban mengenai permohonan dimaksud kepada penyedia barang. </li>
-    <li>Apabila dalam jangka waktu sebagaimana dimaksud pada angka huruf e di atas Tim Pengelola Kegiatan tidak memberikan jawaban terhadap permohonan perpanjangan waktu penyerahan pekerjaan dari penyedia barang, maka Tim Pengelola Kegiatan dianggap telah memberikan persetujuan terhadap permohonan dimaksud. </li>
+    <li>Apabila dalam jangka waktu sebagaimana dimaksud pada huruf b di atas penyedia barang tidak memberitahukan kejadian  Force Majeure tersebut kepada Tim Pelaksana Kegiatan, maka keterlambatan penyerahan pekerjaan dianggap bukan sebagai akibat Force Majeure. </li>
+    <li>Apabila dalam jangka waktu sebagaimana dimaksud pada huruf b di atas penyedia barang tidak memberitahukan kejadian  Force Majeure tersebut kepada Tim Pelaksana Kegiatan, maka keterlambatan penyerahan pekerjaan dianggap bukan sebagai akibat Force Majeure. </li>
+    <li>Tim Pelaksana Kegiatan dalam waktu 7 (tujuh) hari kalender terhitung sejak diterimanya permohonan perpanjangan akan memberikan jawaban mengenai permohonan dimaksud kepada penyedia barang. </li>
+    <li>Apabila dalam jangka waktu sebagaimana dimaksud pada angka huruf e di atas Tim Pelaksana Kegiatan tidak memberikan jawaban terhadap permohonan perpanjangan waktu penyerahan pekerjaan dari penyedia barang, maka Tim Pelaksana Kegiatan dianggap telah memberikan persetujuan terhadap permohonan dimaksud. </li>
 </ol>
 
 <div class="pasal">Pasal 9 <br> PENGHENTIAN DAN PEMUTUSAN SPK</div>
@@ -183,8 +183,8 @@
 
 <div class="pasal">Pasal 11 <br> KETENTUAN LAIN-LAIN</div>
 <ol style="text-align: justify" type="1">
-    <li>Biaya administrasi dan materai sebagai akibat keluarnya Surat Perintah Kerja ini  menjadi tanggung jawab PIHAK KEDUA.</li>
-    <li>Surat Perintah Kerja (SPK) ini dibuat 4 (empat ) rangkap terdiri dari 2 (dua) asli bermaterai dan  ditandatangani oleh masing masing pihak, dan mempunyai kekuatan hukum yang sama. Selebihnya diberikan kepada pihak yang berkepentingan dan ada hubungannya dengan pekerjaan ini.</li>
+    <li>Biaya administrasi dan materai sebagai akibat keluarnya Surat Perjanjian Kerja ini  menjadi tanggung jawab PIHAK KEDUA.</li>
+    <li>Surat Perjanjian Kerja (SPK) ini dibuat 4 (empat ) rangkap terdiri dari 2 (dua) asli bermaterai dan  ditandatangani oleh masing masing pihak, dan mempunyai kekuatan hukum yang sama. Selebihnya diberikan kepada pihak yang berkepentingan dan ada hubungannya dengan pekerjaan ini.</li>
 </ol>
 
 <div class="pasal">Pasal 12 <br> PENUTUP</div>
@@ -193,11 +193,13 @@
 <table style="width:100%; text-align:center">
     <tr>
         <td>
-            PIHAK KEDUA<br><br><br><br><br><br>
+            PIHAK KEDUA<br>{{$data['penyedia']->nama_penyedia}} 
+            <br><br><br><i>materai</i><br><br><br><br>
             {{$data['penyedia']->nama_pemilik}}
         </td>
         <td>
-            PIHAK KESATU<br>PKA<br><br><br><br><br>
+            PIHAK KESATU<br>PKA
+            <br><br><br><br><br><br><br>
             {{$data['kegiatan']->pka}}
         </td>
     </tr>
