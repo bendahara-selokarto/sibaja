@@ -136,7 +136,7 @@
         </tr>
         <tr>
           <td >WAKTU PELAKSANAAN</td>
-          <td >: {{ $data['negosiasiHarga']->jumlah_hari_kerja }} hari</td>
+          <td >: {{ $data['negosiasiHarga']->jumlah_hari_kerja }} ({{Terbilang::make($data['negosiasiHarga']->jumlah_hari_kerja)}}) hari kalender</td>
         </tr>
         <tr>
           <td >NILAI PEKERJAAN</td>
@@ -149,8 +149,8 @@
           <th style="text-align: center">NO</th>
           <th style="text-align: center">JENIS BARANG/BAHAN</th>
           <th style="text-align: center">KUANTITAS</th>
-          <th style="text-align: center">HARGA SATUAN</th>
-          <th style="text-align: center">JUMLAH</th>
+          <th style="text-align: center">HARGA SATUAN <br>(Rp.)</th>
+          <th style="text-align: center">JUMLAH <br>(Rp.)</th>
         </tr></thead>
       <tbody>
         
@@ -193,7 +193,7 @@
 
       <table style="width: 100%; border-top: 2px solid black; border-left: 1px solid black; border-right: 1px solid black; border-collapse: collapse; text-align: center;">
        <tr>
-         <td  colspan="2"><p style="text-align: justify; margin:2mm; font-size:10pt"><strong>INSTRUKSI KEPADA PENYEDIA BARANG DAN JASA : </strong>Penagihan hanya dapat dilakukan setelah penyelesaian pekerjaan yang diperintahkan dalam SPK ini dan hasil pekerjaan tersebut dapat diterima secara memuaskan oleh Tim Pengelola Kegiatan dan dibuktikan dengan Berita Acara Serah Terima. Jika pengadaan tidak dapat diselesaikan dalam jangka waktu pengiriman karena kesalahan atau kelalaian Penyedia Barang maka Penyedia Barang berkewajiban untuk membayar denda kepada TPK sebesar 1/1000 (satu per seribu) dari nilai SPK sebelum PPN setiap hari kalender keterlambatan. Selain tunduk </p></td>
+         <td  colspan="2"><p style="text-align: justify; margin:2mm; font-size:10pt"><strong>INSTRUKSI KEPADA PENYEDIA BARANG DAN JASA : </strong>Penagihan hanya dapat dilakukan setelah penyelesaian pekerjaan yang diperintahkan dalam SPK ini dan hasil pekerjaan tersebut dapat diterima secara memuaskan oleh Tim Pelaksana Kegiatan dan dibuktikan dengan Berita Acara Serah Terima. Jika pengadaan tidak dapat diselesaikan dalam jangka waktu pengiriman karena kesalahan atau kelalaian Penyedia Barang maka Penyedia Barang berkewajiban untuk membayar denda kepada TPK sebesar 1/1000 (satu per seribu) dari nilai SPK sebelum PPN setiap hari kalender keterlambatan. Selain tunduk </p></td>
         </tr>
       <tr>
         <td></td>
