@@ -27,18 +27,23 @@
                 <td>Lampiaran</td>
                 <td>: </td>
                 <td>1 bandel</td>
-                <td>Yth ;</td>
+                <td>Yth. Kepala Desa {{Auth::user()->desa}}</td>
             </tr>
             <tr>
                 <td>Hal</td>
                 <td>: </td>
                 <td>Laporan Hasi Pekerjaan</td>
-                <td>Kepala Desa {{Auth::user()->desa}}</td>
+                <td>di-</td>
             </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="" style="text-transform: uppercase; text-decoration:underline; text-align:left; text-indent:30px"><b>{{Auth::user()->desa}}</b></td>
+            </tr>
+            {{-- <p style="text-transform: uppercase; text-decoration:underline; margin-left:auto; width:300px; text-align:center"><b>{{Auth::user()->desa}}</b></p> --}}
         </table>
         <br><br>
         <div style="text-align: justify; text-indent:30px; margin-left:154px; vertical-align:1.5; line-height: 2">
-            <p >Berdasarkan Keputusan Kepala Desa Nomor .................. Tahun ..............tentang Pelaksana Kegiatan Anggaran, maka dengan ini kami laporkan bahwa kegiatan {{$kegiatan->kegiatan}} telah selesai dilaksanakan pada {{tanggal_indo($negosiasiHarga->tgl_akhir_perjanjian)}} Adapun dokumen pelaksanaan kegiatan {{$kegiatan->kegiatan}} terlampir.</p>
+            <p >Berdasarkan Keputusan Kepala Desa Nomor .................. Tahun .............. tentang Pelaksana Kegiatan Anggaran, maka dengan ini kami laporkan bahwa kegiatan {{$kegiatan->kegiatan}} telah selesai dilaksanakan pada {{tanggal_indo($negosiasiHarga->tgl_akhir_perjanjian)}} Adapun dokumen pelaksanaan kegiatan {{$kegiatan->kegiatan}} terlampir.</p>
 
 <p>Demikian untuk menjadikan periksa dan guna seperlunya.</p>
 
