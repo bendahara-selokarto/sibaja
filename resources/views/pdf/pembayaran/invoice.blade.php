@@ -84,7 +84,9 @@
             </td>   
         </tr>
     </tbody>
-</table>
+</table><br>
+Terbilang : {{Terbilang::make(round($negosiasiHarga->total, -2))}} rupiah
+<br><br>
 <br>
 <table>
     <tr>
