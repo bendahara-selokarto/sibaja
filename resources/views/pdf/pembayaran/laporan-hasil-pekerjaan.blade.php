@@ -7,18 +7,20 @@
     <title>Document</title>
 </head>
 <body>  
-            <img 
+            {{-- <img 
             src="storage/{{$penyedia->kop_surat }}" 
                 alt=" " 
                 style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
                 onerror="this.src='{{ asset('') }}'" 
-                >
+                > --}}
+                <x-kop-desa></x-kop-desa>
+                <p style="text-align: right">{{Auth::user()->desa}} , {{ tanggal_indo($tgl)}}</p>
 
         <table style="width:100%">
             <tr>
                 <td>Nomor</td>
                 <td>:</td>
-                <td></td>
+                <td style="text-indent: 3b0px">/{{Terbilang::roman($tgl->isoFormat('M'))}}/{{Auth::user()->tahun_anggaran}}</td>
                 <td>Kepada :</td>
             </tr>
             <tr>

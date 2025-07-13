@@ -24,7 +24,7 @@
     <title>Document</title>
 </head>
 <body class="daftar-nama-barang-yang-diperiksa">
-    <h3 style="text-align: center">DAFTAR NAMA BARANG/PEKERJAAN YANG DIPERIKSA</h3>
+    <h3 style="text-align: center">DAFTAR NAMA BARANG / PEKERJAAN YANG DIPERIKSA</h3>
     <br>
     <table class="daftar-nama-barang-yang-diperiksa">
         <tr>
@@ -44,18 +44,18 @@
         </tr>              
         @endforeach       
     </table>
-    <p style="text-align: right">{{Auth::user()->desa}}, </p>
+    <p style="text-align: right">{{Auth::user()->desa}}, {{tanggal_indo($tgl_invoice)}}</p>
     <p style="text-align:center">Tim Pelaksana Kegiatan</p>
-    <table style="width: 100%">
+        <table style="width: 100%">
         <tr>
-            <td>Rekanan</td>
-            <td>1</td>
+            <td style="text-align: center">Rekanan,</td>
+            <td>1.</td>
             <td>Nama</td>
-            <td> ............. </td>
+            <td>: {{$kegiatan->ketua_tpk}}</td>
             <td> 1. .........................  </td>
         </tr>
         <tr>
-            <td></td>
+            <td style="text-align: center">{{$penyedia->nama_penyedia}}</td>
             <td></td>
             <td>Jabatan</td>
             <td>: Ketua</td>
@@ -66,7 +66,7 @@
             <td>2</td>
             <td>Nama</td>
             <td> ..... </td>
-            <td> 2. ........  </td>
+            <td> 2. .........................  </td>
         </tr>
         <tr>
             <td></td>
@@ -76,14 +76,14 @@
             <td></td>
         </tr>
         <tr>
-            <td> .................. </td>
+            <td></td>
             <td>3</td>
             <td>Nama</td>
             <td> ..... </td>
-            <td> 3. ........  </td>
+            <td> 3. .........................  </td>
         </tr>
         <tr>
-            <td></td>
+            <td style="width: 200px; text-align:center"> {{$penyedia->nama_pemilik}} </td>
             <td></td>
             <td>Jabatan</td>
             <td>: Anggota</td>

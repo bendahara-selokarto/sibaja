@@ -14,7 +14,7 @@
             <td style="width:6px">1.</td>
             <td style="width: 50px">Nama</td>
             <td>:</td>
-            <td>{{$kegiatan->ketua_ tpk}}</td>
+            <td>{{$kegiatan->ketua_tpk}}</td>
             <td style="width:60px">Jabatan</td>
             <td>:</td>
             <td>Ketua</td>
@@ -39,26 +39,26 @@
         </tr>
     </table>
 
-    <p style="text-align: justify">Berdasarkan Surat Keputusan Kepala Desa {{Auth::user()->desa}} Nomor : ………………. tanggal ……………….  Selaku Tim Pelaksana Kegiatan dan telah memeriksa Barang / Pekerjaan dengan teliti sebagai daftar terlampir yang telah diserahkan oleh : {{$penyedia->nama_pemilik ." ".$penyedia->jabata_pemilik ." ".$penyedia->nama_penyedia}}</p>
-    <p style="text-align: justify">Berdasarkan Surat Pesanan SPK Nomor : ……………………….. tanggal ...................................</p>
+    <p style="text-align: justify">Berdasarkan Surat Keputusan Kepala Desa {{Auth::user()->desa}} Nomor : ………………. tanggal ……………….  Selaku Tim Pelaksana Kegiatan dan telah memeriksa Barang / Pekerjaan dengan teliti sebagai daftar terlampir yang telah diserahkan oleh : {{$penyedia->nama_penyedia}}</p>
+    <p style="text-align: justify">Berdasarkan Surat Pesanan SPK Nomor : {{$pemberitahuan->no_pbj}}/SPK/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran}} tanggal {{tanggal_indo($negosiasiHarga->tgl_persetujuan)}}.</p>
     <p style="text-align: justify">Dengan kesimpulan sebagai berikut :</p>
     <ol type="a">
         <li>Terdapat baik sesuai dengan Surat SPK.</li>
-        <li>Kurang / Tidak baik.</li>
+        <li><span style="text-decoration: line-through">Kurang / Tidak baik.</span></li>
     </ol>
     <p style="text-align: justify">Barang yang kondisi baik yang kami beri tanda V yang selanjutnya akan diserahkan oleh rekanan kepada Tim Pengelola Kegiatan sedangkan yang tidak baik telah kami beri tanda X.</p>
     <p style="text-align: justify">Demikian Berita Acara ini dibuat dalam  3 ( tiga ) rangkap untuk dipergunakan sebagai mana mestinya.</p>
     
     <table style="width: 100%">
         <tr>
-            <td style="text-align: center">Rekanan</td>
-            <td>1</td>
+            <td style="text-align: center">Rekanan,</td>
+            <td>1.</td>
             <td>Nama</td>
-            <td> ............. </td>
+            <td>: {{$kegiatan->ketua_tpk}}</td>
             <td> 1. .........................  </td>
         </tr>
         <tr>
-            <td></td>
+            <td style="text-align: center">{{$penyedia->nama_penyedia}}</td>
             <td></td>
             <td>Jabatan</td>
             <td>: Ketua</td>
@@ -69,7 +69,7 @@
             <td>2</td>
             <td>Nama</td>
             <td> ..... </td>
-            <td> 2. ........  </td>
+            <td> 2. .........................  </td>
         </tr>
         <tr>
             <td></td>
@@ -79,14 +79,14 @@
             <td></td>
         </tr>
         <tr>
-            <td style="width: 200px; text-align:center"> {{$penyedia->nama_pemilik}} </td>
+            <td></td>
             <td>3</td>
             <td>Nama</td>
             <td> ..... </td>
-            <td> 3. ........  </td>
+            <td> 3. .........................  </td>
         </tr>
         <tr>
-            <td></td>
+            <td style="width: 200px; text-align:center"> {{$penyedia->nama_pemilik}} </td>
             <td></td>
             <td>Jabatan</td>
             <td>: Anggota</td>
