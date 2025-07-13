@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Models\Penyedia;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pemberitahuan;
+use App\Models\Penawaran_1;
+use App\Models\Penawaran_2;
+
+use function PHPUnit\Framework\isEmpty;
 
 class KegiatanController extends Controller
 {
@@ -18,10 +23,43 @@ class KegiatanController extends Controller
     {
         $kegiatan = Kegiatan::with('pemberitahuan')->with('penawaran_1')->with('penawaran_2')->with('negosiasiHarga')->with('pembayaran')->where('kode_desa', Auth::user()->kode_desa)->orderBy('created_at', 'desc')->get();
         
-        return view('menu.kegiatan')->with( 'kegiatans' , $kegiatan );
+        $penyedia = Pemberitahuan::where('kegiatan_id', $kegiatan[0]->id)->get();
+
+        if ($penyedia->isEmpty()) {
+            return view('menu.kegiatan')->with('kegiatans', $kegiatan);
+        }
+
+        $penyediaId = $penyedia[0]->penyedia;
+        
+        $penawaran11 = Penawaran_1::where('penyedia_id', $penyediaId[0])->where('kegiatan_id', $kegiatan[0]->id)->get();
+        $penawaran12 = Penawaran_2::where('penyedia_id', $penyediaId[0])->where('kegiatan_id', $kegiatan[0]->id)->get();
+
+        $penawaran21 = Penawaran_1::where('penyedia_id', $penyediaId[1])->where('kegiatan_id', $kegiatan[0]->id)->get();
+        $penawaran22 = Penawaran_2::where('penyedia_id', $penyediaId[1])->where('kegiatan_id', $kegiatan[0]->id)->get();
+        
+        $penyedia1status = True;
+        $penyedia2status = True;
+
+        if(!$penawaran11->isEmpty() || !$penawaran12->isEmpty()){
+            $penyedia1status = False;
+        }elseif (!$penawaran21->isEmpty() || !$penawaran22->isEmpty()) {
+            $penyedia2status = False;
+        }
+
+        return view('menu.kegiatan')->with('kegiatans', $kegiatan)
+                                          ->with('penyedia', $penyedia)
+                                          ->with('penyedia1status', $penyedia1status)
+                                          ->with('penyedia2status', $penyedia2status);
     }
     public function create()
     {
+        $penyedia = new Penyedia();
+
+        if($penyedia->count() == 0){
+            session()->flash('error', 'Belum ada penyedia');
+            return redirect()->route('menu.penyedia');
+        }
+
         $kegiatan = new Kegiatan();
         return view('form.kegiatan', compact('kegiatan'));
     }
@@ -35,7 +73,10 @@ class KegiatanController extends Controller
             $validatedData = $request->validate([
                 'rekening_apbdes' => 'required|string',
                 'kegiatan' => 'required|string',
+                'lokasi_kegiatan' => 'required|string',
                 'ketua_tpk' => 'required|string',
+                'sekretaris_tpk' => 'required|string',
+                'anggota_tpk' => 'required|string',
                 'pka' => 'required|string',
             ]);
         
@@ -87,10 +128,13 @@ class KegiatanController extends Controller
     {
         try {
             $validatedData = $request->validate([
-            'rekening_apbdes' => 'required|string',
-            'kegiatan' => 'required|string',
-            'ketua_tpk' => 'required|string',
-            'pka' => 'required|string',
+                'rekening_apbdes' => 'required|string',
+                'kegiatan' => 'required|string',
+                'lokasi_kegiatan' => 'required|string',
+                'ketua_tpk' => 'required|string',
+                'sekretaris_tpk' => 'required|string',
+                'anggota_tpk' => 'required|string',
+                'pka' => 'required|string',
             ]);
 
             $kegiatan = Kegiatan::find($id);

@@ -70,7 +70,8 @@ class PemberitahuanController extends Controller
         $request->validate([
             'tgl_pemberitahuan' => 'required|date',
         ]);
-        $tgl_batas_akhir_penawaran = Carbon::parse($request->input('tgl_batas_akhir_penawaran'));
+        // $tgl_batas_akhir_penawaran = Carbon::parse($request->input('tgl_batas_akhir_penawaran'));
+        $tgl_batas_akhir_penawaran = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
 
         $data = [
             'rekening_apbdes' => $request->input('rekening_apbdes'),
