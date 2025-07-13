@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<body>  
+<body >  
             {{-- <img 
             src="storage/{{$penyedia->kop_surat }}" 
                 alt=" " 
@@ -20,34 +20,35 @@
             <tr>
                 <td>Nomor</td>
                 <td>:</td>
-                <td style="text-indent: 3b0px">/{{Terbilang::roman($tgl->isoFormat('M'))}}/{{Auth::user()->tahun_anggaran}}</td>
+                <td style="text-indent: 30px">/{{Terbilang::roman($tgl->isoFormat('M'))}}/{{Auth::user()->tahun_anggaran}}</td>
                 <td>Kepada :</td>
             </tr>
             <tr>
                 <td>Lampiaran</td>
                 <td>: </td>
-                <td> 1 bandel</td>
+                <td>1 bandel</td>
                 <td>Yth ;</td>
             </tr>
             <tr>
                 <td>Hal</td>
                 <td>: </td>
                 <td>Laporan Hasi Pekerjaan</td>
-                <td></td>
+                <td>Kepala Desa {{Auth::user()->desa}}</td>
             </tr>
         </table>
         <br><br>
-        <div style="text-align: justify; text-indent:300px10px; margin-left:154px">
-            <p>Berdasarkan Keputusan Kepala Desa Nomor ..................Tahun ..............tentang Pelaksana Kegiatan Anggaran, maka dengan ini kami laporkan bahwa kegiatan ................telah selesai dilaksanakan pada .............. Adapun dokumen pelaksanaan kegiatan.......... terlampir.</p>
+        <div style="text-align: justify; text-indent:30px; margin-left:154px; vertical-align:1.5; line-height: 2">
+            <p >Berdasarkan Keputusan Kepala Desa Nomor .................. Tahun ..............tentang Pelaksana Kegiatan Anggaran, maka dengan ini kami laporkan bahwa kegiatan {{$kegiatan->kegiatan}} telah selesai dilaksanakan pada {{tanggal_indo($negosiasiHarga->tgl_akhir_perjanjian)}} Adapun dokumen pelaksanaan kegiatan {{$kegiatan->kegiatan}} terlampir.</p>
 
 <p>Demikian untuk menjadikan periksa dan guna seperlunya.</p>
 
 
         </div>
+        <br><br>
         <div style="text-align: center; width: 300px; margin-left:auto">
             Pelaksana Kegiatan Anggaran <br>
             Kegiatan {{$kegiatan->kegiatan}}
-            <br><br><br>
+            <br><br><br><br><br>
             {{$kegiatan->pka}}
         </div>
 </body>
