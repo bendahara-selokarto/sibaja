@@ -16,22 +16,22 @@
     </span>
     <hr style="border: 2px solid black; margin-top: 10px; margin-bottom: 20px;">
     <p style="margin-top: 1rem; text-align: justify; font-size: 12pt;">
-        Pada hari ini, <strong>{{ ucwords($tgl->isoFormat("dddd")) ?? 'Senin' }} </strong> tanggal <strong>{{ ucwords(Terbilang::make($tgl->isoFormat("d")))?? '01' }} </strong> bulan <strong>{{ ucwords($tgl->isoFormat("MMMM")) }} </strong> tahun <strong>{{ Terbilang::make($tgl->isoFormat("Y")) }} </strong>, bertempat di Balaidesa {{ Auth::user()->desa }}, telah dilaksanakan serah terima hasil pekerjaan antara:
+        Pada hari ini, <strong>{{ ucwords($tgl->isoFormat("dddd"))}} </strong> tanggal <strong>{{ ucwords(Terbilang::make($tgl->isoFormat("D")))}} </strong> bulan <strong>{{ ucwords($tgl->isoFormat("MMMM")) }} </strong> tahun <strong>{{ Terbilang::make($tgl->isoFormat("Y")) }} </strong>, bertempat di Kantor Desa {{ Auth::user()->desa }}, telah dilaksanakan serah terima hasil pekerjaan antara:
 
         
         <table style="font-size: 12pt; border-collapse: collapse; width: 100%; margin-bottom: 1.5rem;">
             <tr>
             <td rowspan="4" style="width: 4%; vertical-align: top; padding: 4px;">I. </td>
             <td style="width: 20%; padding: 4px;">Nama</td>
-            <td style="width: 50%; padding: 4px;">{{ Auth::user()->kepala_desa ?? '-' }}</td>
+            <td style="width: 50%; padding: 4px;">: {{ Auth::user()->kepala_desa ?? '-' }}</td>
             </tr>
             <tr>
             <td style="padding: 4px;">Jabatan</td>
-            <td style="padding: 4px;">Kepala Desa {{ Auth::user()->desa ?? '-' }}</td>
+            <td style="padding: 4px;">: Kepala Desa {{ Auth::user()->desa ?? '-' }}</td>
             </tr>
             <tr>
             <td style="padding: 4px;">Alamat</td>
-            <td style="padding: 4px;">Desa {{ Auth::user()->desa ?? '-' }}</td>
+            <td style="padding: 4px;">: Desa {{ Auth::user()->desa ?? '-' }}</td>
             </tr>
             <tr>
             <td colspan="2" style="padding: 4px;">Selanjutnya disebut PIHAK Pertama</td>
@@ -39,25 +39,25 @@
             <tr>
             <td rowspan="4" style="vertical-align: top; padding: 4px;">II. </td>
             <td style="padding: 4px;">Nama</td>
-            <td style="padding: 4px;">{{ $kegiatan->pka ?? '-' }}</td>
+            <td style="padding: 4px;">: {{ $kegiatan->pka ?? '-' }}</td>
             </tr>
             <tr>
             <td style="padding: 4px;">Jabatan</td>
-            <td style="padding: 4px;">PKA</td>
+            <td style="padding: 4px;">: Pelaksana Kegiatan Anggaran</td>
             </tr>
             <tr>
             <td style="padding: 4px;">Instansi</td>
-            <td style="padding: 4px;">Pemerintah Desa {{ Auth::user()->desa ?? '' }}</td>
+            <td style="padding: 4px;">: Pemerintah Desa {{ Auth::user()->desa ?? '' }}</td>
             </tr>
             <tr>
             <td colspan="2" style="padding: 4px;">Selanjutnya disebut PIHAK KEDUA</td>
             </tr>
         </table>
         <p style="text-align: justify; font-size: 12pt; margin-bottom: 1rem;">
-            PIHAK PERTAMA menyatakan bahwa telah menerima hasil pekerjaan berupa Material {{ $kegiatan->kegiatan}} dalam keadaan baik dari PIHAK KEDUA.
+            PIHAK PERTAMA menyatakan bahwa telah menerima hasil pekerjaan berupa {{ $kegiatan->kegiatan}} dalam keadaan baik dari PIHAK KEDUA.
         </p>
         <p style="text-align: justify; font-size: 12pt; margin-bottom: 1rem;">
-            PIHAK KEDUA telah menyerahkan hasil pekerjaan berupa Material {{ $kegiatan->kegiatan}} dalam keadaan baik kepada PIHAK PERTAMA.
+            PIHAK KEDUA telah menyerahkan hasil pekerjaan berupa {{ $kegiatan->kegiatan}} dalam keadaan baik kepada PIHAK PERTAMA.
         </p>
         <p style="text-align: justify; font-size: 12pt;">
             Demikian Berita Acara ini dibuat rangkap 2 (dua) masing-masing bermeterai cukup dan mempunyai kekuatan hukum yang sama untuk dipertanggungjawabkan sesuai peraturan perundang-undangan yang berlaku.
