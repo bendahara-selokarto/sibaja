@@ -4,55 +4,64 @@
             {{ __('Penawaran Harga') }}
         </h2>
     </x-slot>
-    <div class="py-12">       
-    @foreach ( $pemberitahuan->penyedia as $p )
-        @php    
-            $nama_penyedia = App\Models\Penyedia::select('nama_penyedia')->where('id', $p)->first();
-            
-        @endphp 
-    @endforeach
+    <div class="py-12">
+        @foreach ($pemberitahuan->penyedia as $p)
+            @php
+                $nama_penyedia = App\Models\Penyedia::select('nama_penyedia')->where('id', $p)->first();
+
+            @endphp
+        @endforeach
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="max-w-xl">                        
-                <form action="{{ route('penawaran.store') }}" class="survey" method="POST" id="form_id">
-                            @method('post')
-                            @csrf
+                <div class="max-w-xl">
+                    <form action="{{ route('penawaran.store') }}" class="survey" method="POST" id="form_id">
+                        @method('post')
+                        @csrf
                         <div>
                             <x-input-label for="penyedia" :value="__('Penyedia')" />
-                            <select id="penyedia" name="penyedia" class="mt-1 block w-full" required>
+                            <input type="text" value="{{ $penyedia->nama_penyedia }}" readonly>
+                            <input type="text" name="penyedia" value="{{ $penyedia->id }}" readonly>
+                            {{-- <select id="penyedia" name="penyedia" class="mt-1 block w-full" required>
                                 <option value="">pilih penyedia</option>
-                                @foreach ( $pemberitahuan->penyedia as $p )
+                                @foreach ($pemberitahuan->penyedia as $p)
                                     @php    
                                         $nama_penyedia = App\Models\Penyedia::select('nama_penyedia')->where('id', $p)->first();
                                     @endphp 
                                         <option value="{{$p}}">{{$nama_penyedia->nama_penyedia}}</option>
                                 @endforeach
-                            </select>
+                            </select> --}}
                             <x-input-error class="mt-2" :messages="$errors->get('penyedia')" />
                         </div>
                         <div>
-                        <label for="checkbox" class="inline-flex items-center">
-                            <input type="checkbox" id="checkbox" name="pemenang" value="" class="form-checkbox">
-                            <span class="ml-2">Tetapkan sebagai Pemenang</span>
-                        </label>
+                            @if ($penawaran1->isEmpty())
+                                <label for="checkbox" class="inline-flex items-center">
+                                    <input type="checkbox" id="checkbox" name="pemenang" value="true"
+                                        class="form-checkbox">
+                                    <span class="ml-2">Tetapkan sebagai Pemenang</span>
+                                </label>
+                            @endif
                         </div>
-                        <br>                        
+                        <br>
                         <div>
-                            <input type="hidden" name="pemberitahuan_id" value="{{ $pemberitahuan->id}}">                            
-                            <!-- <input type="hidden" name="id_penyedia" value="{{ $p}}"> -->
+                            <input type="hidden" name="pemberitahuan_id" value="{{ $pemberitahuan->id }}">
+                            <!-- <input type="hidden" name="id_penyedia" value="{{ $p }}"> -->
                         </div>
                         <div>
                             <x-input-label for="tgl_surat_penawaran" :value="__('Tanggal Surat Penawaran')" />
-                            <x-text-input id="tgl_surat_penawaran" name="tgl_surat_penawaran" type="date" min="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') }}" max="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->format('Y-m-d') }}" class="mt-1 block " required autocomplete="tgl_surat_penawaran" />
+                            <x-text-input id="tgl_surat_penawaran" name="tgl_surat_penawaran" type="date"
+                                min="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') }}"
+                                max="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->format('Y-m-d') }}"
+                                class="mt-1 block " required autocomplete="tgl_surat_penawaran" />
                             <x-input-error class="mt-2" :messages="$errors->get('tgl_surat_penawaran')" />
                         </div>
                         <br>
                         <div>
                             <x-input-label for="no_penawaran" :value="__('Nomor Penawaran')" />
-                            <x-text-input id="no_penawaran" name="no_penawaran" type="number" min="0" class="mt-1 block " required autocomplete="no_penawaran" />
+                            <x-text-input id="no_penawaran" name="no_penawaran" type="number" min="0"
+                                class="mt-1 block " required autocomplete="no_penawaran" />
                             <x-input-error class="mt-2" :messages="$errors->get('no_penawaran')" />
                         </div>
-                        
+
                         <br>
                         <table class="w-full">
                             <tr>
@@ -63,128 +72,140 @@
                                 <th class="w-64">Harga satuan <br></th>
                                 <th class="w-64">Jumlah</th>
                             </tr>
-                            
-                                @foreach ($pemberitahuan->belanja as $y => $k)
-                                <tr>                                
-                                    <td ><input type="hidden" value="{{ $k['field0']}}" placeholder="{{ $k['field0'] }}" readonly name="no[]">{{ $k['field0']  }}</td>                             
-                                    <td ><input type="hidden" value="{{ $k['field1']}}" placeholder="{{ $k['field1'] }}" readonly name='uraian[]'>{{ $k['field1']  }} </td>                             
-                                    <td ><input type="hidden" value="{{ $k['field2']}}" placeholder="{{ $k['field2'] }}" readonly name='volume[]'>{{ $k['field2']  }} </td>                             
-                                    <td ><input type="hidden" value="{{ $k['field3']}}" placeholder="{{ $k['field3'] }}" readonly name='satuan[]' >{{ $k['field3']  }} </td>                             
-                                    <td class="text-right"><input type="number" min="0" name="harga_satuan[]" onblur="formatNumber(this)" nilai-sebelumnya="{{ old('harga_satuan[]', 0) }}"></td>
-                                    <td class="text-right" name="format_number"></td> 
-                                    <td ><input type="hidden" value="" id="total_input" name='total_input'></td>                             
-                                                    
-                                </tr>
-                                @endforeach
-                                
+
+                            @foreach ($pemberitahuan->belanja as $y => $k)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>Total</td>
-                                    <td class="text-right" id="total"></td>
+                                    <td><input type="hidden" value="{{ $k['field0'] }}"
+                                            placeholder="{{ $k['field0'] }}" readonly
+                                            name="no[]">{{ $k['field0'] }}</td>
+                                    <td><input type="hidden" value="{{ $k['field1'] }}"
+                                            placeholder="{{ $k['field1'] }}" readonly
+                                            name='uraian[]'>{{ $k['field1'] }} </td>
+                                    <td><input type="hidden" value="{{ $k['field2'] }}"
+                                            placeholder="{{ $k['field2'] }}" readonly
+                                            name='volume[]'>{{ $k['field2'] }} </td>
+                                    <td><input type="hidden" value="{{ $k['field3'] }}"
+                                            placeholder="{{ $k['field3'] }}" readonly
+                                            name='satuan[]'>{{ $k['field3'] }} </td>
+                                    <td class="text-right"><input type="number" min="0" name="harga_satuan[]"
+                                            onblur="formatNumber(this)"
+                                            nilai-sebelumnya="{{ old('harga_satuan[]', 0) }}"></td>
+                                    <td class="text-right" name="format_number"></td>
+                                    <td><input type="hidden" value="" id="total_input" name='total_input'></td>
+
                                 </tr>
-                        </table>                        
+                            @endforeach
+
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Total</td>
+                                <td class="text-right" id="total"></td>
+                            </tr>
+                        </table>
                         <div>
                             <button type="submit" class="btn btn-primary">
                                 Simpan
                             </button>
                         </div>
-                    </div>
+                </div>
                 </form>
             </div>
-        </div> 
-        <br>      
-    
-</div>
-@pushOnce('scripts')
-    <script>
-        window.addEventListener('DOMContentLoaded', (event) => {
-  const inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
-  inputsHargaSatuan.forEach(input => {
-    if (!input.getAttribute('nilai-sebelumnya')) {
-      input.setAttribute('nilai-sebelumnya', 0);
-    }
-  });
-});
-var total = 0;
+        </div>
+        <br>
 
-function formatNumber(input) {
-    var tr = input.parentNode.parentNode;
-    var volume = tr.querySelector('input[name="volume[]"]').value;
-    var angka = input.value.replace(/[^0-9]/g, '');
-    var formattedNumber = (angka * volume).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    tr.querySelector('td[name="format_number"]').textContent = formattedNumber;
+    </div>
+    @pushOnce('scripts')
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                const inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
+                inputsHargaSatuan.forEach(input => {
+                    if (!input.getAttribute('nilai-sebelumnya')) {
+                        input.setAttribute('nilai-sebelumnya', 0);
+                    }
+                });
+            });
+            var total = 0;
 
-    // Hitung nilai sebelumnya sebelum diubah
-    var nilaiSebelumnya = input.value * volume; // Nilai input * volume
-    input.setAttribute('nilai-sebelumnya', nilaiSebelumnya);
+            function formatNumber(input) {
+                var tr = input.parentNode.parentNode;
+                var volume = tr.querySelector('input[name="volume[]"]').value;
+                var angka = input.value.replace(/[^0-9]/g, '');
+                var formattedNumber = (angka * volume).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                tr.querySelector('td[name="format_number"]').textContent = formattedNumber;
 
-    updateTotal(formattedNumber, input);
-}
+                // Hitung nilai sebelumnya sebelum diubah
+                var nilaiSebelumnya = input.value * volume; // Nilai input * volume
+                input.setAttribute('nilai-sebelumnya', nilaiSebelumnya);
 
-function updateTotal(formattedNumber, input) {
-    var tr = input.parentNode.parentNode;
-    var nilaiSebelumnya = input.getAttribute('nilai-sebelumnya');
+                updateTotal(formattedNumber, input);
+            }
 
-    console.log("Nilai Sebelumnya:", nilaiSebelumnya); // Debugging
+            function updateTotal(formattedNumber, input) {
+                var tr = input.parentNode.parentNode;
+                var nilaiSebelumnya = input.getAttribute('nilai-sebelumnya');
 
-    if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
-        total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
-    }
+                console.log("Nilai Sebelumnya:", nilaiSebelumnya); // Debugging
 
-    total += parseInt(formattedNumber.replace(/\./g, ''));
+                if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
+                    total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
+                }
 
-    document.getElementById('total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    document.getElementById('total_input').value = total;
-}
+                total += parseInt(formattedNumber.replace(/\./g, ''));
 
-var inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
-inputsHargaSatuan.forEach(function (input) {
-    input.addEventListener('focus', function () {
-        var tr = this.parentNode.parentNode;
-        var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
-        formattedNumber = formattedNumber ? formattedNumber : '0';
+                document.getElementById('total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                document.getElementById('total_input').value = total;
+            }
 
-        var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
-        var nilaiSebelumnya = this.value * volume; // Hitung nilai sebelumnya
+            var inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
+            inputsHargaSatuan.forEach(function(input) {
+                input.addEventListener('focus', function() {
+                    var tr = this.parentNode.parentNode;
+                    var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
+                    formattedNumber = formattedNumber ? formattedNumber : '0';
 
-        if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
-            total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
-        }
+                    var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
+                    var nilaiSebelumnya = this.value * volume; // Hitung nilai sebelumnya
 
-        document.getElementById('total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        document.getElementById('total_input').value = total;
-    });
+                    if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
+                        total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
+                    }
 
-    input.addEventListener('blur', function () {
-        var tr = this.parentNode.parentNode;
-        var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
-        formattedNumber = formattedNumber ? formattedNumber : '0';
+                    document.getElementById('total').textContent = total.toString().replace(
+                        /\B(?=(\d{3})+(?!\d))/g, ".");
+                    document.getElementById('total_input').value = total;
+                });
 
-        var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
-        var nilaiSaatIni = this.value * volume; // Hitung nilai saat ini
-        this.setAttribute('nilai-sebelumnya', nilaiSaatIni); // Update nilai sebelumnya
+                input.addEventListener('blur', function() {
+                    var tr = this.parentNode.parentNode;
+                    var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
+                    formattedNumber = formattedNumber ? formattedNumber : '0';
 
-        total += parseInt(formattedNumber.replace(/\./g, ''));
-        document.getElementById('total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        document.getElementById('total_input').value = total;
-    });
-});
-document.getElementById('penyedia').addEventListener('change', function() {
-    var selectedOption = this.options[this.selectedIndex];
-    var selectedText = selectedOption.text;
-    var selectedValue = selectedOption.value;
-    var checkbox = document.getElementById('checkbox');
-    var checkboxLabelSpan = document.querySelector('label[for="checkbox"] span.ml-2');
-    if (checkboxLabelSpan) {
-        checkboxLabelSpan.textContent = 'Tetapkan sebagai Pemenang: ' + selectedText;
-    }
-    if (checkbox) {
-        checkbox.value = selectedValue;
-    }
-});
-    </script>
-@endPushOnce
+                    var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
+                    var nilaiSaatIni = this.value * volume; // Hitung nilai saat ini
+                    this.setAttribute('nilai-sebelumnya', nilaiSaatIni); // Update nilai sebelumnya
+
+                    total += parseInt(formattedNumber.replace(/\./g, ''));
+                    document.getElementById('total').textContent = total.toString().replace(
+                        /\B(?=(\d{3})+(?!\d))/g, ".");
+                    document.getElementById('total_input').value = total;
+                });
+            });
+            document.getElementById('penyedia').addEventListener('change', function() {
+                var selectedOption = this.options[this.selectedIndex];
+                var selectedText = selectedOption.text;
+                var selectedValue = selectedOption.value;
+                var checkbox = document.getElementById('checkbox');
+                var checkboxLabelSpan = document.querySelector('label[for="checkbox"] span.ml-2');
+                if (checkboxLabelSpan) {
+                    checkboxLabelSpan.textContent = 'Tetapkan sebagai Pemenang: ' + selectedText;
+                }
+                if (checkbox) {
+                    checkbox.value = selectedValue;
+                }
+            });
+        </script>
+    @endPushOnce
 </x-app-layout>

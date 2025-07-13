@@ -32,11 +32,11 @@
                                     <x-text-input id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 inline " required autocomplete="tgl_pemberitahuan" /> <span id="hari-pemberitahuan"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_pemberitahuan')" />
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <x-input-label for="tgl_batas_akhir_penawaran" :value="__('tgl batas akhir penawaran')" />
                                     <x-text-input id="tgl_batas_akhir_penawaran" name="tgl_batas_akhir_penawaran" type="date" class="mt-1 inline " required autocomplete="tgl_batas_akhir_penawaran" /><span id="hari-batas-akhir-penawaran"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_batas_akhir_penawaran')" />
-                                </div>
+                                </div> --}}
                                 <br>
                                 <p>Centang 2 Penyedia yang diberi penawaran :</p>
                                 @foreach ($penyedia as  $p)
@@ -49,7 +49,7 @@
                                 <div id="inputContainer">  
                                     <div class="input-group">                  
                                         <input type="text" name="inputField1[]" placeholder="Uraian" required>
-                                        <input type="number" min="0" step="any" name="inputField2[]" placeholder="Vol" required>  
+                                        <input type="number" min="0" step="any" name="inputField2[]" placeholder="Volume" required>  
                                         <input type="text" name="inputField3[]" placeholder="Satuan" required>  
                                         <!-- <button type="button" onclick="removeInput(this)">Hapus</button>   -->
                                         <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="text-blue-500" />  
