@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('kegiatans', function (Blueprint $table) {
             $table->string('lokasi_kegiatan')->after('kegiatan')->nullable();
-            $table->string('sekretaris_tkp')->after('ketua_tpk')->nullable();
+            $table->string('sekretaris_tpk')->after('ketua_tpk')->nullable();
             $table->string('anggota_tpk')->after('ketua_tpk')->nullable();
         });
     }
@@ -25,7 +25,7 @@ return new class extends Migration
     {
         Schema::table('kegiatans', function (Blueprint $table) {
             $table->dropColumn('lokasi_kegiatan');
-            $table->dropColumn('sekretaris_tkp');
+            $table->dropColumn('sekretaris_tpk');
             $table->dropColumn('anggota_tpk');
         });
     }
