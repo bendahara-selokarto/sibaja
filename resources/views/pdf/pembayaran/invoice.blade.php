@@ -14,7 +14,7 @@
         style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
         onerror="this.src='{{ asset('') }}'" 
         >
-    <p style="text-align: right">{{ $penyedia->kabupaten }}, {{  Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</p>
+    <p style="text-align: right">{{ $penyedia->kabupaten }}, {{  Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_invoice)->isoFormat('D MMMM Y') }}</p>
     
     <table style="line-height: 1;" >
         <tr>
@@ -36,8 +36,8 @@
         di-
         <p style="text-align: center; text-indent: 5pt">TEMPAT</p>
     </div>
-    <h2 style="text-align: center">INVOICE</h2>  
-<table class="invoice" style="width:100%">
+    <h2 style="text-align: center; margin-bottom:1px">INVOICE</h2>  
+<table class="invoice" style="width:100%; margin-top:1px">
     <thead>
         <tr>
             <th style="text-align:center">No.</th>
