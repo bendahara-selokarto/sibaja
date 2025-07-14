@@ -10,7 +10,7 @@
         <br><br><br>
         
         
-        <h1>KEGIATAN {{strToUpper($kegiatan->kegiatan)}}</h1>
+        <h1 style="margin: 60px">KEGIATAN {{strToUpper($kegiatan->kegiatan)}}</h1>
         <br><br><br><br><br><br><br><br><br>
         <div style="position: absolute; bottom: 40px; width:100%;">            
             <h2>PELAKSANAAN DANA DESA</h2>
