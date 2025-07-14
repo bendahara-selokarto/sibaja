@@ -32,12 +32,11 @@
             </td>
         </tr>
     </table>   
-    <div style="width: 37%; margin-left:auto"><br>
-        di- <br>
+    <div style="width: 37%; margin-left:auto">
+        di-
         <p style="text-align: center; text-indent: 5pt">TEMPAT</p>
     </div>
     <h2 style="text-align: center">INVOICE</h2>  
-    <br>
 <table class="invoice" style="width:100%">
     <thead>
         <tr>
@@ -87,7 +86,6 @@
 </table><br>
 Terbilang : {{Terbilang::make(round($negosiasiHarga->total, -2))}} rupiah
 <br><br>
-<br>
 <table>
     <tr>
         <td>Pembayaran Via Bank</td>
@@ -106,7 +104,6 @@ Terbilang : {{Terbilang::make(round($negosiasiHarga->total, -2))}} rupiah
         <td>: {{ $penyedia->bank }}</td>
     </tr>
 </table>
-<br>
 <h4><strong>Pembayaran via Transfer dianggap lunas setelah terkonfirmasi</strong></h4>
 </div>
 </body>
