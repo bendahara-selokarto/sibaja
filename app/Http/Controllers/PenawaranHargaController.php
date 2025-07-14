@@ -30,8 +30,11 @@ class PenawaranHargaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($id)
+    public function create($id, $id2)
     {
+        $namaPenyedia = Penyedia::find($id2);
+        $penawaran1 = Penawaran_1::get();
+
         $kegiatan = Kegiatan::with('pemberitahuan')->with('penawaran')->find($id);
         if (!$kegiatan) {
             noty()->error('Kegiatan tidak ditemukan');
@@ -50,7 +53,9 @@ class PenawaranHargaController extends Controller
         
         return view('form.penawaran-harga', [
             'kegiatan' => $kegiatan,
-            'pemberitahuan' => $pemberitahuan
+            'pemberitahuan' => $pemberitahuan,
+            'penyedia' => $namaPenyedia,
+            'penawaran1' => $penawaran1
         ]);
     }
 
