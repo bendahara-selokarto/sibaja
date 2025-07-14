@@ -184,12 +184,20 @@
           <td style="text-align: right" colspan="4">Dibulatkan</td>
             <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
         </tr>
-        <tr>
-          <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, -2))) }} Rupiah )</td>
+        @if(count($data['item']['uraian']) > 8)
+        <tr style="height: 200px">
+          <td style="height: 200px; text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, -2))) }} Rupiah )</td>
         </tr>
       </tbody>
       </table>
-      <!-- <div style="page-break-before: always;"></div> -->
+      <div style="page-break-before: always;"></div>
+      @else
+      <tr>
+        <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, -2))) }} Rupiah )</td>
+      </tr>
+    </tbody>
+    </table>
+      @endif
 
       <table style="width: 100%; border-top: 2px solid black; border-left: 1px solid black; border-right: 1px solid black; border-collapse: collapse; text-align: center;">
        <tr>
