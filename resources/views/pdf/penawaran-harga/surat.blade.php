@@ -32,23 +32,26 @@ onerror="this.src='{{ asset('') }}'"
         <td></td>
         <td></td>
         <td></td>
-        <td style='text-align:right'>{{ ucwords($penyedia1->kabupaten) }}, {{ tanggal_indo($penawaran_1->tgl_penawaran) }}</td>
+        <td colspan="2" style='text-align:right'>{{ ucwords($penyedia1->kabupaten) }}, {{ tanggal_indo($penawaran_1->tgl_penawaran) }}</td>
     </tr>
     <tr>
         <td>Nomor</td>
-        <td>: {{ $penawaran_1->no_penawaran}}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
-        <td></td>
+        <td>: </td>
+        <td style="width:230px">{{ $penawaran_1->no_penawaran}}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
+        <td ></td>
         <td>Kepada</td>
     </tr>
     <tr>
         <td>Lampiran</td>
-        <td>: 1 (satu) berkas</td>
-        <td>Yth. </td>
+        <td>: </td>
+        <td>1 (satu) berkas</td>
+        <td style="text-align:right">Yth. </td>
         <td rowspan="3" style="vertical-align: top">Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }}</td>
     </tr>
     <tr>
         <td>Perihal</td>
-        <td>: Penawaran Harga</td>
+        <td>: </td>
+        <td>Penawaran Harga</td>
         <td></td>
         
     </tr>
@@ -67,7 +70,7 @@ onerror="this.src='{{ asset('') }}'"
         <td></td>
         <td></td>
         <td></td>
-        <td style="text-align:center; text-decoration: underline">{{ strToUpper(Auth::user()->desa )}}</td>
+        <td colspan="2" style="text-align:center; text-decoration: underline">{{ strToUpper(Auth::user()->desa )}}</td>
     </tr>
     <tr>
         <td></td>
@@ -92,8 +95,11 @@ onerror="this.src='{{ asset('') }}'"
             <td>: {{ $penyedia1->alamat_penyedia }}</td>
         </tr> 
     </table>
-   
-    <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
+    </div>
+    <div style="margin-left:17mm">
+
+        
+        <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
     <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format(round($jumlah_total_1,-2) , 0, ',', '.') }} ({{ Terbilang::make(round($jumlah_total_1, -2))  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
     <p>Sesuai dengan persyaratan yang diminta bersama ini kami sampaikan :</p>
     <ol type="a">
@@ -115,7 +121,8 @@ onerror="this.src='{{ asset('') }}'"
                     <p style="padding: 0%">{{ $penyedia1->jabata_pemilik ." " .$penyedia1->nama_penyedia }}</p>
                     <br><br><br>
                     <p><strong>{{ $penyedia1->nama_pemilik }}</strong></p>
-            </div>  
-
-        </table>
-</div>
+                </div>  
+                
+            </table>
+            
+        </div>
