@@ -69,20 +69,15 @@
     <td style="border: 1px solid black; text-align:center; width: auto; min-width: 60px" >Harga Satuan<br> ( Rp. )</td>
     <td style="border: 1px solid black; text-align:center; width: auto; min-width: 60px">Jumlah Harga <br>( Rp. )</td>
   </tr>
-  @php
-      $no = 1;      
-  @endphp
+
    @foreach ($pemberitahuan['belanja'] as $r)
       <tr>
-          <td style="border: 1px solid black; text-align:center " >{{ $no }}</td>
-          <td style="border: 1px solid black; text-align:left" >{{ $r['field1']}}</td>
-          <td style="border: 1px solid black; text-align:center" >{{ Number::format($r['field2']) }} {{ $r['field3'] }}</td>
+          <td style="border: 1px solid black; text-align:center " >{{ $loop->iteration }}</td>
+          <td style="border: 1px solid black; text-align:left" >{{ $r['uraian']}}</td>
+          <td style="border: 1px solid black; text-align:center" >{{ Number::format($r['volume']) }} {{ $r['satuan'] }}</td>
           <td style="border: 1px solid black; text-align:center"></td>
           <td style="border: 1px solid black; text-align:center"></td>
-      </tr> 
-        @php
-        $no++
-    @endphp
+      </tr>
     @endforeach
     <tr>
         {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
