@@ -45,38 +45,18 @@
                                         value="{{ $penyedia[$i]['id'] }}"
                                         label="{{ $penyedia[$i]['nama_penyedia'] }}" />
                                 @endfor
-                                <!-- <div id="inputContainer">  
-                                    <div class="input-group">                  
-                                        <input value = "{{ $belanja[0]['field1'] }}" type="text" name="inputField1[]" placeholder="Uraian" required>
-                                        <input value = "{{ $belanja[0]['field2'] }}"  type="number" min="0" step="any" name="inputField2[]" placeholder="Vol" required>  
-                                        <input value = "{{ $belanja[0]['field3'] }}"  type="text" name="inputField3[]" placeholder="Satuan" required>  
-                                        <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="text-blue-500" />  
-                                    </div>  
-                                </div>     -->
                                 @foreach ($belanja as $index => $item)
                                     @if ($index >= 0)
                                         <div class="input-group">
-                                            <input value="{{ $item['field1'] }}" type="text" name="inputField1[]" placeholder="Uraian" required>
-                                            <input value="{{ $item['field2'] }}" type="number" min="0" step="any" name="inputField2[]" placeholder="Vol" required>
-                                            <input value="{{ $item['field3'] }}" type="text" name="inputField3[]" placeholder="Satuan" required>
-                                            <button type="button" onclick="removeInput(this)"><x-bladewind::icon class="text-red-500" name="minus-circle"/></button>
+                                            <input value="{{ $item['uraian'] }}" type="text" name="uraian[]" placeholder="Uraian" required>
+                                            <input value="{{ $item['volume'] }}" type="number" min="0" step="any" name="volume[]" placeholder="Vol" required>
+                                            <input value="{{ $item['satuan'] }}" type="text" name="satuan[]" placeholder="Satuan" required>
                                             <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="text-blue-500"/></button>
                                         </div>
                                     @endif
                                 @endforeach
                                 <div id="inputContainer">
                                 </div>
-                                
-
-
-
-
-
-
-
-
-
-
                             </div>            
                         </div>
                         <br>
@@ -103,9 +83,9 @@
    const newInputGroup = document.createElement('div');  
    newInputGroup.className = 'input-group';  
    newInputGroup.innerHTML = `  
-       <x-text-input class="mt-1" type="text" name="inputField1[]" required autofocus autocomplete="uraian" />
-       <x-text-input class="mt-1" type="number" min="0" step="any" name="inputField2[]" required  autocomplete="Vol" />
-       <x-text-input class="mt-1" type="text" name="inputField3[]" required  autocomplete="Satuan" />                  
+       <x-text-input class="mt-1" type="text" name="uraian[]" required autofocus autocomplete="uraian" />
+       <x-text-input class="mt-1" type="number" min="0" step="any" name="volume[]" required  autocomplete="Vol" />
+       <x-text-input class="mt-1" type="text" name="satuan[]" required  autocomplete="Satuan" />                  
        <button type="button" onclick="removeInput(this)"><x-bladewind::icon class="text-red-500" name="minus-circle"/></button> | <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="text-blue-500	"/></button>  
    `;  
    inputContainer.appendChild(newInputGroup);  

@@ -45,22 +45,22 @@ class PemberitahuanController extends Controller
      */
     public function store(Request $request)
     {
-        $inputField1 = $request->input('inputField1');  
-        $inputField2 = $request->input('inputField2');  
-        $inputField3 = $request->input('inputField3');
+        $uraian = $request->input('uraian');  
+        $volume = $request->input('volume');  
+        $satuan = $request->input('satuan');
 
-        $belanja = collect($inputField1)->map(function ($item, $key) use ($inputField2, $inputField3) {
+        $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
             return [
-                'field0' => $key + 1,
-                'field1' => $item,
-                'field2' => $inputField2[$key] ?? null,
-                'field3' => $inputField3[$key] ?? null,
+                'nomor' => $key + 1,
+                'uraian' => $item,
+                'volume' => $volume[$key] ?? null,
+                'satuan' => $satuan[$key] ?? null,
             ];
         });
 
-        $pekerjaan =  collect($belanja)->implode('field1',',');
+        $pekerjaan =  collect($belanja)->implode('uraian',',');
         
-        $data = $request->only([
+         $data = $request->only([
         'rekening_apbdes',
         'kegiatan_id',
         'penyedia',
@@ -91,80 +91,33 @@ class PemberitahuanController extends Controller
      */
     public function edit(string $id)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
-        if (!$kegiatan) {
-            noty()->error('Kegiatan tidak ditemukan.');
-            return redirect()->back();
-        }
-        $pemberitahuan = $kegiatan->pemberitahuan;
-        if (!$pemberitahuan) {
-            noty()->error('Pemberitahuan belum dibuat.');
-            return redirect()->back();
-        }
-        $penyedia = Penyedia::select('nama_penyedia', 'id')->get();
+         $uraian = $request->input('uraian');  
+        $volume = $request->input('volume');  
+        $satuan = $request->input('satuan');
+
+        $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
+            return [
+                'nomor' => $key + 1,
+                'uraian' => $item,
+                'volume' => $volume[$key] ?? null,
+                'satuan' => $satuan[$key] ?? null,
+            ];
+        });
+
+        $pekerjaan =  collect($belanja)->implode('uraian',',');
         
-
-        return view('form.pemberitahuan-edit', [
-            'kegiatan' => $kegiatan,
-            'pemberitahuan' => $pemberitahuan,
-            'selected_penyedia' => $pemberitahuan->penyedia,
-            'penyedia' => $penyedia,
-            'tgl_pemberitahuan' => $pemberitahuan->tgl_surat_pemberitahuan,
-            'tgl_batas_akhir_penawaran' => $pemberitahuan->tgl_batas_akhir_penawaran,
-            'belanja' => $pemberitahuan->belanja
-        ]);
-    }
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $inputField1 = $request->input('inputField1');  
-        $inputField2 = $request->input('inputField2');  
-        $inputField3 = $request->input('inputField3');
-
-        $request->validate([
-            'rekening_apbdes' => 'required',
+         $data = $request->only([
+        'rekening_apbdes',
+        'kegiatan_id',
+        'penyedia',
+        'no_pbj',
         ]);
 
-        $pekerjaan = []; 
-        $belanja = []; 
-        for ($i = 0; $i < count($inputField1); $i++) { 
-            $belanja[] = [ 
-                'field0' => $i+ 1, 
-                'field1' => $inputField1[$i], 
-                'field2' => $inputField2[$i], 
-                'field3' => $inputField3[$i], 
-            ]; 
-            $pekerjaan[] = [ 
-                'field1' => $inputField1[$i], 
-            ]; 
-        } 
-        $string = implode(", ", array_column($pekerjaan, "field1"));
-        $request->validate([
-            'tgl_pemberitahuan' => 'required|date',
-        ]);
-        $tgl_batas_akhir_penawaran = Carbon::parse($request->input('tgl_batas_akhir_penawaran'));
+        $data['belanja'] = $belanja;
+        $data['pekerjaan'] = $pekerjaan;
+        $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan'); // otomatis parse ke Carbon
 
-        $data = [
-            'rekening_apbdes' => $request->input('rekening_apbdes'),
-            'kegiatan_id' => $request->input('kegiatan_id'),
-            'belanja' => $belanja,
-            'pekerjaan' => $string,
-            'tgl_surat_pemberitahuan' => Carbon::parse($request->input('tgl_pemberitahuan')),
-            'tgl_batas_akhir_penawaran' => $tgl_batas_akhir_penawaran,
-            'penyedia' => $request->input('penyedia'),
-            'no_pbj' => $request->input('no_pbj'),
-        ];
-
-        // $saveSpem = Pemberitahuan::updateOrCreate(
-        //     ['rekening_apbdes' => $request->input('rekening_apbdes')],
-        //     $data
-        // );
-        $saveSpem = Pemberitahuan::find($id);
-        if ($saveSpem) {
-            $saveSpem->update($data);
-        }
+        $saveSpem = Pemberitahuan::create($data);
         $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
         return redirect()->route('menu.kegiatan')->with('pemberitahuan', $spem);
     }
