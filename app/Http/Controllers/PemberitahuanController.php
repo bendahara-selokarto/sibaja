@@ -49,45 +49,28 @@ class PemberitahuanController extends Controller
         $inputField2 = $request->input('inputField2');  
         $inputField3 = $request->input('inputField3');
 
-        $request->validate([
-            'rekening_apbdes' => 'required',
+        $belanja = collect($inputField1)->map(function ($item, $key) use ($inputField2, $inputField3) {
+            return [
+                'field0' => $key + 1,
+                'field1' => $item,
+                'field2' => $inputField2[$key] ?? null,
+                'field3' => $inputField3[$key] ?? null,
+            ];
+        });
+
+        $pekerjaan =  collect($belanja)->implode('field1',',');
+        
+        $data = $request->only([
+        'rekening_apbdes',
+        'kegiatan_id',
+        'penyedia',
+        'no_pbj',
         ]);
 
-        $pekerjaan = []; 
-        $belanja = []; 
-        for ($i = 0; $i < count($inputField1); $i++) { 
-            $belanja[] = [ 
-                'field0' => $i+ 1, 
-                'field1' => $inputField1[$i], 
-                'field2' => $inputField2[$i], 
-                'field3' => $inputField3[$i], 
-            ]; 
-            $pekerjaan[] = [ 
-                'field1' => $inputField1[$i], 
-            ]; 
-        } 
-        $string = implode(", ", array_column($pekerjaan, "field1"));
-        $request->validate([
-            'tgl_pemberitahuan' => 'required|date',
-        ]);
-        // $tgl_batas_akhir_penawaran = Carbon::parse($request->input('tgl_batas_akhir_penawaran'));
-        $tgl_batas_akhir_penawaran = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
+        $data['belanja'] = $belanja;
+        $data['pekerjaan'] = $pekerjaan;
+        $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan'); // otomatis parse ke Carbon
 
-        $data = [
-            'rekening_apbdes' => $request->input('rekening_apbdes'),
-            'kegiatan_id' => $request->input('kegiatan_id'),
-            'belanja' => $belanja,
-            'pekerjaan' => $string,
-            'tgl_surat_pemberitahuan' => Carbon::parse($request->input('tgl_pemberitahuan')),
-            'tgl_batas_akhir_penawaran' => $tgl_batas_akhir_penawaran,
-            'penyedia' => $request->input('penyedia'),
-            'no_pbj' => $request->input('no_pbj'),
-        ];
-
-        // $saveSpem = Pemberitahuan::updateOrCreate(
-        //     ['rekening_apbdes' => $request->input('rekening_apbdes')],
-        //     $data
-        // );
         $saveSpem = Pemberitahuan::create($data);
         $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
         return redirect()->route('menu.kegiatan')->with('pemberitahuan', $spem);
