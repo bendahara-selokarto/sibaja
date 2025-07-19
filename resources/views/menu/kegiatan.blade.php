@@ -91,9 +91,9 @@
                                             @if ($kegiatan->pemberitahuan)
                                                 <li class="mb-4">
                                                     @if (!$kegiatan->penawaran_1 || !$kegiatan->penawaran_2)
-                                                        @if ($penyedia1status)
+                                                        {{-- @if ($penyedia1status) --}}
                                                             <form class="inline"
-                                                                action="{{ route('penawaran.create', [$kegiatan['id'], $penyedia[0]->penyedia[0]]) }}"
+                                                                action="{{ route('penawaran.create', [$kegiatan['id']]) }}"
                                                                 method="post">
                                                                 @csrf
                                                                 @method('POST')
@@ -102,10 +102,10 @@
                                                                     can_submit="true" color="green">Penyedia 1
                                                                 </x-bladewind::button>
                                                             </form>
-                                                        @endif
-                                                        @if ($penyedia2status)
+                                                        {{-- @endif --}}
+                                                        {{-- @if ($penyedia2status) --}}
                                                             <form class="inline"
-                                                                action="{{ route('penawaran.create', [$kegiatan['id'], $penyedia[0]->penyedia[1]]) }}"
+                                                                action="{{ route('penawaran.create', [$kegiatan['id']]) }}"
                                                                 method="post">
                                                                 @csrf
                                                                 @method('POST')
@@ -114,7 +114,7 @@
                                                                     can_submit="true" color="green">Penyedia 2
                                                                 </x-bladewind::button>
                                                             </form>
-                                                        @endif
+                                                        {{-- @endif --}}
 
                                                         {{-- @foreach ($penyedia[0]->penyedia as $penyedia_item)
                                                             <form class="inline"
