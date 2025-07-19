@@ -73,7 +73,7 @@ class PemberitahuanController extends Controller
 
         $saveSpem = Pemberitahuan::create($data);
         $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
-        return redirect()->route('menu.kegiatan')->with('pemberitahuan', $spem);
+        return redirect()->route('kegiatan.show' , $request->kegiatan_id);
         
 
     }

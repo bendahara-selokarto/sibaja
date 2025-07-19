@@ -104,7 +104,7 @@ class KegiatanController extends Controller
             flash()->error('kegiatan tidak memiliki pemberitahuan');
         }
 
-        return view('detail.kegiatan')->with('kegiatan', $kegiatan)->with('pemberitahuan', $pemberitahuan);
+        return view('menu.kegiatan-detail')->with('kegiatan', $kegiatan)->with('pemberitahuan', $pemberitahuan);
         // return response()->json($data);
     }
 
