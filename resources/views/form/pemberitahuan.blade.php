@@ -46,7 +46,7 @@
                                     value="{{ old('tgl_pemberitahuan', $pemberitahuan->tgl_surat_pemberitahuan ?? '') }}"
                                     id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 inline " required autocomplete="tgl_pemberitahuan" /> <span id="hari-pemberitahuan"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_pemberitahuan')" />
-                                </div>                                
+                                </div> <span id="tgl_pemberitahuan"></span>                               
                                 <br>
                                 <p>Centang 2 Penyedia yang diberi penawaran :</p>
                                 @foreach ($penyedia as  $p)
@@ -66,19 +66,24 @@
                                 <div id="inputContainer">  
 
                                     @foreach ($uraian as $index => $val)
-                                        <div class="input-group">                  
-                                            <input type="text" name="uraian[]" placeholder="Uraian" required value="{{ $val }}">
-                                            <input type="number" min="0" step="any" name="volume[]" placeholder="Volume" required value="{{ $volume[$index] ?? '' }}">  
-                                            <input type="text" name="satuan[]" placeholder="Satuan" required value="{{ $satuan[$index] ?? '' }}">  
+                                        <div class="flex w-xl items-center gap-1 mb-2">
+                                            <input class="rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500" type="text" name="uraian[]" placeholder="Uraian" required value="{{ $val }}">
+                                            
+                                            <input class="rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right" type="number" min="0" step="any" name="volume[]" placeholder="Vol" required value="{{ $volume[$index] ?? '' }}">  
+                                            
+                                            <input class="rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500" type="text" name="satuan[]" placeholder="Satuan" required value="{{ $satuan[$index] ?? '' }}">  
+
                                             @if(!$loop->first)
                                                 <button type="button" onclick="removeInput(this)">
                                                     <x-bladewind::icon class="text-red-500" name="minus-circle"/>
-                                                </button> |
+                                                </button>
                                             @endif
+
                                             <button type="button" onclick="addInput()">
                                                 <x-bladewind::icon name="plus-circle" class="text-blue-500" />  
                                             </button>
                                         </div>
+
                                     @endforeach
                                 </div>    
                             </div>            
@@ -127,35 +132,36 @@ const listHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'
 
 tglPemberitahuan.addEventListener('change', (e) => {
   const tanggalPemberitahuan = new Date(e.target.value);
-  const tanggalBatasAkhirPenawaran = new Date(tanggalPemberitahuan);
+//   const tanggalBatasAkhirPenawaran = new Date(tanggalPemberitahuan);
   const hariPemberitahuan = listHari[tanggalPemberitahuan.getDay()];
   const spanPemberitahuan = document.getElementById('hari-pemberitahuan');
     spanPemberitahuan.textContent = `(${hariPemberitahuan})`;
-    tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 3);
+    // tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 3);
 
 
-    const hariIndex = tanggalBatasAkhirPenawaran.getDay();
-  if (hariIndex === 0) {
-    tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 1);
-  } else if (hariIndex === 6) {
-    tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 2);
-  } else {
-    tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate());
-  }
-  const hariBatasAkhirPenawaran = listHari[tanggalBatasAkhirPenawaran.getDay()];
-  console.log(hariBatasAkhirPenawaran);
-  const spanBatasAkhirPenawaran = document.getElementById('hari-batas-akhir-penawaran');
-    spanBatasAkhirPenawaran.textContent = `(${hariBatasAkhirPenawaran})`;
+//     const hariIndex = tanggalBatasAkhirPenawaran.getDay();
+//   if (hariIndex === 0) {
+//     tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 1);
+//   } else if (hariIndex === 6) {
+//     tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate() + 2);
+//   } else {
+//     tanggalBatasAkhirPenawaran.setDate(tanggalBatasAkhirPenawaran.getDate());
+//   }
+//   const hariBatasAkhirPenawaran = listHari[tanggalBatasAkhirPenawaran.getDay()];
+//   console.log(hariBatasAkhirPenawaran);
+//   const spanBatasAkhirPenawaran = document.getElementById('hari-batas-akhir-penawaran');
+//     spanBatasAkhirPenawaran.textContent = `(${hariBatasAkhirPenawaran})`;
 
-  const tahun = tanggalBatasAkhirPenawaran.getFullYear();
-  const bulan = tanggalBatasAkhirPenawaran.getMonth() + 1;
-  const hari = tanggalBatasAkhirPenawaran.getDate();
+//   const tahun = tanggalBatasAkhirPenawaran.getFullYear();
+//   const bulan = tanggalBatasAkhirPenawaran.getMonth() + 1;
+//   const hari = tanggalBatasAkhirPenawaran.getDate();
 
-  const tanggalBatasAkhirPenawaranFormat = `${tahun}-${bulan.toString().padStart(2, '0')}-${hari.toString().padStart(2, '0')}`;
+//   const tanggalBatasAkhirPenawaranFormat = `${tahun}-${bulan.toString().padStart(2, '0')}-${hari.toString().padStart(2, '0')}`;
 
-  tglBatasAkhirPenawaran.min = tglPemberitahuan.value;
-  tglBatasAkhirPenawaran.max = tanggalBatasAkhirPenawaranFormat;
-    tglBatasAkhirPenawaran.value = tanggalBatasAkhirPenawaranFormat;
+//   tglBatasAkhirPenawaran.min = tglPemberitahuan.value;
+//   tglBatasAkhirPenawaran.max = tanggalBatasAkhirPenawaranFormat;
+//     tglBatasAkhirPenawaran.value = tanggalBatasAkhirPenawaranFormat;
+// });
 });
 </script>
 
