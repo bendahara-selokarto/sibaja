@@ -34,7 +34,20 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $kegiatan['rekening_apbdes'] }}</td>
                                     <td><h1>{{ $kegiatan['kegiatan'] }}</h1></td>
-                                    <td>hapus | ubah</td>
+                                    <td><a href="{{ route('kegiatan.edit', $kegiatan['id']) }}"> <x-bladewind::button
+                                                size='tiny' outline="true" can_submit="true" color="yellow"
+                                                size='tiny'>Ubah</x-bladewind::button></a>
+                                        <form action="{{ route('kegiatan.destroy', $kegiatan['id']) }}" method="POST"
+                                            class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <x-bladewind::button size='tiny' outline="true" can_submit="true"
+                                                color="red" size='tiny'>Hapus</x-bladewind::button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <span>detail</span><x-bladewind::icon name="chevron-double-right" />
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
