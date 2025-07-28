@@ -20,7 +20,7 @@
                         <div>
                             <x-input-label for="penyedia" :value="__('Penyedia')" />
                             <input type="text" value="{{ $penyedia->nama_penyedia }}" readonly>
-                            <input type="hidden" name="penyedia" value="{{ $penyedia->id }}" >
+                            <input type="hidden" name="penyedia" value="{{ $penyedia->id }}" readonly>
                             {{-- <select id="penyedia" name="penyedia" class="mt-1 block w-full" required>
                                 <option value="">pilih penyedia</option>
                                 @foreach ($pemberitahuan->penyedia as $p)
@@ -61,48 +61,52 @@
                         </div>
 
                         <br>
-                        <table class="w-full">
-                            <tr>
-                                <th class="w-64">NO</th>
-                                <th class="w-64">Uraian</th>
-                                <th class="w-64">Volume</th>
-                                <th class="w-64">Satuan</th>
-                                <th class="w-64">Harga satuan <br></th>
-                                <th class="w-64">Jumlah</th>
-                            </tr>
-
-                            @foreach ($pemberitahuan->belanja as $y => $k)
-                                <tr>
-                                    <td><input type="hidden" value="{{ $k['nomor'] }}"
-                                            placeholder="{{ $k['nomor'] }}" readonly
-                                            name="no[]">{{ $k['nomor'] }}</td>
-                                    <td><input type="hidden" value="{{ $k['uraian'] }}"
-                                            placeholder="{{ $k['uraian'] }}" readonly
-                                            name='uraian[]'>{{ $k['uraian'] }} </td>
-                                    <td><input type="hidden" value="{{ $k['volume'] }}"
-                                            placeholder="{{ $k['volume'] }}" readonly
-                                            name='volume[]'>{{ $k['volume'] }} </td>
-                                    <td><input type="hidden" value="{{ $k['satuan'] }}"
-                                            placeholder="{{ $k['satuan'] }}" readonly
-                                            name='satuan[]'>{{ $k['satuan'] }} </td>
-                                    <td class="text-right"><input type="number" min="0" name="harga_satuan[]"
-                                            onblur="formatNumber(this)"
-                                            nilai-sebelumnya="{{ old('harga_satuan[]', 0) }}"></td>
-                                    <td class="text-right" name="format_number"></td>
-                                    <td><input type="hidden" value="" id="total_input" name='total_input'></td>
-
-                                </tr>
-                            @endforeach
-
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>Total</td>
-                                <td class="text-right" id="total"></td>
-                            </tr>
-                        </table>
+                                    {{-- Tabel Belanja --}}
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full border border-gray-200 divide-y divide-gray-100 text-sm text-left">
+                                <thead class="bg-gray-100 text-gray-700">
+                                    <tr>
+                                        <th class="px-4 py-2 w-10">NO</th>
+                                        <th class="px-4 py-2 w-3/10">Uraian</th>
+                                        <th class="px-4 py-2 w-1/10">Volume</th>
+                                        <th class="px-4 py-2 w-1/10">Satuan</th>
+                                        <th class="px-4 py-2 w-2/10 text-right">Harga Satuan</th>
+                                        <th class="px-4 py-2 w-2/10 text-right">Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-100">
+                                    @foreach ($pemberitahuan->belanja as $y => $k)
+                                        <tr>
+                                            <td class="px-4 py-2">
+                                                {{ $k['nomor'] }}
+                                                <input type="hidden" name="no[]" value="{{ $k['nomor'] }}">
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                {{ $k['uraian'] }}
+                                                <input type="hidden" name="uraian[]" value="{{ $k['uraian'] }}">
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                {{ $k['volume'] }}
+                                                <input type="hidden" name="volume[]" value="{{ $k['volume'] }}">
+                                            </td>
+                                            <td class="px-4 py-2">
+                                                {{ $k['satuan'] }}
+                                                <input type="hidden" name="satuan[]" value="{{ $k['satuan'] }}">
+                                            </td>
+                                            <td class="px-4 py-2 text-right">
+                                                <input type="number" min="0" step="any" name="harga_satuan[]" class="w-24 rounded-md border-gray-300 text-right" onblur="formatNumber(this)">
+                                            </td>
+                                            <td class="px-4 py-2 text-right" name="format_number"></td>
+                                        </tr>
+                                    @endforeach
+                                    <tr class="bg-gray-50 font-semibold">
+                                        <td colspan="4"></td>
+                                        <td class="px-4 py-2 text-right">Total</td>
+                                        <td class="px-4 py-2 text-right" id="total">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <div>
                             <button type="submit" class="btn btn-primary">
                                 Simpan
