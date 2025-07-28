@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kegiatans', function (Blueprint $table) {
+        Schema::create('haraga_penawaran', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('rekening_apbdes')->nullable();
-            $table->string('kegiatan')->nullable();
-            $table->string('ketua_tpk')->nullable();
-            $table->string('pka')->nullable();
-            $table->string('kode_desa')->default('332514');
+            $table->foreignUuid('penawaran_id')->constrained('penawaran')->cascadeOnDelete();
+            $table->integer('harga_satuan');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kegiatans');
+        Schema::dropIfExists('haraga_penawaran');
     }
 };
