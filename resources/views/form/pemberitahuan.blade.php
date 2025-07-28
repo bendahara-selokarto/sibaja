@@ -70,6 +70,11 @@
                                             <input type="text" name="uraian[]" placeholder="Uraian" required value="{{ $val }}">
                                             <input type="number" min="0" step="any" name="volume[]" placeholder="Volume" required value="{{ $volume[$index] ?? '' }}">  
                                             <input type="text" name="satuan[]" placeholder="Satuan" required value="{{ $satuan[$index] ?? '' }}">  
+                                            @if(!$loop->first)
+                                                <button type="button" onclick="removeInput(this)">
+                                                    <x-bladewind::icon class="text-red-500" name="minus-circle"/>
+                                                </button> |
+                                            @endif
                                             <button type="button" onclick="addInput()">
                                                 <x-bladewind::icon name="plus-circle" class="text-blue-500" />  
                                             </button>
