@@ -20,7 +20,7 @@
                         <div>
                             <x-input-label for="penyedia" :value="__('Penyedia')" />
                             <input type="text" value="{{ $penyedia->nama_penyedia }}" readonly>
-                            <input type="text" name="penyedia" value="{{ $penyedia->id }}" readonly>
+                            <input type="hidden" name="penyedia" value="{{ $penyedia->id }}" >
                             {{-- <select id="penyedia" name="penyedia" class="mt-1 block w-full" required>
                                 <option value="">pilih penyedia</option>
                                 @foreach ($pemberitahuan->penyedia as $p)
@@ -32,14 +32,12 @@
                             </select> --}}
                             <x-input-error class="mt-2" :messages="$errors->get('penyedia')" />
                         </div>
-                        <div>
-                            @if ($penawaran1->isEmpty())
+                        <div>                           
                                 <label for="checkbox" class="inline-flex items-center">
                                     <input type="checkbox" id="checkbox" name="pemenang" value="true"
                                         class="form-checkbox">
                                     <span class="ml-2">Tetapkan sebagai Pemenang</span>
-                                </label>
-                            @endif
+                                </label>                            
                         </div>
                         <br>
                         <div>
@@ -75,18 +73,18 @@
 
                             @foreach ($pemberitahuan->belanja as $y => $k)
                                 <tr>
-                                    <td><input type="hidden" value="{{ $k['field0'] }}"
-                                            placeholder="{{ $k['field0'] }}" readonly
-                                            name="no[]">{{ $k['field0'] }}</td>
-                                    <td><input type="hidden" value="{{ $k['field1'] }}"
-                                            placeholder="{{ $k['field1'] }}" readonly
-                                            name='uraian[]'>{{ $k['field1'] }} </td>
-                                    <td><input type="hidden" value="{{ $k['field2'] }}"
-                                            placeholder="{{ $k['field2'] }}" readonly
-                                            name='volume[]'>{{ $k['field2'] }} </td>
-                                    <td><input type="hidden" value="{{ $k['field3'] }}"
-                                            placeholder="{{ $k['field3'] }}" readonly
-                                            name='satuan[]'>{{ $k['field3'] }} </td>
+                                    <td><input type="hidden" value="{{ $k['nomor'] }}"
+                                            placeholder="{{ $k['nomor'] }}" readonly
+                                            name="no[]">{{ $k['nomor'] }}</td>
+                                    <td><input type="hidden" value="{{ $k['uraian'] }}"
+                                            placeholder="{{ $k['uraian'] }}" readonly
+                                            name='uraian[]'>{{ $k['uraian'] }} </td>
+                                    <td><input type="hidden" value="{{ $k['volume'] }}"
+                                            placeholder="{{ $k['volume'] }}" readonly
+                                            name='volume[]'>{{ $k['volume'] }} </td>
+                                    <td><input type="hidden" value="{{ $k['satuan'] }}"
+                                            placeholder="{{ $k['satuan'] }}" readonly
+                                            name='satuan[]'>{{ $k['satuan'] }} </td>
                                     <td class="text-right"><input type="number" min="0" name="harga_satuan[]"
                                             onblur="formatNumber(this)"
                                             nilai-sebelumnya="{{ old('harga_satuan[]', 0) }}"></td>

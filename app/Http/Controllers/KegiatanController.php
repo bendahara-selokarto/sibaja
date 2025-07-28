@@ -94,18 +94,31 @@ class KegiatanController extends Controller
      */
     public function show(string $id)
     {
-        $kegiatan = Kegiatan::find($id);
-        if (!$kegiatan) {
-            flash()->error('kegiatan tidak ditemukan');
-            return redirect()->route('menu.kegiatan');
-        }
-        $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->get();
-        if ($pemberitahuan->isEmpty()) {
-            flash()->error('kegiatan tidak memiliki pemberitahuan');
-        }
+        $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
+        if($kegiatan->pemberitahuan && $kegiatan->pemberitahuan->count() > 0){
 
-        return view('detail.kegiatan')->with('kegiatan', $kegiatan)->with('pemberitahuan', $pemberitahuan);
-        // return response()->json($data);
+        $penyedia = Pemberitahuan::where('kegiatan_id', $id)->pluck('penyedia')->toArray();
+        $penyedia_1  = Penyedia::find($penyedia[0][0]);
+        $penyedia_2  = Penyedia::find($penyedia[0][1]);
+        $nama_penyedia_1 = $penyedia_1->nama_penyedia;
+        $nama_penyedia_2 = $penyedia_2->nama_penyedia;
+        }else{
+            $penyedia = collect();
+            $penyedia_1 = new Penyedia();
+            $penyedia_2 = new Penyedia();
+            $nama_penyedia_1 = '';
+            $nama_penyedia_2 = '';
+
+        }
+       
+        $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->get();
+
+        return view('menu.kegiatan-detail')
+        ->with('kegiatan', $kegiatan)
+        ->with('pemberitahuan', $pemberitahuan)
+        ->with('penyedia', $penyedia[0] ?? collect())
+        ->with('nama_penyedia_1', $nama_penyedia_1)
+        ->with('nama_penyedia_2', $nama_penyedia_2);
     }
 
     /**
