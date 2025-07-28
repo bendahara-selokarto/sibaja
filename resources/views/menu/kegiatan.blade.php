@@ -24,7 +24,8 @@
                             <x-slot name="header">
                                 <th class="w-xl">No</th>
                                 <th class="w-xl">Kode Rekening</th>
-                                <th class="w-5xl">Kegiatan</th>
+                                <th class="w-4xl">Kegiatan</th>
+                                <th class="w-xl">Aksi</th>
                             </x-slot>
 
                             @forelse ($kegiatans as $kegiatan)
@@ -33,6 +34,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $kegiatan['rekening_apbdes'] }}</td>
                                     <td><h1>{{ $kegiatan['kegiatan'] }}</h1></td>
+                                    <td>hapus | ubah</td>
                                 </tr>
                             @empty
                                 <tr>

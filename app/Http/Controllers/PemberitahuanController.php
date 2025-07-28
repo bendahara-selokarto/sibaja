@@ -134,7 +134,7 @@ class PemberitahuanController extends Controller
         } else {
             noty()->error('Pemberitahuan tidak ditemukan.');
         }
-        return redirect()->route('menu.kegiatan');
+        return redirect()->route('kegiatan.show', ['id' => $id]);
     }
 
     public function render(string $id)

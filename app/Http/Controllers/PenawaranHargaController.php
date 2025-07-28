@@ -32,30 +32,20 @@ class PenawaranHargaController extends Controller
      */
     public function create($id, $id2)
     {
-        $namaPenyedia = Penyedia::find($id2);
-        $penawaran1 = Penawaran_1::get();
-
-        $kegiatan = Kegiatan::with('pemberitahuan')->with('penawaran')->find($id);
-        if (!$kegiatan) {
-            noty()->error('Kegiatan tidak ditemukan');
-            return redirect()->back();
-        }
-        if($kegiatan->penawaran) {
-            noty()->warning('Penawaran sudah ada, klik ubah untuk mengubah data');
-            return redirect()->back();
-        }
-        if (!$kegiatan->pemberitahuan) {
-            noty()->error('Tidak ada pemberitahuan terkait');
-            return redirect()->back();
-        }
         
+        $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
+        
+        $penyedia = Penyedia::find($id2);
+              
         $pemberitahuan = $kegiatan->pemberitahuan;
+
+        $penawaran_1 = Penawaran_1::where('kegiatan_id', $id)->first();
         
         return view('form.penawaran-harga', [
             'kegiatan' => $kegiatan,
             'pemberitahuan' => $pemberitahuan,
-            'penyedia' => $namaPenyedia,
-            'penawaran1' => $penawaran1
+            'penyedia' => $penyedia,
+            'penawaran1' => ''
         ]);
     }
 
@@ -66,10 +56,6 @@ class PenawaranHargaController extends Controller
     {
      
     $pemberitahuan = Pemberitahuan::with('kegiatan')->find($request->pemberitahuan_id);
-    if (!$pemberitahuan || !$pemberitahuan->kegiatan) {
-        noty()->error('gagal menyimpan');
-        return redirect()->back();
-    }
     $kegiatan_id = $pemberitahuan->kegiatan->id;
     $volume = $request->volume;
     $totalHarga = 0;
@@ -119,7 +105,8 @@ class PenawaranHargaController extends Controller
             noty()->success('Penawaran pembanding berhasil disimpan');
         }
         
-     return redirect()->route('menu.kegiatan');         
+     return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
+        
 
     }
 
@@ -207,7 +194,7 @@ class PenawaranHargaController extends Controller
             flash()->success('Penawaran pembanding berhasil diperbarui.');
         }
 
-        return redirect()->route('menu.kegiatan');
+        return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
     }
 
     /**
@@ -217,17 +204,11 @@ class PenawaranHargaController extends Controller
     {
         $penawaran_1 = Penawaran_1::where('kegiatan_id', $id)->first();
         $penawaran_2 = Penawaran_2::where('kegiatan_id', $id)->first();
-
-        if (!$penawaran_1 || !$penawaran_2) {
-            flash()->error('Penawaran tidak ditemukan.');
-            return redirect()->back();
-        }
-
         $penawaran_1->delete();
         $penawaran_2->delete();
 
         flash()->success('Penawaran berhasil dihapus.');
-        return redirect()->route('menu.kegiatan');
+        return redirect()->route('kegiatan.show', ['id' => $id]);
     }
     public function render(string $id)
     {

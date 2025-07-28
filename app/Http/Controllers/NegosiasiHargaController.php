@@ -92,7 +92,7 @@ class NegosiasiHargaController extends Controller
            
         ]);
 
-        return redirect()->route('menu.kegiatan')->with('success', 'berhasil menambahkan data');
+        return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil menambahkan data');
 
 
 
@@ -149,7 +149,7 @@ class NegosiasiHargaController extends Controller
             'harga_negosiasi' => $request->harga_negosiasi,
         ]);
 
-        return redirect()->route('menu.kegiatan')->with('success', 'Negosiasi berhasil diperbarui');
+        return redirect()->route('kegiatan.show', ['id' => $kegiatan->kegiatan_id])->with('success', 'Negosiasi berhasil diperbarui');
     }
 
     /**
