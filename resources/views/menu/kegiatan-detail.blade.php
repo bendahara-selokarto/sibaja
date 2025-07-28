@@ -40,7 +40,7 @@
                                             </x-bladewind::button>
                                         </form>
                                     @else
-                                        <form action="{{ route('pemberitahuan.edit', $kegiatan['id']) }}" method="post" class="inline">
+                                        <form action="{{ route('pemberitahuan.edit', $pemberitahuan[0]->id) }}" method="post" class="inline">
                                             @csrf
                                             @method('POST')
                                             <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">

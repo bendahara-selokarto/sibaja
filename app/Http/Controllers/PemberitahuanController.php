@@ -37,7 +37,15 @@ class PemberitahuanController extends Controller
 
         // $nomor = str_pad($nomor, 3, '0', STR_PAD_LEFT);
         
-        return view('form.pemberitahuan', ['kegiatan' => $kegiatan, 'penyedia' => $penyedia, 'nomor' => $nomor]);
+        return view('form.pemberitahuan', [
+            'kegiatan' => $kegiatan, 
+            'penyedia' => $penyedia, 
+            'nomor' => $nomor,
+            'pemberitahuan' => null,
+            'belanja' => collect([['nomor' => 1, 'uraian' => '', 'volume' => '', 'satuan' => '']]),
+            'penyediaTerpilih' => []
+        ])->with('success', 'Silakan isi form pemberitahuan.');
+        
     }
 
     /**
@@ -86,41 +94,76 @@ class PemberitahuanController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+   
     public function edit(string $id)
     {
-         $uraian = $request->input('uraian');  
-        $volume = $request->input('volume');  
-        $satuan = $request->input('satuan');
-
-        $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
-            return [
-                'nomor' => $key + 1,
-                'uraian' => $item,
-                'volume' => $volume[$key] ?? null,
-                'satuan' => $satuan[$key] ?? null,
-            ];
-        });
-
-        $pekerjaan =  collect($belanja)->implode('uraian',',');
+        $pemberitahuan = Pemberitahuan::find($id);
+        if (!$pemberitahuan) {
+            noty()->error('Pemberitahuan tidak ditemukan.');
+            return redirect()->back();
+        }
+        $penyediaTerpilih = $pemberitahuan->penyedia;
+        $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
         
-         $data = $request->only([
+        $kegiatan = Kegiatan::find($pemberitahuan->kegiatan_id);
+        if (!$kegiatan) {
+            noty()->error('Kegiatan tidak ditemukan.');
+            return redirect()->back();
+        }
+        $belanja = $pemberitahuan->belanja;
+
+        return view('form.pemberitahuan', [
+            'pemberitahuan' => $pemberitahuan, 
+            'penyedia' => $penyedia, 'kegiatan' => $kegiatan, 
+            'penyediaTerpilih' => $penyediaTerpilih, 
+            'belanja' => $belanja]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+public function update(Request $request, string $id)
+{
+    $pemberitahuan = Pemberitahuan::findOrFail($id);
+
+    $uraian = $request->input('uraian');  
+    $volume = $request->input('volume');  
+    $satuan = $request->input('satuan');
+
+    $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
+        return [
+            'nomor' => $key + 1,
+            'uraian' => $item,
+            'volume' => $volume[$key] ?? null,
+            'satuan' => $satuan[$key] ?? null,
+        ];
+    });
+
+    $pekerjaan = collect($belanja)->implode('uraian', ',');
+
+    $data = $request->only([
         'rekening_apbdes',
         'kegiatan_id',
         'penyedia',
         'no_pbj',
-        ]);
+    ]);
 
-        $data['belanja'] = $belanja;
-        $data['pekerjaan'] = $pekerjaan;
-        $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan'); // otomatis parse ke Carbon
+    $data['belanja'] = $belanja;
+    $data['pekerjaan'] = $pekerjaan;
+    $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
 
-        $saveSpem = Pemberitahuan::create($data);
-        $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
-        return redirect()->route('menu.kegiatan')->with('pemberitahuan', $spem);
-    }
+
+    // ✅ update menggunakan instance
+    $pemberitahuan->update($data);
+
+    // (opsional) ambil ulang data untuk ditampilkan
+    $pemberitahuan = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
+
+    $kegiatan_id = $request->input('kegiatan_id');
+
+    return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id ])->with('pemberitahuan', $pemberitahuan);
+}
+
 
     /**
      * Remove the specified resource from storage.

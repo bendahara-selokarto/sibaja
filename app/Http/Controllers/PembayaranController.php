@@ -84,9 +84,9 @@ class PembayaranController extends Controller
         $pembayaran = Pembayaran::where('kegiatan_id', $kegiatan_id)->first();
         if ($pembayaran) {
             $pembayaran->delete();
-            return redirect()->route('menu.kegiatan')->with('success', 'Pembayaran berhasil dihapus.');
+            return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id])->with('success', 'Pembayaran berhasil dihapus.');
         }
-        return redirect()->route('menu.kegiatan')->with('error', 'Pembayaran tidak ditemukan.');
+        return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id]);
     }
 
     public function render($id){
