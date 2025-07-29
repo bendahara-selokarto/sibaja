@@ -27,18 +27,11 @@ class NegosiasiHargaController extends Controller
      */
     public function create($id)
     {
-        $kegiatan = Kegiatan::with('negosiasiHarga')->find($id);
-        if($kegiatan->negosiasiHarga){
-            return redirect()->back()->with('warning', 'Negosiasi sudah ada, klik ubah untuk mengubah data');
-        };
-        $kegiatan = Kegiatan::with('penawaran_1')->find($id);    
-       if (!$kegiatan) {
-           return redirect()->back()->with('error', 'Data not found');
-       }
-       $kegiatan->tgl = Carbon::parse($kegiatan->penawaran_1->tgl_penawaran)->format('Y-m-d');
-       $kegiatan->harga_penawaran = $kegiatan->penawaran_1->harga_penawaran;
-       $item_penawaran = $kegiatan->penawaran_1->item;
-    //    dd($item_penawaran);
+        $kegiatan = Kegiatan::with('negosiasiHarga' , 'penawaran_1')->find($id);
+
+        $kegiatan->tgl = Carbon::parse($kegiatan->penawaran_1->tgl_penawaran)->format('Y-m-d');
+        $kegiatan->harga_penawaran = $kegiatan->penawaran_1->harga_penawaran;
+        $item_penawaran = $kegiatan->penawaran_1->item;
        return view('form.negosiasi', compact('kegiatan', 'item_penawaran'));
     }
 
@@ -110,12 +103,12 @@ class NegosiasiHargaController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($kegiatan_id)
-    {
+    { 
         $kegiatan = Kegiatan::with(['penawaran', 'negosiasiHarga'])->find($kegiatan_id);
-        if (!$kegiatan || !$kegiatan->negosiasiHarga) {
-            return redirect()->back()->with('error', 'Data negosiasi tidak ditemukan');
-        }
+        
         $negosiasiHarga = $kegiatan->negosiasiHarga;
+
+
         return view('form.negosiasi_edit', compact('kegiatan', 'negosiasiHarga'));
     }
 

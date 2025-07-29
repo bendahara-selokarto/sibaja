@@ -123,29 +123,22 @@ class PenawaranHargaController extends Controller
      */
     public function edit(string $id)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan', 'penawaran')->find($id);
-
-        if (!$kegiatan) {
-            flash()->error('Kegiatan tidak ditemukan.');
-            return redirect()->back();
-        }
-
-        $penawaran = $kegiatan->penawaran;
-        if (!$penawaran) {
-            flash()->error('Penawaran tidak ditemukan.');
-            return redirect()->back();
-        }
+        
+        $kegiatan = Kegiatan::with('pemberitahuan', 'penawaran')->findOrFail($id);
 
         $pemberitahuan = $kegiatan->pemberitahuan;
-        if (!$pemberitahuan) {
-            flash()->error('Pemberitahuan tidak ditemukan.');
-            return redirect()->back();
-        }
+        $penyedia = $kegiatan->penawaran->penyedia;
+
+
+        $penawaran_1 = $kegiatan->penawaran_1;
+        $penawaran_2 = $kegiatan->penawaran_2;
 
         return view('form.penawaran-harga-edit', [
             'kegiatan' => $kegiatan,
-            'penawaran' => $penawaran,
-            'pemberitahuan' => $pemberitahuan
+            'penawaran_1' => $penawaran_1,
+            'penawaran_2' => $penawaran_2,
+            'pemberitahuan' => $pemberitahuan,
+            'penyedia' => $penyedia ?? null,
         ]);
     }
 

@@ -4,158 +4,144 @@
             {{ __('Penawaran Harga') }}
         </h2>
     </x-slot>
-    <div class="py-12">       
-    @foreach ( $pemberitahuan->penyedia as $p )
-        @php
-    
-            $nama_penyedia = App\Models\Penyedia::select('nama_penyedia')->where('id', $p)->first();
-            
-        @endphp
+
+    <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        <h3>Penyedia : {{ $nama_penyedia->nama_penyedia }}</h3>
-                        
-                        <form action="{{ route('penawaran.update', ['id' => $kegiatan->id]) }}" class="survey" method="POST" id="form_id">
-                            @method('PATCH')
-                            @csrf
-                        
-                        <div>
-                            <input type="hidden" name="pemberitahuan_id" value="{{ $pemberitahuan->id}}">                            
-                            <input type="hidden" name="id_penyedia" value="{{ $p}}">
-                        </div>
-                        <div>
-                            <x-input-label for="tgl_surat_penawaran" :value="__('Tanggal Surat Penawaran')" />
-                            <x-text-input id="tgl_surat_penawaran" name="tgl_surat_penawaran" type="date" min="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') }}" max="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->format('Y-m-d') }}" class="mt-1 block " required autocomplete="tgl_surat_penawaran" />
-                            <x-input-error class="mt-2" :messages="$errors->get('tgl_surat_penawaran')" />
-                        </div>
-                        <br>
-                        <div>
-                            <x-input-label for="no_penawaran" :value="__('Nomor Penawaran')" />
-                            <x-text-input id="no_penawaran" name="no_penawaran" type="number" min="0" class="mt-1 block " required autocomplete="no_penawaran" />
-                            <x-input-error class="mt-2" :messages="$errors->get('no_penawaran')" />
-                        </div>
-                        
-                        <br>
-                        <table class="w-full">
-                            <tr>
-                                <th class="w-64">NO</th>
-                                <th class="w-64">Uraian</th>
-                                <th class="w-64">Volume</th>
-                                <th class="w-64">Satuan</th>
-                                <th class="w-64">Harga satuan <br></th>
-                                <th class="w-64">Jumlah</th>
-                            </tr>
-                            
-                                @foreach ($pemberitahuan->belanja as $y => $k)
-                                <tr>                                
-                                    <td ><input type="hidden" value="{{ $k['field0']}}" placeholder="{{ $k['field0'] }}" readonly name="no[]">{{ $k['field0']  }}</td>                             
-                                    <td ><input type="hidden" value="{{ $k['field1']}}" placeholder="{{ $k['field1'] }}" readonly name='uraian[]'>{{ $k['field1']  }} </td>                             
-                                    <td ><input type="hidden" value="{{ $k['field2']}}" placeholder="{{ $k['field2'] }}" readonly name='volume[]'>{{ $k['field2']  }} </td>                             
-                                    <td ><input type="hidden" value="{{ $k['field3']}}" placeholder="{{ $k['field3'] }}" readonly name='satuan[]' >{{ $k['field3']  }} </td>                             
-                                    <td class="text-right"><input type="number" min="0" name="harga_satuan[]" onblur="formatNumber(this)" nilai-sebelumnya="{{ old('harga_satuan[]', 0) }}"></td>
-                                    <td class="text-right" name="format_number"></td> 
-                                    <td ><input type="hidden" value="" id="total_input" name='total_input'></td>                             
-                                                    
-                                </tr>
-                                @endforeach
+                <form action="{{ isset($penawaran) ? route('penawaran.update', $penawaran->id) : route('penawaran.store') }}" method="POST" id="form_id">
+                    @csrf
+                    @if(isset($penawaran))
+                        @method('PUT')
+                    @else
+                        @method('POST')
+                    @endif
+
+                    {{-- Penyedia --}}
+                    <div class="mb-4">
+                        <x-input-label for="penyedia" :value="__('Penyedia')" />
+                        <input type="text" value="{{ $penyedia->nama_penyedia }}" readonly class="w-full bg-gray-100 rounded px-3 py-2">
+                        <input type="hidden" name="penyedia" value="{{ $penyedia->id }}">
+                    </div>
+
+                    {{-- Tetapkan Pemenang --}}
+                    <div class="mb-4">
+                        <label for="checkbox" class="inline-flex items-center">
+                            <input type="checkbox" id="checkbox" name="pemenang" value="true" class="form-checkbox"
+                                {{ old('pemenang', $penawaran->pemenang ?? false) ? 'checked' : '' }}>
+                            <span class="ml-2">Tetapkan sebagai Pemenang</span>
+                        </label>
+                    </div>
+
+                    {{-- Tanggal Surat --}}
+                    <div class="mb-4">
+                        <x-input-label for="tgl_surat_penawaran" :value="__('Tanggal Surat Penawaran')" />
+                        <x-text-input id="tgl_surat_penawaran" name="tgl_surat_penawaran" type="date"
+                            min="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') }}"
+                            max="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->format('Y-m-d') }}"
+                            value="{{ old('tgl_surat_penawaran', $penawaran->tgl_surat_penawaran ?? '') }}"
+                            class="mt-1 block" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('tgl_surat_penawaran')" />
+                    </div>
+
+                    {{-- No Penawaran --}}
+                    <div class="mb-4">
+                        <x-input-label for="no_penawaran" :value="__('Nomor Penawaran')" />
+                        <x-text-input id="no_penawaran" name="no_penawaran" type="number" min="0"
+                            value="{{ old('no_penawaran', $penawaran->no_penawaran ?? '') }}"
+                            class="mt-1 block" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('no_penawaran')" />
+                    </div>
+
+                    {{-- Hidden pemberitahuan --}}
+                    <input type="hidden" name="pemberitahuan_id" value="{{ $pemberitahuan->id }}">
+
+                    {{-- Tabel Belanja --}}
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border border-gray-200 divide-y divide-gray-100 text-sm text-left">
+                            <thead class="bg-gray-100 text-gray-700">
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>Total</td>
-                                    <td class="text-right" id="total"></td>
+                                    <th class="px-4 py-2 w-10">NO</th>
+                                    <th class="px-4 py-2 w-3/10">Uraian</th>
+                                    <th class="px-4 py-2 w-1/10">Volume</th>
+                                    <th class="px-4 py-2 w-1/10">Satuan</th>
+                                    <th class="px-4 py-2 w-2/10 text-right">Harga Satuan</th>
+                                    <th class="px-4 py-2 w-2/10 text-right">Jumlah</th>
                                 </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-100">
+                                @foreach ($pemberitahuan->belanja as $i => $item)
+                                    @php
+                                        $hargaLama = $penawaran->item[$i]['harga_satuan'] ?? null;
+                                    @endphp
+                                    <tr>
+                                        <td class="px-4 py-2">{{ $item['nomor'] }}
+                                            <input type="hidden" name="no[]" value="{{ $item['nomor'] }}">
+                                        </td>
+                                        <td class="px-4 py-2">{{ $item['uraian'] }}
+                                            <input type="hidden" name="uraian[]" value="{{ $item['uraian'] }}">
+                                        </td>
+                                        <td class="px-4 py-2">{{ $item['volume'] }}
+                                            <input type="hidden" name="volume[]" value="{{ $item['volume'] }}">
+                                        </td>
+                                        <td class="px-4 py-2">{{ $item['satuan'] }}
+                                            <input type="hidden" name="satuan[]" value="{{ $item['satuan'] }}">
+                                        </td>
+                                        <td class="px-4 py-2 text-right">
+                                            <input type="number" min="0" step="any" name="harga_satuan[]"
+                                                class="w-24 rounded-md border-gray-300 text-right harga-input"
+                                                value="{{ old("harga_satuan.$i", $hargaLama) }}"
+                                                onblur="hitungJumlah(this)">
+                                        </td>
+                                        <td class="px-4 py-2 text-right jumlah-output">0</td>
+                                    </tr>
+                                @endforeach
+                                <tr class="bg-gray-50 font-semibold">
+                                    <td colspan="4"></td>
+                                    <td class="px-4 py-2 text-right">Total</td>
+                                    <td class="px-4 py-2 text-right" id="total">0</td>
+                                </tr>
+                            </tbody>
                         </table>
-                        <div>
-                        <x-bladewind::checkbox label="Tetapkan {{ $nama_penyedia->nama_penyedia }} sebagai Pemenang" name="pemenang" value="{{ $p }}" />                    
-                        </div>
-                        <div>
-                            <x-primary-button>Simpan</x-primary-button>
-                        </div>
+                    </div>
+
+                    <input type="hidden" id="total_input" name="total_input" value="0">
+
+                    {{-- Tombol Simpan --}}
+                    <div class="mt-6">
+                        <x-primary-button>Simpan</x-primary-button>
                     </div>
                 </form>
             </div>
-        </div> 
-        <br>      
-    @endforeach
-</div>
-@pushOnce('scripts')
+        </div>
+    </div>
+
+    @pushOnce('scripts')
     <script>
-        window.addEventListener('DOMContentLoaded', (event) => {
-  const inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
-  inputsHargaSatuan.forEach(input => {
-    if (!input.getAttribute('nilai-sebelumnya')) {
-      input.setAttribute('nilai-sebelumnya', 0);
-    }
-  });
-});
-var total = 0;
+        function hitungJumlah(input) {
+            const tr = input.closest('tr');
+            const volume = parseFloat(tr.querySelector('input[name="volume[]"]').value) || 0;
+            const harga = parseFloat(input.value) || 0;
+            const jumlah = volume * harga;
+            const jumlahTd = tr.querySelector('.jumlah-output');
+            jumlahTd.textContent = jumlah.toLocaleString('id-ID');
 
-function formatNumber(input) {
-    var tr = input.parentNode.parentNode;
-    var volume = tr.querySelector('input[name="volume[]"]').value;
-    var angka = input.value.replace(/[^0-9]/g, '');
-    var formattedNumber = (angka * volume).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    tr.querySelector('td[name="format_number"]').textContent = formattedNumber;
-
-    // Hitung nilai sebelumnya sebelum diubah
-    var nilaiSebelumnya = input.value * volume; // Nilai input * volume
-    input.setAttribute('nilai-sebelumnya', nilaiSebelumnya);
-
-    updateTotal(formattedNumber, input);
-}
-
-function updateTotal(formattedNumber, input) {
-    var tr = input.parentNode.parentNode;
-    var nilaiSebelumnya = input.getAttribute('nilai-sebelumnya');
-
-    console.log("Nilai Sebelumnya:", nilaiSebelumnya); // Debugging
-
-    if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
-        total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
-    }
-
-    total += parseInt(formattedNumber.replace(/\./g, ''));
-
-    document.getElementById('total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    document.getElementById('total_input').value = total;
-}
-
-var inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
-inputsHargaSatuan.forEach(function (input) {
-    input.addEventListener('focus', function () {
-        var tr = this.parentNode.parentNode;
-        var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
-        formattedNumber = formattedNumber ? formattedNumber : '0';
-
-        var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
-        var nilaiSebelumnya = this.value * volume; // Hitung nilai sebelumnya
-
-        if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
-            total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
+            updateTotal();
         }
 
-        document.getElementById('total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        document.getElementById('total_input').value = total;
-    });
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('.jumlah-output').forEach(el => {
+                const nilai = parseInt(el.textContent.replace(/\./g, '').replace(/,/g, '')) || 0;
+                total += nilai;
+            });
+            document.getElementById('total').textContent = total.toLocaleString('id-ID');
+            document.getElementById('total_input').value = total;
+        }
 
-    input.addEventListener('blur', function () {
-        var tr = this.parentNode.parentNode;
-        var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
-        formattedNumber = formattedNumber ? formattedNumber : '0';
-
-        var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
-        var nilaiSaatIni = this.value * volume; // Hitung nilai saat ini
-        this.setAttribute('nilai-sebelumnya', nilaiSaatIni); // Update nilai sebelumnya
-
-        total += parseInt(formattedNumber.replace(/\./g, ''));
-        document.getElementById('total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        document.getElementById('total_input').value = total;
-    });
-});
-
+        // Initial hitung kalau ada data lama
+        document.querySelectorAll('.harga-input').forEach(input => {
+            if (input.value) hitungJumlah(input);
+        });
     </script>
-@endPushOnce
+    @endPushOnce
 </x-app-layout>
