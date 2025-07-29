@@ -21,8 +21,7 @@ class KegiatanController extends Controller
      */
     public function index(): View
     {
-        $kegiatan = Kegiatan::with(['pemberitahuan', 'penawaran_1', 'penawaran_2', 'negosiasiHarga', 'pembayaran'])
-            ->where('kode_desa', Auth::user()->kode_desa)
+        $kegiatan = Kegiatan::where('kode_desa', Auth::user()->kode_desa)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -30,36 +29,8 @@ class KegiatanController extends Controller
             // Jika tidak ada kegiatan, langsung render tanpa data tambahan
             return view('menu.kegiatan')->with('kegiatans', collect());
         }
-
-        $kegiatanPertama = $kegiatan->first(); // sama dengan $kegiatan[0]
-
-        $penyedia = Pemberitahuan::where('kegiatan_id', $kegiatanPertama->id)->get();
-
-        if ($penyedia->isEmpty() || !isset($penyedia[0]->penyedia)) {
-            return view('menu.kegiatan')->with('kegiatans', $kegiatan);
-        }
-
-        $penyediaId = $penyedia[0]->penyedia;
-
-        // Cek apakah $penyediaId adalah array dan memiliki setidaknya 2 elemen
-        if (!is_array($penyediaId) || count($penyediaId) < 2) {
-            return view('menu.kegiatan')->with('kegiatans', $kegiatan)->with('penyedia', $penyedia);
-        }
-
-        $penawaran11 = Penawaran_1::where('penyedia_id', $penyediaId[0])->where('kegiatan_id', $kegiatanPertama->id)->get();
-        $penawaran12 = Penawaran_2::where('penyedia_id', $penyediaId[0])->where('kegiatan_id', $kegiatanPertama->id)->get();
-
-        $penawaran21 = Penawaran_1::where('penyedia_id', $penyediaId[1])->where('kegiatan_id', $kegiatanPertama->id)->get();
-        $penawaran22 = Penawaran_2::where('penyedia_id', $penyediaId[1])->where('kegiatan_id', $kegiatanPertama->id)->get();
-
-        $penyedia1status = !($penawaran11->isNotEmpty() || $penawaran12->isNotEmpty());
-        $penyedia2status = !($penawaran21->isNotEmpty() || $penawaran22->isNotEmpty());
-
-        return view('menu.kegiatan')
-            ->with('kegiatans', $kegiatan)
-            ->with('penyedia', $penyedia)
-            ->with('penyedia1status', $penyedia1status)
-            ->with('penyedia2status', $penyedia2status);
+       
+        return view('menu.kegiatan')->with('kegiatans', $kegiatan);           
     }
 
     public function create()

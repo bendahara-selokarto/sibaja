@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Kegiatan') }}
+            {{ __('Daftar Kegiatan') }}
         </h2>
     </x-slot>
 
@@ -51,7 +51,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center">Belum ada kegiatan</td>
+                                    <td colspan="4" class="text-center">Belum ada kegiatan</td>
                                 </tr>
                             @endforelse
 
