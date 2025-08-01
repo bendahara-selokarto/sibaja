@@ -28,24 +28,21 @@ class CheckDefaultKode
         }
         // Daftar pengguna yang diijinkan
         $allowedUsers = [
-            'selokarto',
-            'gemuh',
-            'randu',
-            'pretek',
-            'siguci',
-            'Selokarto',
-            'Gemuh',
-            'Randu',
-            'Pretek',
-            'SELOKARTO',
-            'GEMUH',
-            'RANDU',
-            'PRETEK'
+           'Pecalungan',
+           'Bandung',
+           'Gombong',
+           'Randu',
+           'Siguci',
+           'Pretekan',
+           'Selokarto',
+           'Gemuh',
+           'Gumawang',
+           'Keniten'
             // Tambahkan email pengguna lain yang diijinkan di sini
         ];
 
         if (Auth::check() && !in_array(Auth::user()->desa, $allowedUsers)) {
-            return redirect()->route('profile.edit')->with('error', 'Hubungi admin untuk penggunaan sibaja!');
+            return redirect()->route('profile.edit')->with('error', 'desa ' . Auth::user()->desa .'tdak terdaftar, dapatkan lisensi untuk mengakses aplikasi ini. Silakan hubungi admin untuk informasi lebih lanjut.');
         }
 
         return $next($request);

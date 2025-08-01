@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
 use App\Models\NegosiasiHarga;
 use App\Models\PenawaranHarga;
+use App\Models\Penawaran;
 use App\Models\Penawaran_1;
 use App\Models\Penawaran_2;
 use Illuminate\Support\Carbon;
@@ -70,6 +71,27 @@ class PenawaranHargaController extends Controller
         'harga_satuan' => $request->harga_satuan,
     ];
   
+    $is_winner = $request->pemenang ? true : false;
+    Penawaran::create([
+        'kegiatan_id' => $kegiatan_id,
+        'pemberitahuan_id' => $request->pemberitahuan_id,
+        'penyedia_id' => $request->penyedia,
+        'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
+        'no_penawaran' => $request->no_penawaran,
+        'item' => $item_penawaran,
+        'is_winner' => $is_winner,
+    ]);
+    // Cek apakah ada penawaran pemenang atau pembanding yang sudah ada
+    $idPenyediaPemenang = Penawaran::where('kegiatan_id', $kegiatan_id)->where('is_winner', true)->value('penyedia_id');
+    $idPenyediaPembanding = Penawaran::where('kegiatan_id', $kegiatan_id)->where('is_winner', false)->value('penyedia_id');
+
+    $penyediaPemenang = Penyedia::find($idPenyediaPemenang)->nama_penyedia ?? '';
+    $penyediaPembanding = Penyedia::find($idPenyediaPembanding)->nama_penyedia ?? '';
+    $penyedia = [
+        'pemenang' => $penyediaPemenang,
+        'pembanding' => $penyediaPembanding,
+    ];
+    // dd($penyediaPemenang, $penyediaPembanding);
 
         
         if($request->pemenang){
@@ -105,7 +127,15 @@ class PenawaranHargaController extends Controller
             noty()->success('Penawaran pembanding berhasil disimpan');
         }
         
-     return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
+    return redirect()->route('kegiatan.show', ['id' => $kegiatan_id , 'penyedia' => $penyedia]);
+        
+        // if ($request->pemenang) {
+        //     noty()->success('Penawaran pemenang berhasil disimpan');
+        // } else {
+        //     noty()->success('Penawaran pembanding berhasil disimpan');
+        // }
+        
+        // return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
         
 
     }

@@ -100,6 +100,8 @@ class KegiatanController extends Controller
         ->with('pemberitahuan', $pemberitahuan)
         ->with('penyedia', $penyedia[0] ?? collect())
         ->with('nama_penyedia_1', $nama_penyedia_1)
+        ->with('penyedia_1', $penyedia_1)
+        ->with('penyedia_2', $penyedia_2)
         ->with('nama_penyedia_2', $nama_penyedia_2);
     }
 

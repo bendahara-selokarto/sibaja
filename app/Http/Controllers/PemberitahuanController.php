@@ -40,11 +40,11 @@ class PemberitahuanController extends Controller
         return view('form.pemberitahuan', [
             'kegiatan' => $kegiatan, 
             'penyedia' => $penyedia, 
-            'nomor' => $nomor,
+            'no_pbj' => $nomor,
             'pemberitahuan' => null,
             'belanja' => collect([['nomor' => 1, 'uraian' => '', 'volume' => '', 'satuan' => '']]),
             'penyediaTerpilih' => []
-        ])->with('success', 'Silakan isi form pemberitahuan.');
+        ]);
         
     }
 

@@ -45,6 +45,7 @@ class NegosiasiHargaController extends Controller
         if (!$kegiatan) {
             return redirect()->back()->with('error', 'Kegiatan not found');
         };
+
         $request->validate([
             'tgl_negosiasi' => 'required|date',
             'tgl_persetujuan' => 'required|date',
@@ -52,8 +53,6 @@ class NegosiasiHargaController extends Controller
             'harga_satuan_negosiasi' => 'required|array',
             'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
         ]);
-        
-
         
         $item_negosiasi =$request->harga_satuan_negosiasi; 
 
