@@ -58,9 +58,10 @@ class PembayaranController extends Controller
      */
     public function edit($id)
     {
-        $pembayaran = Kegiatan::with('pembayaran')->find($id);      
-       
-        return view('form.pembayaran_edit', compact('pembayaran', 'kegiatan'));
+        $kegiatan = Kegiatan::with('negosiasiHarga', 'pembayaran')->find($id);     
+        $pembayaran = $kegiatan->pembayaran;  
+        
+        return view ('form.pembayaran', compact('pembayaran', 'kegiatan'));
     }
 
     /**
@@ -68,12 +69,13 @@ class PembayaranController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $pembayaran = Pembayaran::where('kegiatan_id', $id)->first();
+        $pembayaran = Pembayaran::find($id);
 
         $pembayaran->tgl_pembayaran_cms = $request->tgl_pembayaran_cms;
         $pembayaran->save();
+        $kegiatan_id = $pembayaran->kegiatan_id;
 
-        return redirect()->route('menu.kegiatan')->with('success', 'Pembayaran berhasil diperbarui.');
+        return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id])->with('success', 'Pembayaran berhasil diperbarui.');
     }
 
     /**

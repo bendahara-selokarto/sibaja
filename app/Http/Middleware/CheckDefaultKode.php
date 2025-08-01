@@ -42,7 +42,7 @@ class CheckDefaultKode
         ];
 
         if (Auth::check() && !in_array(Auth::user()->desa, $allowedUsers)) {
-            return redirect()->route('profile.edit')->with('error', 'desa ' . Auth::user()->desa .'tdak terdaftar, dapatkan lisensi untuk mengakses aplikasi ini. Silakan hubungi admin untuk informasi lebih lanjut.');
+            return redirect()->route('profile.edit')->with('error', 'desa ' . Auth::user()->desa .' tdak terdaftar, dapatkan lisensi untuk mengakses aplikasi ini. Silakan hubungi admin untuk informasi lebih lanjut.');
         }
 
         return $next($request);
