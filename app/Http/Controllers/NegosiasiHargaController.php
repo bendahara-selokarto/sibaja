@@ -103,12 +103,15 @@ class NegosiasiHargaController extends Controller
      */
     public function edit($kegiatan_id)
     { 
-        $kegiatan = Kegiatan::with(['penawaran', 'negosiasiHarga'])->find($kegiatan_id);
-        
-        $negosiasiHarga = $kegiatan->negosiasiHarga;
+        $kegiatan = Kegiatan::with('negosiasiHarga' , 'penawaran_1')->find($kegiatan_id);
 
+        $kegiatan->tgl = Carbon::parse($kegiatan->penawaran_1->tgl_penawaran)->format('Y-m-d');
+        $kegiatan->harga_penawaran = $kegiatan->penawaran_1->harga_penawaran;
+        $item_penawaran = $kegiatan->penawaran_1->item;
+        $negosiasi = $kegiatan->negosiasiHarga;
+        $item_negosiasi = json_decode($negosiasi->item, true);
 
-        return view('form.negosiasi_edit', compact('kegiatan', 'negosiasiHarga'));
+       return view('form.negosiasi', compact('kegiatan', 'item_penawaran' , 'negosiasi', 'item_negosiasi'));
     }
 
     /**
@@ -116,32 +119,50 @@ class NegosiasiHargaController extends Controller
      */
     public function update(Request $request, $kegiatan_id)
     {
-        $negosiasiHarga = NegosiasiHarga::where('kegiatan_id', $kegiatan_id)->first();
-        if (!$negosiasiHarga) {
-            return redirect()->back()->with('error', 'Negosiasi tidak ditemukan');
-        }
-        $kegiatan = Kegiatan::find($kegiatan_id);
+        $kegiatan = Kegiatan::with('penawaran_1')->find($request->kegiatan_id);
         if (!$kegiatan) {
-            return redirect()->back()->with('error', 'Kegiatan tidak ditemukan');
-        }
-        $request->validate([
-            'tgl_persetujuan' => 'required|date',
-            'tgl_negosiasi' => 'required|date',
-            'tgl_perjanjian' => 'required|date',
-            'tgl_akhir_perjanjian' => 'required|date',
-            'harga_negosiasi' => 'required|numeric|min:0',
-        ]);
+            return redirect()->back()->with('error', 'Kegiatan not found');
+        };
 
-        $negosiasiHarga->update([
-            'rekening_apbdes' => $kegiatan->rekening_apbdes,
+        $request->validate([
+            'tgl_negosiasi' => 'required|date',
+            'tgl_persetujuan' => 'required|date',
+            'tgl_akhir_perjanjian' => 'required|date',
+            'harga_satuan_negosiasi' => 'required|array',
+            'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
+        ]);
+        
+        $item_negosiasi =$request->harga_satuan_negosiasi; 
+
+        $item_penawaran = $kegiatan->penawaran_1->item;
+        $item_penawaran['harga_negosiasi'] = $item_negosiasi;
+        $item = $item_penawaran;
+
+    $volume = $item['volume'];
+    $totalHargaNegosiasi = 0;
+    for ($i = 0; $i < count($volume); $i++) {
+        $totalHargaNegosiasi += $volume[$i] * $item['harga_negosiasi'][$i];
+    }
+        
+        $pemberitahuan = $kegiatan->pemberitahuan->first();
+        if (!$pemberitahuan) {
+            return redirect()->back()->with('error', 'Pemberitahuan not found');
+        }
+        $tgl = Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan);
+        $negosiasi = NegosiasiHarga::where('kegiatan_id', $request->kegiatan_id)->first();
+        $negosiasi->update( [
+            'kegiatan_id' => $request->kegiatan_id,
+            'rekening_apbdes' =>$kegiatan->rekening_apbdes,
             'tgl_persetujuan' => Carbon::parse($request->tgl_persetujuan),
             'tgl_negosiasi' => Carbon::parse($request->tgl_negosiasi),
             'tgl_perjanjian' => Carbon::parse($request->tgl_perjanjian),
             'tgl_akhir_perjanjian' => Carbon::parse($request->tgl_akhir_perjanjian),
-            'harga_negosiasi' => $request->harga_negosiasi,
+            'harga_negosiasi' => $totalHargaNegosiasi,
+            'item' => json_encode($item),
+            'jumlah_total' => $totalHargaNegosiasi + ($totalHargaNegosiasi * config('pajak.ppn')) + ($totalHargaNegosiasi * config('pajak.pph_22'))
+           
         ]);
-
-        return redirect()->route('kegiatan.show', ['id' => $kegiatan->kegiatan_id])->with('success', 'Negosiasi berhasil diperbarui');
+        return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil memperbarui data');
     }
 
     /**
