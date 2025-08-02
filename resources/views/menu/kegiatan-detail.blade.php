@@ -88,13 +88,13 @@
                                                     </x-bladewind::button>
                                                 </form>
                                             @else
-                                                <form action="{{ route('penawaran.edit', $kegiatan['id']) }}" method="post" class="inline">
+                                                {{-- <form action="{{ route('penawaran.edit', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('POST')
                                                     <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">
                                                         Ubah
                                                     </x-bladewind::button>
-                                                </form>
+                                                </form> --}}
 
                                                 <form action="{{ route('penawaran.destroy', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
