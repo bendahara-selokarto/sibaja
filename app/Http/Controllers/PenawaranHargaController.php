@@ -40,13 +40,20 @@ class PenawaranHargaController extends Controller
               
         $pemberitahuan = $kegiatan->pemberitahuan;
 
-        $penawaran_1 = Penawaran_1::where('kegiatan_id', $id)->first();
+        $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) {
+            return [
+                'uraian' => $item['uraian'],
+                'volume' => $item['volume'],
+                'satuan' => $item['satuan'],
+            ];
+        });
         
         return view('form.penawaran-harga', [
             'kegiatan' => $kegiatan,
             'pemberitahuan' => $pemberitahuan,
             'penyedia' => $penyedia,
-            'penawaran1' => ''
+            'penawaran1' => '',
+            'belanja' => $belanja
         ]);
     }
 
@@ -56,7 +63,7 @@ class PenawaranHargaController extends Controller
     public function store(Request $request)
     {
      
-    $pemberitahuan = Pemberitahuan::with('kegiatan')->find($request->pemberitahuan_id);
+    $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran')->find($request->pemberitahuan_id);
     $kegiatan_id = $pemberitahuan->kegiatan->id;
     $volume = $request->volume;
     $totalHarga = 0;
@@ -72,7 +79,7 @@ class PenawaranHargaController extends Controller
     ];
   
     $is_winner = $request->pemenang ? true : false;
-    Penawaran::create([
+    $penawaran = Penawaran::create([
         'kegiatan_id' => $kegiatan_id,
         'pemberitahuan_id' => $request->pemberitahuan_id,
         'penyedia_id' => $request->penyedia,
@@ -81,63 +88,56 @@ class PenawaranHargaController extends Controller
         'item' => $item_penawaran,
         'is_winner' => $is_winner,
     ]);
+    $penyedia = [];
+if(isset($pemberitahuan->penawaran[0]->penyedia_id)){
+    $penyedia['nama_penyedia_1'] = Penyedia::findOrFail($pemberitahuan->penawaran[0]->penyedia_id)->nama_penyedia ?? '';
+}
+if(isset($pemberitahuan->penawaran[1]->penyedia_id)){
+    $penyedia['nama_penyedia_2'] = Penyedia::findOrFail($pemberitahuan->penawaran[1]->penyedia_id)->nama_penyedia ?? '';
+}   
+
     // Cek apakah ada penawaran pemenang atau pembanding yang sudah ada
-    $idPenyediaPemenang = Penawaran::where('kegiatan_id', $kegiatan_id)->where('is_winner', true)->value('penyedia_id');
-    $idPenyediaPembanding = Penawaran::where('kegiatan_id', $kegiatan_id)->where('is_winner', false)->value('penyedia_id');
+    // $idPenyediaPemenang = Penawaran::where('kegiatan_id', $kegiatan_id)->where('is_winner', true)->value('penyedia_id');
+    // $idPenyediaPembanding = Penawaran::where('kegiatan_id', $kegiatan_id)->where('is_winner', false)->value('penyedia_id');
 
-    $penyediaPemenang = Penyedia::find($idPenyediaPemenang)->nama_penyedia ?? '';
-    $penyediaPembanding = Penyedia::find($idPenyediaPembanding)->nama_penyedia ?? '';
-    $penyedia = [
-        'pemenang' => $penyediaPemenang,
-        'pembanding' => $penyediaPembanding,
-    ];
-    // dd($penyediaPemenang, $penyediaPembanding);
+    // $penyediaPemenang = Penyedia::find($idPenyediaPemenang)->nama_penyedia ?? '';
+    // $penyediaPembanding = Penyedia::find($idPenyediaPembanding)->nama_penyedia ?? '';
+    // $penyedia = [
+    //     'pemenang' => $penyediaPemenang,
+    //     'pembanding' => $penyediaPembanding,
+    // ];
+    
 
         
-        if($request->pemenang){
-            $penawaran = Penawaran_1::where('kegiatan_id', $kegiatan_id)->first();
+        // if($request->pemenang){
+        //     $penawaran = Penawaran_1::where('kegiatan_id', $kegiatan_id)->first();
             
-            Penawaran_1::updateOrCreate([
-                'kegiatan_id' => $kegiatan_id ], [
-                'pemberitahuan_id' => $request->pemberitahuan_id ,
-                'penyedia_id' => $request->penyedia,
-                'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
-                'no_penawaran' => $request->no_penawaran,
-                'nilai_penawaran' => $totalHarga,
-                'item' => $item_penawaran
-            ]);
-            // if ($penawaran->penyedia_id != $request->penyedia && $penawaran->exists) {
-            //     noty()->warning('Penawaran pemenang berhasil diubah');
-            //     } else {
-            //     noty()->success('Penawaran pemenang berhasil disimpan');
-                  
-            // }
-        };
+        //     Penawaran_1::updateOrCreate([
+        //         'kegiatan_id' => $kegiatan_id ], [
+        //         'pemberitahuan_id' => $request->pemberitahuan_id ,
+        //         'penyedia_id' => $request->penyedia,
+        //         'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
+        //         'no_penawaran' => $request->no_penawaran,
+        //         'nilai_penawaran' => $totalHarga,
+        //         'item' => $item_penawaran
+        //     ]);
+        // };
         
-        if(!$request->pemenang){
-            Penawaran_2::create([
-                'kegiatan_id' => $kegiatan_id ,
-                'pemberitahuan_id' => $request->pemberitahuan_id ,
-                'penyedia_id' => $request->penyedia,             
-                'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
-                'no_penawaran' => $request->no_penawaran,
-                'nilai_penawaran' => $totalHarga,
-                'item' => $item_penawaran
-            ]);
-            noty()->success('Penawaran pembanding berhasil disimpan');
-        }
-        
-    return redirect()->route('kegiatan.show', ['id' => $kegiatan_id , 'penyedia' => $penyedia]);
-        
-        // if ($request->pemenang) {
-        //     noty()->success('Penawaran pemenang berhasil disimpan');
-        // } else {
+        // if(!$request->pemenang){
+        //     Penawaran_2::create([
+        //         'kegiatan_id' => $kegiatan_id ,
+        //         'pemberitahuan_id' => $request->pemberitahuan_id ,
+        //         'penyedia_id' => $request->penyedia,             
+        //         'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
+        //         'no_penawaran' => $request->no_penawaran,
+        //         'nilai_penawaran' => $totalHarga,
+        //         'item' => $item_penawaran
+        //     ]);
         //     noty()->success('Penawaran pembanding berhasil disimpan');
         // }
         
-        // return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
+    return redirect()->route('kegiatan.show', ['id' => $kegiatan_id , 'penyedia' => $penyedia]);
         
-
     }
 
     /**

@@ -55,6 +55,11 @@ class Pemberitahuan extends Model
         return $this->hasOne(PenawaranHarga::class, 'kegiatan_id');
     }
 
+    public function penawaran()
+    {
+        return $this->hasMany(Penawaran::class, 'pemberitahuan_id');
+    }
+
     /**
      * ---------------------------
      *     Model Event Hooks

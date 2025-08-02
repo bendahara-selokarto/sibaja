@@ -75,11 +75,11 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-100">
-                                    @foreach ($pemberitahuan->belanja as $y => $k)
+                                    @foreach ($belanja as $y => $k)
                                         <tr>
                                             <td class="px-4 py-2">
-                                                {{ $k['nomor'] }}
-                                                <input type="hidden" name="no[]" value="{{ $k['nomor'] }}">
+                                                {{ $loop->iteration  }}
+                                                {{-- <input type="hidden" name="no[]" value="{{ $k['nomor'] }}"> --}}
                                             </td>
                                             <td class="px-4 py-2">
                                                 {{ $k['uraian'] }}

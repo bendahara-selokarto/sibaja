@@ -71,7 +71,7 @@
                                 <td colspan="2">
                                     @if ($kegiatan->pemberitahuan)
                                         <div class="mt-4">
-                                            @if (!$kegiatan->penawaran_1 || !$kegiatan->penawaran_2)
+                                            @if(true)                                            
                                                 <form action="{{ route('penawaran.create', [$kegiatan['id'] , $penyedia[0]]) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('POST')
@@ -79,6 +79,8 @@
                                                         Tambah {{ $nama_penyedia_1 }}
                                                     </x-bladewind::button>
                                                 </form>
+                                            @endif
+                                            @if(true)
 
                                                 <form action="{{ route('penawaran.create', [$kegiatan['id'] , $penyedia[1] ]) }}" method="post" class="inline">
                                                     @csrf
@@ -87,7 +89,8 @@
                                                         Tambah {{ $nama_penyedia_2 }}
                                                     </x-bladewind::button>
                                                 </form>
-                                            @else
+                                            @endif
+                                            @if(true)
                                                 {{-- <form action="{{ route('penawaran.edit', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('POST')
