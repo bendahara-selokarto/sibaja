@@ -70,7 +70,7 @@
     <td style="border: 1px solid black; text-align:center; width: auto; min-width: 60px">Jumlah Harga <br>( Rp. )</td>
   </tr>
 
-   @foreach ($pemberitahuan['belanja'] as $r)
+   @foreach ($belanja as $r)
       <tr>
           <td style="border: 1px solid black; text-align:center " >{{ $loop->iteration }}</td>
           <td style="border: 1px solid black; text-align:left" >{{ $r['uraian']}}</td>

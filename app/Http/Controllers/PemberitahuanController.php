@@ -59,7 +59,7 @@ class PemberitahuanController extends Controller
 
         $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
             return [
-                'nomor' => $key + 1,
+                // 'nomor' => $key + 1,
                 'uraian' => $item,
                 'volume' => $volume[$key] ?? null,
                 'satuan' => $satuan[$key] ?? null,
@@ -75,11 +75,13 @@ class PemberitahuanController extends Controller
         'no_pbj',
         ]);
 
-        $data['belanja'] = $belanja;
+        // $data['belanja'] = $belanja;
         $data['pekerjaan'] = $pekerjaan;
         $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan'); // otomatis parse ke Carbon
 
         $saveSpem = Pemberitahuan::create($data);
+        $saveSpem->belanjas()->createMany($belanja->toArray());
+        
         $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
         return redirect()->route('kegiatan.show' , $request->kegiatan_id);
         
@@ -97,7 +99,7 @@ class PemberitahuanController extends Controller
    
     public function edit(string $id)
     {
-        $pemberitahuan = Pemberitahuan::find($id);
+        $pemberitahuan = Pemberitahuan::with('belanjas')->find($id);
         if (!$pemberitahuan) {
             noty()->error('Pemberitahuan tidak ditemukan.');
             return redirect()->back();
@@ -110,7 +112,7 @@ class PemberitahuanController extends Controller
             noty()->error('Kegiatan tidak ditemukan.');
             return redirect()->back();
         }
-        $belanja = $pemberitahuan->belanja;
+        $belanja = $pemberitahuan->belanjas;
 
         return view('form.pemberitahuan', [
             'pemberitahuan' => $pemberitahuan, 
@@ -132,7 +134,7 @@ public function update(Request $request, string $id)
 
     $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
         return [
-            'nomor' => $key + 1,
+            // 'nomor' => $key + 1,
             'uraian' => $item,
             'volume' => $volume[$key] ?? null,
             'satuan' => $satuan[$key] ?? null,
@@ -148,13 +150,18 @@ public function update(Request $request, string $id)
         'no_pbj',
     ]);
 
-    $data['belanja'] = $belanja;
+    // $data['belanja'] = $belanja;
     $data['pekerjaan'] = $pekerjaan;
     $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
 
 
     // ✅ update menggunakan instance
     $pemberitahuan->update($data);
+
+    $pemberitahuan->update($data);
+    $pemberitahuan->belanjas()->delete(); // hapus semua relasi lama
+    $pemberitahuan->belanjas()->createMany($belanja->toArray()); // insert ulang
+
 
     // (opsional) ambil ulang data untuk ditampilkan
     $pemberitahuan = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
@@ -183,19 +190,21 @@ public function update(Request $request, string $id)
     public function render(string $id)
         {
            
-            $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->first();
+            $pemberitahuan = Pemberitahuan::with('belanjas')->where('kegiatan_id', $id)->first();
             if (!$pemberitahuan) {
                 noty()->error('Pemberitahuan tidak ditemukan.');
                 return redirect()->back();
             }
+           
             $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
             if (!$kegiatan) {
                 noty()->error('Kegiatan tidak ditemukan.');
                 return redirect()->back();
             }         
-            // $pemberitahuan = $kegiatan->pemberitahuan;
+            $belanja = $pemberitahuan->belanjas;
+            // dd($belanja);
 
-            $pdf = Pdf::loadView('pdf.pemberitahuan', ['pemberitahuan' => $pemberitahuan, 'kegiatan' => $kegiatan] );
+            $pdf = Pdf::loadView('pdf.pemberitahuan', ['pemberitahuan' => $pemberitahuan, 'kegiatan' => $kegiatan , 'belanja' => $belanja] );
 
             if (!$pdf) {
                 flash()->error('Gagal membuat PDF.');
