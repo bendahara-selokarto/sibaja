@@ -64,7 +64,9 @@ class PenawaranHargaController extends Controller
     {
      
     $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran')->find($request->pemberitahuan_id);
+
     $kegiatan_id = $pemberitahuan->kegiatan->id;
+    
     $volume = $request->volume;
     $totalHarga = 0;
     for ($i = 0; $i < count($volume); $i++) {
@@ -88,55 +90,36 @@ class PenawaranHargaController extends Controller
         'item' => $item_penawaran,
         'is_winner' => $is_winner,
     ]);
+
+    $pemberitahuan = $pemberitahuan->fresh('penawaran');
+
     $penyedia = [];
-if(isset($pemberitahuan->penawaran[0]->penyedia_id)){
-    $penyedia['nama_penyedia_1'] = Penyedia::findOrFail($pemberitahuan->penawaran[0]->penyedia_id)->nama_penyedia ?? '';
-}
-if(isset($pemberitahuan->penawaran[1]->penyedia_id)){
-    $penyedia['nama_penyedia_2'] = Penyedia::findOrFail($pemberitahuan->penawaran[1]->penyedia_id)->nama_penyedia ?? '';
-}   
-
-    // Cek apakah ada penawaran pemenang atau pembanding yang sudah ada
-    // $idPenyediaPemenang = Penawaran::where('kegiatan_id', $kegiatan_id)->where('is_winner', true)->value('penyedia_id');
-    // $idPenyediaPembanding = Penawaran::where('kegiatan_id', $kegiatan_id)->where('is_winner', false)->value('penyedia_id');
-
-    // $penyediaPemenang = Penyedia::find($idPenyediaPemenang)->nama_penyedia ?? '';
-    // $penyediaPembanding = Penyedia::find($idPenyediaPembanding)->nama_penyedia ?? '';
-    // $penyedia = [
-    //     'pemenang' => $penyediaPemenang,
-    //     'pembanding' => $penyediaPembanding,
-    // ];
+    if($penawaran){
+        $ids = $pemberitahuan->penawaran->pluck('penyedia_id')
+                ->flatten()
+                ->unique()
+                ->toArray();
+        $penyedia = Penyedia::whereNotIn('id', $ids)->get();
+       
+    }else{
+        
+        $ids = Pemberitahuan::where('kegiatan_id', $kegiatan_id)
+                ->pluck('penyedia')
+                ->flatten()
+                ->unique()
+                ->toArray();
+        $penyedia = Penyedia::whereIn('id', $ids)->get();
     
+    }
 
-        
-        // if($request->pemenang){
-        //     $penawaran = Penawaran_1::where('kegiatan_id', $kegiatan_id)->first();
-            
-        //     Penawaran_1::updateOrCreate([
-        //         'kegiatan_id' => $kegiatan_id ], [
-        //         'pemberitahuan_id' => $request->pemberitahuan_id ,
-        //         'penyedia_id' => $request->penyedia,
-        //         'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
-        //         'no_penawaran' => $request->no_penawaran,
-        //         'nilai_penawaran' => $totalHarga,
-        //         'item' => $item_penawaran
-        //     ]);
-        // };
-        
-        // if(!$request->pemenang){
-        //     Penawaran_2::create([
-        //         'kegiatan_id' => $kegiatan_id ,
-        //         'pemberitahuan_id' => $request->pemberitahuan_id ,
-        //         'penyedia_id' => $request->penyedia,             
-        //         'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
-        //         'no_penawaran' => $request->no_penawaran,
-        //         'nilai_penawaran' => $totalHarga,
-        //         'item' => $item_penawaran
-        //     ]);
-        //     noty()->success('Penawaran pembanding berhasil disimpan');
-        // }
-        
-    return redirect()->route('kegiatan.show', ['id' => $kegiatan_id , 'penyedia' => $penyedia]);
+    // return redirect()->route('kegiatan.show', ['id' => $kegiatan_id , 'penyedia' => $penyedia]);
+    return view('menu.kegiatan-detail', [
+        'kegiatan' => $pemberitahuan->kegiatan,
+        'penawaran' => $pemberitahuan->penawaran,
+        'pemberitahuan' => $pemberitahuan,
+        'penyedia' => $penyedia,
+       
+    ]);
         
     }
 

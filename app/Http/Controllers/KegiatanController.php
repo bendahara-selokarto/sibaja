@@ -79,11 +79,14 @@ class KegiatanController extends Controller
         $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
         if($kegiatan->pemberitahuan && $kegiatan->pemberitahuan->count() > 0){
 
-        $penyedia = Pemberitahuan::where('kegiatan_id', $id)->pluck('penyedia')->toArray();
-        $penyedia_1  = Penyedia::find($penyedia[0][0]);
-        $penyedia_2  = Penyedia::find($penyedia[0][1]);
-        $nama_penyedia_1 = $penyedia_1->nama_penyedia;
-        $nama_penyedia_2 = $penyedia_2->nama_penyedia;
+        $ids = Pemberitahuan::where('kegiatan_id', $id)
+                ->pluck('penyedia')
+                ->flatten()
+                ->unique()
+                ->toArray();
+        $penyedia = Penyedia::whereIn('id', $ids)->get();
+       
+       
         }else{
             $penyedia = collect();
             $penyedia_1 = new Penyedia();
@@ -93,16 +96,13 @@ class KegiatanController extends Controller
 
         }
        
-        $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->get();
+        $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->first();
 
         return view('menu.kegiatan-detail')
         ->with('kegiatan', $kegiatan)
         ->with('pemberitahuan', $pemberitahuan)
-        ->with('penyedia', $penyedia[0] ?? collect())
-        ->with('nama_penyedia_1', $nama_penyedia_1)
-        ->with('penyedia_1', $penyedia_1)
-        ->with('penyedia_2', $penyedia_2)
-        ->with('nama_penyedia_2', $nama_penyedia_2);
+        ->with('penyedia', $penyedia ?? collect());
+       
     }
 
     /**

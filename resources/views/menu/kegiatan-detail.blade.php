@@ -40,7 +40,7 @@
                                             </x-bladewind::button>
                                         </form>
                                     @else
-                                        <form action="{{ route('pemberitahuan.edit', $pemberitahuan[0]->id) }}" method="post" class="inline">
+                                        <form action="{{ route('pemberitahuan.edit', $pemberitahuan->id) }}" method="post" class="inline">
                                             @csrf
                                             @method('POST')
                                             <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">
@@ -71,26 +71,17 @@
                                 <td colspan="2">
                                     @if ($kegiatan->pemberitahuan)
                                         <div class="mt-4">
-                                            @if(true)                                            
-                                                <form action="{{ route('penawaran.create', [$kegiatan['id'] , $penyedia[0]]) }}" method="post" class="inline">
-                                                    @csrf
-                                                    @method('POST')
-                                                    <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
-                                                        Tambah {{ $nama_penyedia_1 }}
-                                                    </x-bladewind::button>
-                                                </form>
-                                            @endif
-                                            @if(true)
-
-                                                <form action="{{ route('penawaran.create', [$kegiatan['id'] , $penyedia[1] ]) }}" method="post" class="inline">
-                                                    @csrf
-                                                    @method('POST')
-                                                    <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
-                                                        Tambah {{ $nama_penyedia_2 }}
-                                                    </x-bladewind::button>
-                                                </form>
-                                            @endif
-                                            @if(true)
+                                               @foreach ($penyedia as $penyediaItem)                                 
+                                                    <form action="{{ route('penawaran.create', [$kegiatan['id'] , $penyediaItem->id]) }}" method="post" class="inline">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
+                                                            Tambah {{ $penyediaItem->nama_penyedia }}
+                                                        </x-bladewind::button>
+                                                    </form> 
+                                                @endforeach
+                                                                                      
+                                            @if(!$penyedia->count() > 0)
                                                 {{-- <form action="{{ route('penawaran.edit', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('POST')
