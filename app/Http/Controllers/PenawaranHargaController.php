@@ -8,12 +8,15 @@ use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
 use App\Models\NegosiasiHarga;
 use App\Models\PenawaranHarga;
+use App\Models\Belanja;
+use App\Models\HargaPenawaran;
 use App\Models\Penawaran;
 use App\Models\Penawaran_1;
 use App\Models\Penawaran_2;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PenawaranHargaController extends Controller
 {
@@ -63,7 +66,19 @@ class PenawaranHargaController extends Controller
     public function store(Request $request)
     {
      
-    $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran')->find($request->pemberitahuan_id);
+        $uraian = $request->uraian;
+        $satuan = $request->satuan;
+        $volume = $request->volume;
+        $harga_satuan = $request->harga_satuan;
+        
+        $harga_satuan_array = collect($harga_satuan)->map(function ($item) { return [ 
+            'id' => (string) Str::uuid(),
+            'harga_satuan' => $item
+        ];})->toArray();
+    
+    $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran' , 'belanjas')->find($request->pemberitahuan_id);
+   
+    $penyedias = $pemberitahuan->penyedia;
 
     $kegiatan_id = $pemberitahuan->kegiatan->id;
     
@@ -91,6 +106,8 @@ class PenawaranHargaController extends Controller
         'is_winner' => $is_winner,
     ]);
 
+    $penawaran->hargaPenawaran()->createMany($harga_satuan_array);
+
     $pemberitahuan = $pemberitahuan->fresh('penawaran');
 
     $penyedia = [];
@@ -99,7 +116,8 @@ class PenawaranHargaController extends Controller
                 ->flatten()
                 ->unique()
                 ->toArray();
-        $penyedia = Penyedia::whereNotIn('id', $ids)->get();
+        $not_in = array_diff($penyedias, $ids);
+        $penyedia = Penyedia::whereIn('id', $not_in)->get();
        
     }else{
         
@@ -221,47 +239,39 @@ class PenawaranHargaController extends Controller
     public function render(string $id)
     {
         
-            $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran_1', 'penawaran_2')->find($id);
-            if (!$kegiatan) {
-                flash()->error('Kegiatan tidak ditemukan');
-                return back();
-            }       
-    
-        
-            // $penawaran = $kegiatan->penawaran_1;        
-            // if(!$penawaran){
-            //     flash()->error('Tidak ada penawaran yang relevan');
-            //     return back();
-            // }
-                            
-            $penyedia1 = Penyedia::find($kegiatan->penawaran_1->penyedia_id);
-            if(!$penyedia1){
-                flash()->error('Penyedia yang ditunjuk belum diset');
-                return back();
-            }
-            $penyedia2 = Penyedia::find($kegiatan->penawaran_2->penyedia_id);
-            if(!$penyedia2){
-                flash()->error('Penyedia pembanding belum diset');
-                return back();
-            }
+            $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($id);
+                                       
+            $pemberitahuan = $kegiatan->pemberitahuan;
+
+            $penawaran = $pemberitahuan->penawaran;
+ 
+            $pemenang = collect($penawaran)->firstWhere('is_winner', true);
+            $harga_pemenang = $pemenang->hargaPenawaran;
+            $pembanding = collect($penawaran)->firstWhere('is_winner', false);
+            $harga_pembanding = $pembanding->hargaPenawaran;
+            $penyedia1 = Penyedia::find($pemenang->penyedia_id);
+            $penyedia2 = Penyedia::find($pembanding->penyedia_id);
+            dd($penyedia1, $penyedia2);
+            
             $pemberitahuan = $kegiatan->pemberitahuan; 
             if(!$pemberitahuan){
                 flash()->error('Tidak ada pemberitahuan yang relevan');
                 return back();
             }
-            
+            dd($pemenang); 
                 
             $jumlah = $kegiatan->penawaran_1->nilai_penawaran;
-            $jumlah_2 = $kegiatan->penawaran_2->nilai_penawaran;
             $ppn_1 = $jumlah * config('pajak.ppn');
-            $ppn_2 = $jumlah_2 * config('pajak.ppn');
             $pph_22_1 = $jumlah * config('pajak.pph_22');
-            $pph_22_2 = $jumlah_2 * config('pajak.pph_22');
             $jumlah_total_1 = $jumlah + $ppn_1 + $pph_22_1;
-            $jumlah_total_2 = $jumlah_2 + $ppn_2 + $pph_22_2;
-
             $item = $kegiatan->penawaran_1->item;
+
+            $jumlah_2 = $kegiatan->penawaran_2->nilai_penawaran;
+            $ppn_2 = $jumlah_2 * config('pajak.ppn');
+            $pph_22_2 = $jumlah_2 * config('pajak.pph_22');
+            $jumlah_total_2 = $jumlah_2 + $ppn_2 + $pph_22_2;
             $item_2 = $kegiatan->penawaran_2->item;
+
             $pdf = Pdf::loadView('pdf.penawaran-harga', [
                 'penawaran_1' => $kegiatan->penawaran_1,
                 'penawaran_2' => $kegiatan->penawaran_2,

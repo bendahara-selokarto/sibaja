@@ -59,7 +59,6 @@ class PemberitahuanController extends Controller
 
         $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
             return [
-                // 'nomor' => $key + 1,
                 'uraian' => $item,
                 'volume' => $volume[$key] ?? null,
                 'satuan' => $satuan[$key] ?? null,
@@ -75,7 +74,6 @@ class PemberitahuanController extends Controller
         'no_pbj',
         ]);
 
-        // $data['belanja'] = $belanja;
         $data['pekerjaan'] = $pekerjaan;
         $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan'); // otomatis parse ke Carbon
 
@@ -87,7 +85,7 @@ class PemberitahuanController extends Controller
         
 
     }
-
+ 
     /**
      * Display the specified resource.
      */

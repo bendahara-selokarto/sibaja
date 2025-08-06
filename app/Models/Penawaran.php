@@ -5,6 +5,9 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\HargaPenawaran;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Penawaran extends Model
 {
@@ -28,6 +31,10 @@ class Penawaran extends Model
         return $this->belongsTo(Pemberitahuan::class);
     }
 
+        public function hargaPenawaran(){
+            return $this->hasMany(HargaPenawaran::class);
+        }
+        
         public function getTglPenawaranIndoAttribute()
     {
         return Carbon::parse($this->tgl_penawaran)->translatedFormat('j F Y');

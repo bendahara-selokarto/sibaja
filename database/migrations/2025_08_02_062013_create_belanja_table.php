@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('belanja', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('pemberitahuan_id')->constrained('pemberitahuans')->cascadeOnDelete();
-            $table->string('uraian');
-            $table->string('volume');
-            $table->string('satuan');
+            $table->decimal('harga_satuan', 15, 2)->nullable();
             $table->timestamps();
         });
     }
