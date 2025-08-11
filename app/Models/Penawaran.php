@@ -52,15 +52,25 @@ class Penawaran extends Model
 
     public function getHargaTotalAttribute()
     {
+        $this->relationLoaded('hargaPenawaran');
         $data = collect(json_decode($this->item, true));
+        $harga = $this->hargaPenawaran;
 
         $total = collect($data['volume'])->map(function ($vol, $i) use ($data) {
-            return ((float) $vol) * ((float) $data['harga_satuan'][$i]);
+            return ((float) $vol) * ((float) $harga['harga_satuan'][$i]);
         })->sum();
 
         return $total;
 
     }
+
+    public function getNilaiPenawaranAttribute()
+    {
+        return $this->relationLoaded('hargaPenawaran')
+            ? $this->hargaPenawaran->sum('harga_satuan')
+            : $this->hargaPenawaran()->sum('harga_satuan');
+    }
+
 
     
     

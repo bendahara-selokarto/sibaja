@@ -22,7 +22,7 @@ class Kegiatan extends Model
     }
     public function penawaran()
     {
-        return $this->hasOne(PenawaranHarga::class, 'kegiatan_id');
+        return $this->hasOne(Penawaran::class, 'kegiatan_id');
     }
     public function penawaran_1()
     {

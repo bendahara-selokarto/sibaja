@@ -6,6 +6,7 @@ use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
+use App\Models\Belanja;
 use App\Models\NegosiasiHarga;
 use App\Models\PenawaranHarga;
 use Illuminate\Support\Carbon;
@@ -27,11 +28,27 @@ class NegosiasiHargaController extends Controller
      */
     public function create($id)
     {
-        $kegiatan = Kegiatan::with('negosiasiHarga' , 'penawaran_1')->find($id);
+        $kegiatan = Kegiatan::with('negosiasiHarga' , 'penawaran')->find($id);
 
-        $kegiatan->tgl = Carbon::parse($kegiatan->penawaran_1->tgl_penawaran)->format('Y-m-d');
-        $kegiatan->harga_penawaran = $kegiatan->penawaran_1->harga_penawaran;
-        $item_penawaran = $kegiatan->penawaran_1->item;
+        $penawaran = $kegiatan->penawaran()->where('is_winner', true)->first();
+
+        $pemberitahuanId = $penawaran->pemberitahuan_id;
+
+        $belanja = Belanja::where('pemberitahuan_id' , $pemberitahuanId )->get();
+
+        $item_penawaran = $penawaran->hargaPenawaran->map(function ($harga, $i) use ($belanja){
+                return [
+                    'uraian'       => $belanja[$i]->uraian ?? null,
+                    'volume'       => $belanja[$i]->volume ?? null,
+                    'satuan'       => $belanja[$i]->satuan ?? null,
+                    'harga_satuan' => $harga->harga_satuan ?? null,
+                    'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
+                ];
+            });
+              
+        // $item_penawaran->dd();
+
+        $kegiatan->tgl = Carbon::parse($penawaran->tgl_penawaran)->format('Y-m-d');
        return view('form.negosiasi', compact('kegiatan', 'item_penawaran'));
     }
 
@@ -41,7 +58,7 @@ class NegosiasiHargaController extends Controller
     public function store(Request $request)
     {
         
-        $kegiatan = Kegiatan::with('penawaran_1')->find($request->kegiatan_id);
+        $kegiatan = Kegiatan::with('penawaran')->find($request->kegiatan_id);
         if (!$kegiatan) {
             return redirect()->back()->with('error', 'Kegiatan not found');
         };

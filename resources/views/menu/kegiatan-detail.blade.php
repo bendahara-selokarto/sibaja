@@ -69,7 +69,7 @@
                                     <div class="mt-2 font-semibold">2. Penawaran Harga dari 2 Penyedia</div>
                                 </td>
                                 <td colspan="2">
-                                    @if ($kegiatan->pemberitahuan)
+                                    @if ($kegiatan->pemberitahuan  )
                                         <div class="mt-4">
                                                @foreach ($penyedia as $penyediaItem)                                 
                                                     <form action="{{ route('penawaran.create', [$kegiatan['id'] , $penyediaItem->id]) }}" method="post" class="inline">
@@ -81,7 +81,6 @@
                                                     </form> 
                                                 @endforeach
                                                                                       
-                                            @if(!$penyedia->count() > 0)
                                                 {{-- <form action="{{ route('penawaran.edit', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('POST')
@@ -89,7 +88,8 @@
                                                         Ubah
                                                     </x-bladewind::button>
                                                 </form> --}}
-
+                                                
+                                                @if(!empty($btn['penawaran-delete']) && $btn['penawaran-delete'])
                                                 <form action="{{ route('penawaran.destroy', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('DELETE')
@@ -97,14 +97,14 @@
                                                         Hapus
                                                     </x-bladewind::button>
                                                 </form>
-
+                                                @endif
+                                                @if(!empty($btn['penawaran-delete']) && $btn['penawaran-render'])
                                                 <a target="_blank" href="{{ route('penawaran.render', $kegiatan['id']) }}">
                                                     <x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">
                                                         Cetak
                                                     </x-bladewind::button>
                                                 </a>
-                                            @endif
-
+                                                @endif
                                         </div>
                                     @endif
                                 </td>
@@ -116,7 +116,7 @@
                                 </td>
                                 <td colspan="2">
                                     {{-- 3. Negosiasi Harga --}}
-                                    @if ($kegiatan->penawaran_1 && $kegiatan->penawaran_2)
+                                    @if ($penawaran)
                                         <div class="mt-4">
                                             @if (!$kegiatan->negosiasiHarga)
                                                 <form action="{{ route('negosiasi.create', $kegiatan['id']) }}" method="post" class="inline">

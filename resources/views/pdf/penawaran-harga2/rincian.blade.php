@@ -56,22 +56,14 @@ onerror="this.src='{{ asset('') }}'"
           <td style="border: 1px solid black; text-align:center; width: 30mm">Harga Satuan</td>
           <td style="border: 1px solid black; text-align:center; width: 30mm; ">Jumlah</td>
         </tr>
-        @php
-       
-        $no = 1;   
-        @endphp
-         @foreach ($item_2['uraian'] as $key => $value)
-         
+         @foreach ($item_2 as $item)
             <tr>
-                <td style="border: 1px solid black; text-align:center " >{{ $no }}</td>
-                <td style="border: 1px solid black; text-align:left " >{{ $item_2['uraian'][$key] }}</td>
-                <td style="border: 1px solid black; text-align:center " >{{ $item_2['volume'][$key] .'  '. $item_2['satuan'][$key] }}</td>
-                <td style="border: 1px solid black; text-align:right " >{{ number_format($item_2['harga_satuan'][$key], 0, ',', '.') }}</td>
-                <td style="border: 1px solid black; text-align:right " >{{ number_format($item_2['harga_satuan'][$key] *  $item_2['volume'][$key], 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:center " >{{ $loop->iteration }}</td>
+                <td style="border: 1px solid black; text-align:left " >{{ $item['uraian'] }}</td>
+                <td style="border: 1px solid black; text-align:center " >{{ $item['volume'] .'  '. $item['satuan'] }}</td>
+                <td style="border: 1px solid black; text-align:right " >{{ number_format($item['harga_satuan'], 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right " >{{ number_format($item['harga_satuan'] *  $item['volume'], 0, ',', '.') }}</td>
             </tr> 
-              @php
-              $no++
-          @endphp
           @endforeach
           <tr>
               {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}

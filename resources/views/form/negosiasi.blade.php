@@ -70,19 +70,20 @@
                                             <th class="w-64">Harga Penawaran</th>
                                             <th class="w-64">Harga Negosiasi</th>
                                         </tr>
-                                        @for ($i = 0; $i < count($item_penawaran['uraian']); $i++)
-                                            <tr>
-                                                <td>{{ $item_penawaran['uraian'][$i] }}</td>
-                                                <td>{{ $item_penawaran['volume'][$i] }} {{ $item_penawaran['satuan'][$i] }}</td>
-                                                <td>{{ $item_penawaran['harga_satuan'][$i] }}</td>
-                                                <td>
-                                                    <input type="number" name="harga_satuan_negosiasi[]" required
-                                                        value="{{ old('harga_satuan_negosiasi.' . $i, isset($item_negosiasi['harga_negosiasi'][$i]) ? $item_negosiasi['harga_negosiasi'][$i] : '') }}"
-                                                        class="w-full border border-gray-300 rounded px-2 py-1"
-                                                    >
-                                                </td>
-                                            </tr>
-                                        @endfor
+                                        @foreach ($item_penawaran as $i => $item)
+                                        <tr>
+                                            <td>{{ $item['uraian'] }}</td>
+                                            <td>{{ $item['volume'] }} {{ $item['satuan'] }}</td>
+                                            <td>{{ $item['harga_satuan'] }}</td>
+                                            <td>
+                                                <input type="number" name="harga_satuan_negosiasi[]" required
+                                                    value="{{ old('harga_satuan_negosiasi.' . $i, isset($item_negosiasi['harga_negosiasi'][$i]) ? $item_negosiasi['harga_negosiasi'][$i] : '') }}"
+                                                    class="w-full border border-gray-300 rounded px-2 py-1"
+                                                >
+                                            </td>
+                                        </tr>
+                                            
+                                        @endforeach
                                     </table>
                                 </div>
 

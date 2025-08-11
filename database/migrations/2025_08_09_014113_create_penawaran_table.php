@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('penawaran_2', function (Blueprint $table) {
+        Schema::create('penawaran', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('penyedia_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('kegiatan_id')->constrained()->cascadeOnDelete();
             $table->foreignUuid('pemberitahuan_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('penyedia_id');
             $table->dateTime('tgl_penawaran');
-            $table->integer('no_penawaran');
-            $table->string('nilai_penawaran');
-            $table->string('item');
+            $table->string('no_penawaran');
+            $table->boolean('is_winner')->default(false);
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penawaran_2');
+        Schema::dropIfExists('penawaran');
     }
 };

@@ -102,7 +102,6 @@ class PenawaranHargaController extends Controller
         'penyedia_id' => $request->penyedia,
         'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
         'no_penawaran' => $request->no_penawaran,
-        'item' => $item_penawaran,
         'is_winner' => $is_winner,
     ]);
 
@@ -130,14 +129,15 @@ class PenawaranHargaController extends Controller
     
     }
 
+    return redirect()->route('kegiatan.show', ['id' => $kegiatan_id , 'penyedia' => $penyedia]);
     // return redirect()->route('kegiatan.show', ['id' => $kegiatan_id , 'penyedia' => $penyedia]);
-    return view('menu.kegiatan-detail', [
-        'kegiatan' => $pemberitahuan->kegiatan,
-        'penawaran' => $pemberitahuan->penawaran,
-        'pemberitahuan' => $pemberitahuan,
-        'penyedia' => $penyedia,
+    // return view('menu.kegiatan-detail', [
+    //     'kegiatan' => $pemberitahuan->kegiatan,
+    //     'penawaran' => $pemberitahuan->penawaran,
+    //     'pemberitahuan' => $pemberitahuan,
+    //     'penyedia' => $penyedia,
        
-    ]);
+    // ]);
         
     }
 
@@ -241,40 +241,68 @@ class PenawaranHargaController extends Controller
         
             $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($id);
                                        
-            $pemberitahuan = $kegiatan->pemberitahuan;
+            $pemberitahuanId = $kegiatan->pemberitahuan->id;
+            $pemberitahuan = Pemberitahuan::with('belanjas')->find($pemberitahuanId);
+            $belanja = $pemberitahuan->belanjas;
 
             $penawaran = $pemberitahuan->penawaran;
- 
-            $pemenang = collect($penawaran)->firstWhere('is_winner', true);
-            $harga_pemenang = $pemenang->hargaPenawaran;
-            $pembanding = collect($penawaran)->firstWhere('is_winner', false);
-            $harga_pembanding = $pembanding->hargaPenawaran;
+
+            $pemenangId = collect($penawaran)->firstWhere('is_winner', true)->id;
+            $pemenang = Penawaran::with('hargaPenawaran')->find($pemenangId);
+            $penawaranPemenang = $pemenang->hargaPenawaran->map(function ($harga, $i) use ($belanja){
+                return [
+                    'uraian'       => $belanja[$i]->uraian ?? null,
+                    'volume'       => $belanja[$i]->volume ?? null,
+                    'satuan'       => $belanja[$i]->satuan ?? null,
+                    'harga_satuan' => $harga->harga_satuan ?? null,
+                    'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
+                ];
+            });
+            $nilaiPenawaranPemenang = $penawaranPemenang->sum('jumlah');
+
+            $pembandingId = collect($penawaran)->firstWhere('is_winner', false)->id;
+            $pembanding = Penawaran::with('hargaPenawaran')->find($pembandingId);
+            $penawaranPembanding = $pembanding->hargaPenawaran->map(function ($harga, $i) use ($belanja){
+                
+                return [
+                    'uraian'       => $belanja[$i]->uraian ?? null,
+                    'volume'       => $belanja[$i]->volume ?? null,
+                    'satuan'       => $belanja[$i]->satuan ?? null,
+                    'harga_satuan' => $harga->harga_satuan ?? null,
+                    'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
+                ];
+            });
+
+            $nilaiPenawaranPembanding = $penawaranPembanding->sum('jumlah');
+
             $penyedia1 = Penyedia::find($pemenang->penyedia_id);
             $penyedia2 = Penyedia::find($pembanding->penyedia_id);
-            dd($penyedia1, $penyedia2);
             
             $pemberitahuan = $kegiatan->pemberitahuan; 
             if(!$pemberitahuan){
                 flash()->error('Tidak ada pemberitahuan yang relevan');
                 return back();
             }
-            dd($pemenang); 
+
+          
                 
-            $jumlah = $kegiatan->penawaran_1->nilai_penawaran;
+            $jumlah = $nilaiPenawaranPemenang;
             $ppn_1 = $jumlah * config('pajak.ppn');
             $pph_22_1 = $jumlah * config('pajak.pph_22');
             $jumlah_total_1 = $jumlah + $ppn_1 + $pph_22_1;
-            $item = $kegiatan->penawaran_1->item;
+            $item = $penawaranPemenang;
 
-            $jumlah_2 = $kegiatan->penawaran_2->nilai_penawaran;
+            // $item->dd();
+
+            $jumlah_2 = $nilaiPenawaranPembanding;
             $ppn_2 = $jumlah_2 * config('pajak.ppn');
             $pph_22_2 = $jumlah_2 * config('pajak.pph_22');
             $jumlah_total_2 = $jumlah_2 + $ppn_2 + $pph_22_2;
-            $item_2 = $kegiatan->penawaran_2->item;
+            $item_2 = $penawaranPembanding;
 
             $pdf = Pdf::loadView('pdf.penawaran-harga', [
-                'penawaran_1' => $kegiatan->penawaran_1,
-                'penawaran_2' => $kegiatan->penawaran_2,
+                'penawaran_1' => $pemenang,
+                'penawaran_2' => $pembanding,
                 'kegiatan' => $kegiatan,
                 'penyedia1' => $penyedia1,
                 'penyedia2' => $penyedia2,

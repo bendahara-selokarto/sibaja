@@ -68,39 +68,56 @@ class KegiatanController extends Controller
         } catch (\Throwable $th) {
             noty()->error($th->getMessage());
         }
-       return redirect()->route('menu.kegiatan');
+        return redirect()->route('menu.kegiatan');
     }
-
+    
     /**
      * Display the specified resource.
-     */
+    */
     public function show(string $id)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
+        $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($id);
+        
+        $btn = [];
+
         if($kegiatan->pemberitahuan && $kegiatan->pemberitahuan->count() > 0){
+        
+            $pemberitahuanId = $kegiatan->pemberitahuan->id;
 
-        $ids = Pemberitahuan::where('kegiatan_id', $id)
-                ->pluck('penyedia')
-                ->flatten()
-                ->unique()
-                ->toArray();
-        $penyedia = Penyedia::whereIn('id', $ids)->get();
-       
-       
-        }else{
-            $penyedia = collect();
-            $penyedia_1 = new Penyedia();
-            $penyedia_2 = new Penyedia();
-            $nama_penyedia_1 = '';
-            $nama_penyedia_2 = '';
+            $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran' , 'belanjas' )->find($pemberitahuanId);
+    
+            $penyedias = $pemberitahuan->penyedia;
 
-        }
-       
-        $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->first();
+            $kegiatan_id = $id;
+
+            $penawaran =  $pemberitahuan->penawaran;
+        
+                if($penawaran){
+                    $ids = $pemberitahuan->penawaran->pluck('penyedia_id')
+                    ->flatten()
+                    ->unique()
+                    ->toArray();
+                    $not_in = array_diff($penyedias, $ids);
+                    $penyedia = Penyedia::whereIn('id', $not_in)->get();           
+                    
+                }
+
+                $btn['penawaran-delete'] = ($penawaran && $penawaran->count() > 0);
+                $btn['penawaran-render'] = ($penawaran && $penawaran->count() > 1);
+
+                
+            
+            }
+
+
+
+
 
         return view('menu.kegiatan-detail')
         ->with('kegiatan', $kegiatan)
-        ->with('pemberitahuan', $pemberitahuan)
+        ->with('pemberitahuan', $pemberitahuan ?? collect())
+        ->with('penawaran' , $penawaran ?? collect())
+        ->with('btn' ,$btn)
         ->with('penyedia', $penyedia ?? collect());
        
     }
