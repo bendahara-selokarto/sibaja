@@ -76,7 +76,7 @@ class KegiatanController extends Controller
     */
     public function show(string $id)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($id);
+        $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran' , 'negosiasiHarga' )->find($id);
         
         $btn = [];
 
@@ -102,22 +102,22 @@ class KegiatanController extends Controller
                     
                 }
 
-                $btn['penawaran-delete'] = ($penawaran && $penawaran->count() > 0);
+                $btn['penawaran-create'] = ($penawaran && $penawaran->count() > 0);
                 $btn['penawaran-render'] = ($penawaran && $penawaran->count() > 1);
-
-                
-            
+                $btn['negosiasi-create'] = ($btn['penawaran-render'] && $kegiatan->negosiasiHarga == null );
+                $btn['negosiasi-render'] = ($kegiatan->negosiasiHarga && $kegiatan->negosiasiHarga->count() > 0);
+                $btn['pembayaran-create'] = ($btn['negosiasi-render'] && $kegiatan->pembayaran == null);
+                $btn['pembayaran-render'] = ($kegiatan->pembayaran && $kegiatan->pembayaran->count() > 0);
+           
             }
 
-
-
-
+          
 
         return view('menu.kegiatan-detail')
         ->with('kegiatan', $kegiatan)
+        ->with('btn' ,$btn)
         ->with('pemberitahuan', $pemberitahuan ?? collect())
         ->with('penawaran' , $penawaran ?? collect())
-        ->with('btn' ,$btn)
         ->with('penyedia', $penyedia ?? collect());
        
     }

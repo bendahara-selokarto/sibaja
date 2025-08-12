@@ -31,7 +31,7 @@
                                         max="{{ Auth::user()->tahun_anggaran . '-12-31' }}"
                                         class="mt-1 block"
                                         required
-                                        autocomplete="tgl_negosiasi"
+                                        {{-- autocomplete="tgl_negosiasi" --}}
                                         value="{{ old('tgl_negosiasi', isset($negosiasi) ? $negosiasi->tgl_negosiasi : '') }}"
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_negosiasi')" />
@@ -44,7 +44,7 @@
                                         class="mt-1 block"
                                         min="{{ $kegiatan->tgl }}"
                                         required
-                                        autocomplete="tgl_persetujuan"
+                                        {{-- autocomplete="tgl_persetujuan" --}}
                                         value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
@@ -56,7 +56,7 @@
                                         max="{{ Auth::user()->tahun_anggaran . '-12-31' }}"
                                         class="mt-1 block"
                                         required
-                                        autocomplete="tgl_akhir_perjanjian"
+                                        {{-- autocomplete="tgl_akhir_perjanjian" --}}
                                         value="{{ old('tgl_akhir_perjanjian', isset($negosiasi) ? $negosiasi->tgl_akhir_perjanjian : '') }}"
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
@@ -70,14 +70,14 @@
                                             <th class="w-64">Harga Penawaran</th>
                                             <th class="w-64">Harga Negosiasi</th>
                                         </tr>
-                                        @foreach ($item_penawaran as $i => $item)
+                                        @foreach ($items as $i => $item)
                                         <tr>
                                             <td>{{ $item['uraian'] }}</td>
                                             <td>{{ $item['volume'] }} {{ $item['satuan'] }}</td>
-                                            <td>{{ $item['harga_satuan'] }}</td>
+                                            <td>{{ $item['harga_penawaran'] }}</td>
                                             <td>
                                                 <input type="number" name="harga_satuan_negosiasi[]" required
-                                                    value="{{ old('harga_satuan_negosiasi.' . $i, isset($item_negosiasi['harga_negosiasi'][$i]) ? $item_negosiasi['harga_negosiasi'][$i] : '') }}"
+                                                    value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? $item['harga_negosiasi'] : '') }}"
                                                     class="w-full border border-gray-300 rounded px-2 py-1"
                                                 >
                                             </td>

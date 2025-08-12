@@ -28,14 +28,14 @@
             <th>HARGA <br> SATUAN <br>(Rp.)</th>
             <th>JUMLAH <br>(Rp.)</th>
         </tr>
-        @foreach ($data['item']['uraian'] as $k => $v )
+        @foreach ($data['item'] as $k => $v )
             
         <tr>
           <td style="text-align: center">{{ $loop->iteration }}</td>
-            <td >{{ $data['item']['uraian'][$k] }}</td>
-            <td style="text-align: center">{{ $data['item']['volume'][$k] . ' '. $data['item']['satuan'][$k]  }}</td>
-            <td style="text-align: right"> {{ number_format($data['item']['harga_negosiasi'][$k] * 1.14 , 0, ',', '.') }}</td>
-            <td style="text-align: right"> {{ number_format(round($data['item']['volume'][$k] * 1.14 * $data['item']['harga_negosiasi'][$k], -2), 0, ',', '.') }}</td>
+            <td >{{ $v['uraian'] }}</td>
+            <td style="text-align: center">{{ $v['volume'] . ' '. $v['satuan']  }}</td>
+            <td style="text-align: right"> {{ number_format($v['harga_negosiasi'] * 1.14 , 0, ',', '.') }}</td>
+            <td style="text-align: right"> {{ number_format(round($v['volume'] * 1.14 * $v['harga_negosiasi'], -2), 0, ',', '.') }}</td>
         </tr>
         @endforeach
         <tr>

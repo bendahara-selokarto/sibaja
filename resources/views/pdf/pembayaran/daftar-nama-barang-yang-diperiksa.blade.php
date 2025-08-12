@@ -34,11 +34,11 @@
             <th style="width: 20%">Tanda</th>
             <th style="width: 20%">Keterangan</th>
         </tr>
-        @foreach ($item['uraian'] as $key => $value)
+        @foreach ($item as $item)
         <tr>
             <td style="text-align: center">{{ $loop->iteration }}</td>
-            <td style="text-align: left">{{ $item['uraian'][$key] }}</td>         
-            <td style="text-align: center">{{ $item['volume'][$key]  }} {{ $item['satuan'][$key] }}</td> 
+            <td style="text-align: left">{{ $item['uraian'] }}</td>         
+            <td style="text-align: center">{{ $item['volume']  }} {{ $item['satuan'] }}</td> 
             <td style="text-align: center">V</td>         
             <td style="text-align: center">Baik dan Lengkap</td>         
         </tr>              

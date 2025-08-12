@@ -12,20 +12,16 @@ use App\Models\PenawaranHarga;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+
 
 class NegosiasiHargaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
        
     }
   
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create($id)
     {
         $kegiatan = Kegiatan::with('negosiasiHarga' , 'penawaran')->find($id);
@@ -36,32 +32,25 @@ class NegosiasiHargaController extends Controller
 
         $belanja = Belanja::where('pemberitahuan_id' , $pemberitahuanId )->get();
 
-        $item_penawaran = $penawaran->hargaPenawaran->map(function ($harga, $i) use ($belanja){
+        $items = $penawaran->hargaPenawaran->map(function ($harga, $i) use ($belanja){
                 return [
                     'uraian'       => $belanja[$i]->uraian ?? null,
                     'volume'       => $belanja[$i]->volume ?? null,
                     'satuan'       => $belanja[$i]->satuan ?? null,
-                    'harga_satuan' => $harga->harga_satuan ?? null,
+                    'harga_penawaran' => $harga->harga_satuan ?? null,
                     'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
                 ];
             });
               
-        // $item_penawaran->dd();
-
         $kegiatan->tgl = Carbon::parse($penawaran->tgl_penawaran)->format('Y-m-d');
-       return view('form.negosiasi', compact('kegiatan', 'item_penawaran'));
+
+       return view('form.negosiasi', compact('kegiatan', 'items'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         
         $kegiatan = Kegiatan::with('penawaran')->find($request->kegiatan_id);
-        if (!$kegiatan) {
-            return redirect()->back()->with('error', 'Kegiatan not found');
-        };
 
         $request->validate([
             'tgl_negosiasi' => 'required|date',
@@ -73,33 +62,25 @@ class NegosiasiHargaController extends Controller
         
         $item_negosiasi =$request->harga_satuan_negosiasi; 
 
-        $item_penawaran = $kegiatan->penawaran_1->item;
-        $item_penawaran['harga_negosiasi'] = $item_negosiasi;
-        $item = $item_penawaran;
-
-    $volume = $item['volume'];
-    $totalHargaNegosiasi = 0;
-    for ($i = 0; $i < count($volume); $i++) {
-        $totalHargaNegosiasi += $volume[$i] * $item['harga_negosiasi'][$i];
-    }
+        $item_negosiasi_array = collect($item_negosiasi)->map(function ($item) { return [ 
+            'id' => (string) Str::uuid(),
+            'harga_satuan' => $item
+        ];})->toArray();
         
         $pemberitahuan = $kegiatan->pemberitahuan->first();
         if (!$pemberitahuan) {
             return redirect()->back()->with('error', 'Pemberitahuan not found');
         }
         $tgl = Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan);
-        NegosiasiHarga::create( [
+
+        $negosiasi = NegosiasiHarga::create( [
             'kegiatan_id' => $request->kegiatan_id,
-            'rekening_apbdes' =>$kegiatan->rekening_apbdes,
             'tgl_persetujuan' => Carbon::parse($request->tgl_persetujuan),
             'tgl_negosiasi' => Carbon::parse($request->tgl_negosiasi),
-            'tgl_perjanjian' => Carbon::parse($request->tgl_perjanjian),
             'tgl_akhir_perjanjian' => Carbon::parse($request->tgl_akhir_perjanjian),
-            'harga_negosiasi' => $totalHargaNegosiasi,
-            'item' => json_encode($item),
-            'jumlah_total' => $totalHargaNegosiasi + ($totalHargaNegosiasi * config('pajak.ppn')) + ($totalHargaNegosiasi * config('pajak.pph_22'))
-           
         ]);
+
+        $negosiasi->hargaNegosiasi()->createMany($item_negosiasi_array);
 
         return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil menambahkan data');
 
@@ -107,115 +88,121 @@ class NegosiasiHargaController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(NegosiasiHarga $negosiasiHarga)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($kegiatan_id)
     { 
-        $kegiatan = Kegiatan::with('negosiasiHarga' , 'penawaran_1')->find($kegiatan_id);
+        $kegiatan = Kegiatan::with('pemberitahuan','negosiasiHarga' , 'penawaran')->find($kegiatan_id);
 
-        $kegiatan->tgl = Carbon::parse($kegiatan->penawaran_1->tgl_penawaran)->format('Y-m-d');
-        $kegiatan->harga_penawaran = $kegiatan->penawaran_1->harga_penawaran;
-        $item_penawaran = $kegiatan->penawaran_1->item;
-        $negosiasi = $kegiatan->negosiasiHarga;
-        $item_negosiasi = json_decode($negosiasi->item, true);
+        $pemberitahuan = $kegiatan->pemberitahuan;
+        $pemberitahuan->load('belanjas');
+        $penawaranHarga = $kegiatan->penawaran()->firstWhere('is_winner' , true);
+        $penawaranHarga->load('hargaPenawaran');
+        $hargaPenawaran = $penawaranHarga->hargaPenawaran;
+        $negosiasi  = $kegiatan->negosiasiHarga ;
+        $negosiasi->load('hargaNegosiasi');
+        $hargaNegosiasi = $negosiasi->hargaNegosiasi;
 
-       return view('form.negosiasi', compact('kegiatan', 'item_penawaran' , 'negosiasi', 'item_negosiasi'));
+        $items = $pemberitahuan->belanjas->map(function($item,$k) 
+        use ( $hargaPenawaran , $hargaNegosiasi )       
+        {
+            return [
+                'uraian' => $item->uraian,
+                'volume' => $item->volume,
+                'satuan' => $item->satuan,
+                'harga_penawaran' => $hargaPenawaran[$k]->harga_satuan,
+                'harga_negosiasi' => $hargaNegosiasi[$k]->harga_satuan,
+                'jumlah_penawaran' => $item->volume * $hargaPenawaran[$k]->harga_satuan,
+                'jumlah_negosiasi' => $item->volume * $hargaNegosiasi[$k]->harga_satuan,
+            ];
+        });
+
+        $kegiatan->tgl = Carbon::parse($penawaranHarga->tgl_penawaran)->format('Y-m-d');
+
+        // $kegiatan->harga_penawaran = $items->sum(fn ($i) => $i['volume'] * $i['harga_penawaran']);
+
+       return view('form.negosiasi', compact('kegiatan', 'items' , 'negosiasi'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $kegiatan_id)
     {
-        $kegiatan = Kegiatan::with('penawaran_1')->find($request->kegiatan_id);
-        if (!$kegiatan) {
-            return redirect()->back()->with('error', 'Kegiatan not found');
-        };
-
-        $request->validate([
-            'tgl_negosiasi' => 'required|date',
-            'tgl_persetujuan' => 'required|date',
-            'tgl_akhir_perjanjian' => 'required|date',
-            'harga_satuan_negosiasi' => 'required|array',
-            'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
-        ]);
         
-        $item_negosiasi =$request->harga_satuan_negosiasi; 
+        $kegiatan = Kegiatan::with('pemberitahuan','penawaran' , 'negosiasiHarga')->find($request->kegiatan_id);
 
-        $item_penawaran = $kegiatan->penawaran_1->item;
-        $item_penawaran['harga_negosiasi'] = $item_negosiasi;
-        $item = $item_penawaran;
-
-    $volume = $item['volume'];
-    $totalHargaNegosiasi = 0;
-    for ($i = 0; $i < count($volume); $i++) {
-        $totalHargaNegosiasi += $volume[$i] * $item['harga_negosiasi'][$i];
-    }
-        
-        $pemberitahuan = $kegiatan->pemberitahuan->first();
-        if (!$pemberitahuan) {
-            return redirect()->back()->with('error', 'Pemberitahuan not found');
-        }
+        $pemberitahuan = $kegiatan->pemberitahuan;
+       
         $tgl = Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan);
+
         $negosiasi = NegosiasiHarga::where('kegiatan_id', $request->kegiatan_id)->first();
+
+        
+
         $negosiasi->update( [
             'kegiatan_id' => $request->kegiatan_id,
             'rekening_apbdes' =>$kegiatan->rekening_apbdes,
             'tgl_persetujuan' => Carbon::parse($request->tgl_persetujuan),
             'tgl_negosiasi' => Carbon::parse($request->tgl_negosiasi),
             'tgl_perjanjian' => Carbon::parse($request->tgl_perjanjian),
-            'tgl_akhir_perjanjian' => Carbon::parse($request->tgl_akhir_perjanjian),
-            'harga_negosiasi' => $totalHargaNegosiasi,
-            'item' => json_encode($item),
-            'jumlah_total' => $totalHargaNegosiasi + ($totalHargaNegosiasi * config('pajak.ppn')) + ($totalHargaNegosiasi * config('pajak.pph_22'))
-           
+            'tgl_akhir_perjanjian' => Carbon::parse($request->tgl_akhir_perjanjian)           
         ]);
+
+        $item_negosiasi =$request->harga_satuan_negosiasi; 
+
+        $item_negosiasi_array = collect($item_negosiasi)->map(function ($item) { return [ 
+            'id' => (string) Str::uuid(),
+            'harga_satuan' => $item
+        ];})->toArray();
+
+        $negosiasi->hargaNegosiasi()->delete();
+        $negosiasi->hargaNegosiasi()->createMany($item_negosiasi_array);
         return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil memperbarui data');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($kegiatan_id)
     {
-        $negosiasi = NegosiasiHarga::where('kegiatan_id', $kegiatan_id)->first();
+        $negosiasi = NegosiasiHarga::where('kegiatan_id', $kegiatan_id)->get();
         if (!$negosiasi) {
             return redirect()->back()->with('error', 'Negosiasi tidak ditemukan');
         }
-        $negosiasi->delete();
+        $negosiasi->each->delete();
         return redirect()->back()->with('success', 'Negosiasi berhasil dihapus');
     }
 
-    /**
-     * Generate a PDF for the specified negotiation price and notification.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\NegosiasiHarga $negosiasiHarga
-     * @param \App\Models\Pemberitahuan $pemberitahuan
-     * @return \Illuminate\Http\Response
-     */
     public function renderPDF($id)
     {
         
         $nomor_surat =  '/' .Auth::user()->kode_desa . '/' . Auth::user()->tahun_anggaran ;
         
-        $kegiatan = Kegiatan::with('penawaran_1')->with('pemberitahuan')->with('negosiasiHarga')->find( $id);
+        $kegiatan = Kegiatan::with('penawaran')
+                                ->with('pemberitahuan')
+                                ->with('negosiasiHarga')
+                                ->find( $id);
        
-        if (!$kegiatan) {
-            flash()->error('Kegiatan tidak ditemukan');
-            return redirect()->back();
-        };
         $pemberitahuan = $kegiatan->pemberitahuan;
-        $penawaranHarga = $kegiatan->penawaran_1;
+        $pemberitahuan->load('belanjas');
+        $penawaranHarga = $kegiatan->penawaran()->firstWhere('is_winner' , true);
+        $penawaranHarga->load('hargaPenawaran');
+        $hargaPenawaran = $penawaranHarga->hargaPenawaran;
+        $negosiasiHarga  = $kegiatan->negosiasiHarga ;
+        $negosiasiHarga->load('hargaNegosiasi');
+        $hargaNegosiasi = $negosiasiHarga->hargaNegosiasi;
+
+        $items = $pemberitahuan->belanjas->map(function($item,$k) 
+        use ( $hargaPenawaran , $hargaNegosiasi )       
+        {
+            return [
+                'uraian' => $item->uraian,
+                'volume' => $item->volume,
+                'satuan' => $item->satuan,
+                'harga_penawaran' => $hargaPenawaran[$k]->harga_satuan,
+                'harga_negosiasi' => $hargaNegosiasi[$k]->harga_satuan,
+                'jumlah_penawaran' => $item->volume * $hargaPenawaran[$k]->harga_satuan,
+                'jumlah_negosiasi' => $item->volume * $hargaNegosiasi[$k]->harga_satuan,
+            ];
+        });
         $penawaranHarga->tgl_penawaran =  Carbon::parse($penawaranHarga->tgl_penawaran);
         $ppn = config('pajak.ppn');
         $pph_22 = config('pajak.pph_22');
@@ -226,7 +213,6 @@ class NegosiasiHargaController extends Controller
         $penawaranHarga->harga_total = floor($penawaranHarga->nilai_penawaran + $nilai_ppn + $nilai_pph_22); 
         
         $nilai_total_penawaran = $penawaranHarga->nilai_penawaran + ($penawaranHarga->nilai_penawaran * config('pajak.ppn')) + ($penawaranHarga->nilai_penawaran * config('pajak.pph_22'));
-        $negosiasiHarga  = $kegiatan->negosiasiHarga ;
         if(!$pemberitahuan){
             flash()->error('pemberitahuna belum diset');
             return redirect()->back();
@@ -249,17 +235,13 @@ class NegosiasiHargaController extends Controller
         $negosiasiHarga->tgl_akhir_perjanjian = Carbon::parse($negosiasiHarga->tgl_akhir_perjanjian);
         $negosiasiHarga->jumlah_hari_kerja = $negosiasiHarga->tgl_akhir_perjanjian->diffInDays($negosiasiHarga->tgl_perjanjian) * -1;
         
-        // $item = $kegiatan->penawaran_1->item;
         $negosiasi = $negosiasiHarga->item;
-        // $item['harga_negosiasi'] = json_decode($negosiasi, true);       
-       
-
 
         $pemberitahuan->no_spk = $pemberitahuan->no_pbj . '/SPK' . $nomor_surat;
         $pemberitahuan->no_ba_negosiasi = $pemberitahuan->no_pbj . '/BA-NEGO' . $nomor_surat;
         $pemberitahuan->no_perjanjian = $pemberitahuan->no_pbj . '/PERJ' . $nomor_surat;
 
-        $penyedia = Penyedia::find($kegiatan->penawaran_1->penyedia_id);
+        $penyedia = Penyedia::find($penawaranHarga->penyedia_id);
         $data = [
             'kegiatan' => $kegiatan,
             'penyedia' => $penyedia,
@@ -267,8 +249,9 @@ class NegosiasiHargaController extends Controller
             'penawaranHarga' => $penawaranHarga,
             'negosiasiHarga' => $negosiasiHarga,
             'nilai_total_penawaran' => $nilai_total_penawaran,
-            'item' => json_decode($negosiasi, true),
+            'item' => json_decode($items, true),
         ];
+
         $pdf = Pdf::loadView('pdf.negosiasi-harga', compact('data'));
         // Replace invalid filename characters with underscore
         $filename = '3. NEGOSIASI HARGA - (' . $kegiatan->kegiatan . ')';

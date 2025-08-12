@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class NegosiasiHarga extends Model
 {
@@ -14,6 +16,10 @@ class NegosiasiHarga extends Model
     public function kegiatan()
     {
         return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
+    }
+    public function hargaNegosiasi()
+    {
+        return $this->hasMany(HargaNegosiasi::class);
     }
     
     protected $table = 'negosiasi_harga';

@@ -66,10 +66,7 @@ class PenawaranHargaController extends Controller
     public function store(Request $request)
     {
      
-        $uraian = $request->uraian;
-        $satuan = $request->satuan;
-        $volume = $request->volume;
-        $harga_satuan = $request->harga_satuan;
+    $harga_satuan = $request->harga_satuan;
         
         $harga_satuan_array = collect($harga_satuan)->map(function ($item) { return [ 
             'id' => (string) Str::uuid(),
@@ -82,62 +79,20 @@ class PenawaranHargaController extends Controller
 
     $kegiatan_id = $pemberitahuan->kegiatan->id;
     
-    $volume = $request->volume;
-    $totalHarga = 0;
-    for ($i = 0; $i < count($volume); $i++) {
-        $totalHarga += $volume[$i] * $request->harga_satuan[$i];
-    }
-
-    $item_penawaran = [
-        'uraian' => $request->uraian,
-        'volume' => $request->volume,
-        'satuan' => $request->satuan,
-        'harga_satuan' => $request->harga_satuan,
-    ];
-  
     $is_winner = $request->pemenang ? true : false;
-    $penawaran = Penawaran::create([
-        'kegiatan_id' => $kegiatan_id,
-        'pemberitahuan_id' => $request->pemberitahuan_id,
-        'penyedia_id' => $request->penyedia,
-        'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
-        'no_penawaran' => $request->no_penawaran,
-        'is_winner' => $is_winner,
-    ]);
-
-    $penawaran->hargaPenawaran()->createMany($harga_satuan_array);
-
-    $pemberitahuan = $pemberitahuan->fresh('penawaran');
-
-    $penyedia = [];
-    if($penawaran){
-        $ids = $pemberitahuan->penawaran->pluck('penyedia_id')
-                ->flatten()
-                ->unique()
-                ->toArray();
-        $not_in = array_diff($penyedias, $ids);
-        $penyedia = Penyedia::whereIn('id', $not_in)->get();
-       
-    }else{
-        
-        $ids = Pemberitahuan::where('kegiatan_id', $kegiatan_id)
-                ->pluck('penyedia')
-                ->flatten()
-                ->unique()
-                ->toArray();
-        $penyedia = Penyedia::whereIn('id', $ids)->get();
     
-    }
+        $penawaran = Penawaran::create([
+            'kegiatan_id' => $kegiatan_id,
+            'pemberitahuan_id' => $request->pemberitahuan_id,
+            'penyedia_id' => $request->penyedia,
+            'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
+            'no_penawaran' => $request->no_penawaran,
+            'is_winner' => $is_winner,
+        ]);
 
-    return redirect()->route('kegiatan.show', ['id' => $kegiatan_id , 'penyedia' => $penyedia]);
-    // return redirect()->route('kegiatan.show', ['id' => $kegiatan_id , 'penyedia' => $penyedia]);
-    // return view('menu.kegiatan-detail', [
-    //     'kegiatan' => $pemberitahuan->kegiatan,
-    //     'penawaran' => $pemberitahuan->penawaran,
-    //     'pemberitahuan' => $pemberitahuan,
-    //     'penyedia' => $penyedia,
-       
-    // ]);
+            $penawaran->hargaPenawaran()->createMany($harga_satuan_array);
+
+    return redirect()->route('kegiatan.show', ['id' => $kegiatan_id ]);
         
     }
 

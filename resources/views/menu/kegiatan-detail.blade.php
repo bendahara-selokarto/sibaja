@@ -29,8 +29,6 @@
                                     <div class="mt-2 font-semibold">1. Pemberitahuan kepada 2 Penyedia</div>
                                 </td>
                                 <td class="mb-4">
-
-                                    {{-- 1. Pemberitahuan kepada 2 Penyedia --}}
                                     @if (!$kegiatan->pemberitahuan)
                                         <form action="{{ route('pemberitahuan.create', $kegiatan['id']) }}" method="post" class="inline">
                                             @csrf
@@ -76,20 +74,11 @@
                                                         @csrf
                                                         @method('POST')
                                                         <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
-                                                            Tambah {{ $penyediaItem->nama_penyedia }}
+                                                            Penawaran : {{ $penyediaItem->nama_penyedia }}
                                                         </x-bladewind::button>
                                                     </form> 
                                                 @endforeach
-                                                                                      
-                                                {{-- <form action="{{ route('penawaran.edit', $kegiatan['id']) }}" method="post" class="inline">
-                                                    @csrf
-                                                    @method('POST')
-                                                    <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">
-                                                        Ubah
-                                                    </x-bladewind::button>
-                                                </form> --}}
-                                                
-                                                @if(!empty($btn['penawaran-delete']) && $btn['penawaran-delete'])
+                                                @if(!empty($btn['penawaran-create']) && $btn['penawaran-create'])
                                                 <form action="{{ route('penawaran.destroy', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('DELETE')
@@ -98,7 +87,7 @@
                                                     </x-bladewind::button>
                                                 </form>
                                                 @endif
-                                                @if(!empty($btn['penawaran-delete']) && $btn['penawaran-render'])
+                                                @if(!empty($btn['penawaran-render']) && $btn['penawaran-render'])
                                                 <a target="_blank" href="{{ route('penawaran.render', $kegiatan['id']) }}">
                                                     <x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">
                                                         Cetak
@@ -115,10 +104,8 @@
                                     <div class="mt-2 font-semibold">3. Negosiasi Harga dengan Penyedia Terpilih</div>
                                 </td>
                                 <td colspan="2">
-                                    {{-- 3. Negosiasi Harga --}}
-                                    @if ($penawaran)
                                         <div class="mt-4">
-                                            @if (!$kegiatan->negosiasiHarga)
+                                            @if(!empty($btn['negosiasi-create']))
                                                 <form action="{{ route('negosiasi.create', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('POST')
@@ -126,7 +113,8 @@
                                                         Buat
                                                     </x-bladewind::button>
                                                 </form>
-                                            @else
+                                            @endif
+                                            @if(!empty($btn['negosiasi-render']))
                                                 <form action="{{ route('negosiasi.edit', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('POST')
@@ -151,7 +139,6 @@
                                             @endif
 
                                         </div>
-                                    @endif
                                 </td>
                             </tr>
                             <tr>
@@ -159,19 +146,17 @@
                                     <div class="mt-2 font-semibold">4. Pembayaran</div>
                                 </td>
                                 <td colspan="2">
-                                    
-                                    {{-- 4. Pembayaran --}}
-                                    @if ($kegiatan->negosiasiHarga)
                                     <div class="mt-4">
-                                            @if (!$kegiatan->pembayaran)
-                                                <form action="{{ route('pembayaran.create', $kegiatan['id']) }}" method="post" class="inline">
-                                                    @csrf
-                                                    @method('POST')
-                                                    <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
-                                                        Buat
-                                                    </x-bladewind::button>
-                                                </form>
-                                            @else
+                                        @if(!empty($btn['pembayaran-create']))
+                                        <form action="{{ route('pembayaran.create', $kegiatan['id']) }}" method="post" class="inline">
+                                            @csrf
+                                            @method('POST')
+                                            <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
+                                                Buat
+                                            </x-bladewind::button>
+                                        </form>
+                                        @endif
+                                        @if(!empty($btn['pembayaran-render']))
                                                 <form action="{{ route('pembayaran.edit', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('POST')
@@ -196,10 +181,8 @@
                                             @endif
 
                                         </div>
-                                    @endif
                                 </td>
                             </tr>
-
                         </x-bladewind::table>
                     </div>
                 </div>

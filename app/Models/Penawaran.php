@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\HargaPenawaran;
+use App\Models\pemberitahuan;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Penawaran extends Model
@@ -50,19 +51,24 @@ class Penawaran extends Model
         return $this->nilai_penawaran * config('pajak.pph_22');
     }
 
-    public function getHargaTotalAttribute()
-    {
-        $this->relationLoaded('hargaPenawaran');
-        $data = collect(json_decode($this->item, true));
-        $harga = $this->hargaPenawaran;
+   public function getHargaTotalAttribute()
+        {
+            $this->loadMissing('pemberitahuan');
 
-        $total = collect($data['volume'])->map(function ($vol, $i) use ($data) {
-            return ((float) $vol) * ((float) $harga['harga_satuan'][$i]);
-        })->sum();
+            // Ambil data belanja dari JSON
+            $dataBelanja = collect(json_decode($this->pemberitahuan->belanjas, true));
 
-        return $total;
+            // Hitung total langsung dari JSON
+            $total = $dataBelanja->map(function ($item) {
+                $volume = (float) ($item['volume'] ?? 0);
+                $hargaSatuan = (float) ($item['harga_satuan'] ?? 0);
+                return $volume * $hargaSatuan;
+            })->sum();
 
-    }
+            return $total;
+        }
+
+
 
     public function getNilaiPenawaranAttribute()
     {

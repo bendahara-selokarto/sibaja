@@ -95,13 +95,13 @@
         <tr>
           <td style="text-align: center">PEKERJAAN</td>
           <td style="border-left: 1px solid black" >Nomor</td>
-          <td >: {{ $data['kegiatan']->penawaran_1->no_penawaran }}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
+          <td >: {{ $data['kegiatan']->penawaran->no_penawaran }}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
         </tr>
         <tr>
           <td style="text-align: center">{{ $data['kegiatan']->kegiatan }}</td>
           <td style="border-left: 1px solid black" >Tanggal</td>
         
-          <td >: {{ Illuminate\Support\Carbon::parse($data['kegiatan']->penawaran_1->tgl_penawaran)->isoFormat('D MMMM Y')  }}</td>
+          <td >: {{ Illuminate\Support\Carbon::parse($data['kegiatan']->penawaran->tgl_penawaran)->isoFormat('D MMMM Y')  }}</td>
         </tr>
         <tr>
           <td style="text-align: center">KODE REKENING BELANJA</td>
@@ -154,14 +154,14 @@
         </tr></thead>
       <tbody>
         
-        @foreach ($data['item']['uraian'] as $k => $v )
+        @foreach ($data['item'] as $k => $v )
             
         <tr>
           <td style="text-align: center">{{ $loop->iteration }}</td>
-            <td >{{ $data['item']['uraian'][$k] }}</td>
-            <td style="text-align: center">{{ $data['item']['volume'][$k] . ' '. $data['item']['satuan'][$k]  }}</td>
-            <td style="text-align: right"> {{ number_format($data['item']['harga_negosiasi'][$k], 0, ',', '.') }}</td>
-            <td style="text-align: right"> {{ number_format($data['item']['volume'][$k] * $data['item']['harga_negosiasi'][$k], 0, ',', '.') }}</td>
+            <td >{{ $v['uraian'] }}</td>
+            <td style="text-align: center">{{ $v['volume'] . ' '. $v['satuan']  }}</td>
+            <td style="text-align: right"> {{ number_format($v['harga_negosiasi'], 0, ',', '.') }}</td>
+            <td style="text-align: right"> {{ number_format($v['volume'] * $v['harga_negosiasi'], 0, ',', '.') }}</td>
         </tr>
         @endforeach
         <tr>
@@ -184,7 +184,7 @@
           <td style="text-align: right" colspan="4">Dibulatkan</td>
             <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
         </tr>
-        @if(count($data['item']['uraian']) > 8)
+        @if(count($v) > 8)
         <tr style="height: 200px">
           <td style="height: 200px; text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, -2))) }} Rupiah )</td>
         </tr>
