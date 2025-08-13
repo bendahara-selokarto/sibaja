@@ -96,16 +96,16 @@
                 <tr>
                     <td>Dibayarkan</td>
                     <td>Rp. </td>
-                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->harga_negosiasi, -2))}},-</td>
+                    <td style="text-align: right">{{formatNumber(round($harga_negosiasi, -2))}},-</td>
                 </tr>
             </table>
 
             <div style="margin-top: 10px;"><strong>Perincian Potongan :</strong></div>
             <table style="width: 100%; margin-top: 5px;">
                 <tr><td>1. PPh 21</td><td>Rp. </td><td style="text-align: right"></td></tr>
-                <tr><td>2. PPh 22</td><td>Rp. </td><td style="text-align: right">{{formatNumber($negosiasiHarga->pph_22)}},-</td></tr>
+                <tr><td>2. PPh 22</td><td>Rp. </td><td style="text-align: right">{{formatNumber($negosiasiHarga->pph_22 ?? 0)}},-</td></tr>
                 <tr><td>3. PPh 23</td><td>Rp. </td><td style="text-align: right"></td></tr>
-                <tr><td>4. PPN</td><td>Rp. </td> <td style="text-align: right">{{formatNumber($negosiasiHarga->ppn)}},-</td></tr>
+                <tr><td>4. PPN</td><td>Rp. </td> <td style="text-align: right">{{formatNumber($negosiasiHarga->ppn ?? 0)}},-</td></tr>
             </table>
         </td>
     </tr>

@@ -36,18 +36,18 @@ onerror="this.src='{{ asset('') }}'"
             <td style="border: 1px solid black; text-align: center;">HARGA</td>
             <td style="border: 1px solid black; text-align: center;">JUMLAH</td>
         </tr>
-        @foreach ($item['uraian'] as $k => $v )
+        @foreach ($item['uraian'] as $v )
             <tr style="border: 1px solid black;">
                 <td style="text-align: center; border: 1px solid black;">{{ $loop->iteration }}</td>
-                <td style="border: 1px solid black;">{{ $item['uraian'][$k] }}</td>
-                <td style="text-align: center; border: 1px solid black;">{{ $item['volume'][$k] . ' '. $item['satuan'][$k]  }}</td>
-                <td style="text-align: right; border: 1px solid black;">{{ number_format($item['harga_negosiasi'][$k], 0, ',', '.') }}</td>
-                <td style="text-align: right; border: 1px solid black;">{{ number_format($item['volume'][$k] * $item['harga_negosiasi'][$k], 0, ',', '.') }}</td>
+                <td style="border: 1px solid black;">{{ $item['uraian'] }}</td>
+                <td style="text-align: center; border: 1px solid black;">{{ $item['volume'] . ' '. $item['satuan'] }}</td>
+                <td style="text-align: right; border: 1px solid black;">{{ number_format($item['harga_negosiasi'], 0, ',', '.') }}</td>
+                <td style="text-align: right; border: 1px solid black;">{{ number_format($item['jumlah_negosiasi'], 0, ',', '.') }}</td>
             </tr>
         @endforeach
         <tr style="border: 1px solid black;">
             <td style="text-align: right; border: 1px solid black;" colspan="4">Jumlah</td>
-            <td style="text-align: right; border: 1px solid black;">{{ number_format($negosiasiHarga['harga_negosiasi'] , 0, ',', '.') }}</td>
+            <td style="text-align: right; border: 1px solid black;">{{ number_format($harga_negosiasi , 0, ',', '.') }}</td>
         </tr>
         <tr style="border: 1px solid black;">
             <td style="text-align: right; border: 1px solid black;" colspan="4">PPN</td>

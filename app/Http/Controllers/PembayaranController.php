@@ -113,11 +113,21 @@ class PembayaranController extends Controller
 
         $item = $items;
 
-        $negosiasiHarga->ppn = $negosiasiHarga->harga_negosiasi *  config('pajak.ppn') ;
+        $harga_negosiasi = $items->sum('jumlah_negosiasi');
 
-        $negosiasiHarga->pph_22 = $negosiasiHarga->harga_negosiasi *  config('pajak.pph_22') ;
+        $const_ppn = config('pajak.ppn');
 
-        $negosiasiHarga->total = $negosiasiHarga->harga_negosiasi + $negosiasiHarga->ppn + $negosiasiHarga->pph_22;
+        $const_pph22 = config('pajak.pph_22');
+
+        $const_pajak = $const_ppn + $const_pph22;
+
+        $pajak = $const_pajak * $harga_negosiasi;
+
+        $negosiasiHarga->ppn = $harga_negosiasi * $const_ppn;
+
+        $negosiasiHarga->pph_22 = $harga_negosiasi * $const_pph22;
+
+        $negosiasiHarga->total = $harga_negosiasi * ( 1 + $const_pajak );
         
         $pemberitahuan = $kegiatan->pemberitahuan;
         
@@ -130,6 +140,8 @@ class PembayaranController extends Controller
         'penyedia',
         'pemberitahuan',
         'negosiasiHarga',
+        'harga_negosiasi',
+        'pajak',
         'item',
         'tgl',
         'tgl_invoice',
