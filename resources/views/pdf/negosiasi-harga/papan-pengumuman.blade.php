@@ -58,7 +58,7 @@
         <tr>
             <td style="vertical-align:top">Harga Penawaran</td>
             <td style="vertical-align:top">: </td>
-            <td style="vertical-align:top">Rp. {{ number_format(round($data['nilai_total_penawaran'], -2),0 ,"," ,".")}},- <i> ( {{ Terbilang::make(round($data['nilai_total_penawaran'], -2)) }} rupiah )</i></td>
+            <td style="vertical-align:top">Rp. {{ number_format(round($data['penawaranHarga']->harga_total, -2),0 ,"," ,".")}},- <i> ( {{ Terbilang::make(round($data['penawaranHarga']->harga_total, -2)) }} rupiah )</i></td>
         </tr>
         <tr>
             <td style="vertical-align:top">Harga Negosiasi</td>

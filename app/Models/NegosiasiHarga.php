@@ -59,21 +59,6 @@ class NegosiasiHarga extends Model
         return Carbon::parse($this->tgl_akhir_perjanjian)->translatedFormat('j F Y');
     }
 
-    public function getPpnAttribute()
-    {
-        return $this->harga_negosiasi * config('pajak.ppn');
-    }
-
-    public function getPph22Attribute()
-    {
-        return $this->harga_negosiasi * config('pajak.pph_22');
-    }
-
-    public function getHargaTotalAttribute()
-    {
-        return round($this->harga_negosiasi + $this->ppn + $this->pph22, -2);
-    }
-
     public function getJumlahHariKerjaAttribute()
     {
         return Carbon::parse($this->tgl_akhir_perjanjian)->diffInDays(Carbon::parse($this->tgl_persetujuan)) * -1;

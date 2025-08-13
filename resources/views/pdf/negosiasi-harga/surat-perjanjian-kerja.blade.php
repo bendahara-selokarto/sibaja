@@ -99,12 +99,12 @@ Nilai pekerjaan yang disepakati oleh kedua pihak sebesar:
             <td style="border: 1px solid black; vertical-align:top; text-align:center">1</td>
             <td style="border: 1px solid black; vertical-align:top">Pengadaan Material Kegiatan {{$data['kegiatan']->kegiatan}}</td>
             <td style="border: 1px solid black; vertical-align:top">1 paket</td>
-            <td style="border: 1px solid black; vertical-align:top; text-align:right">{{(formatNumber(round($data['negosiasiHarga']->jumlah_total, -2)))}}</td>
-            <td style="border: 1px solid black; vertical-align:top; text-align:right">{{(formatNumber(round($data['negosiasiHarga']->jumlah_total, -2)))}}</td>
+            <td style="border: 1px solid black; vertical-align:top; text-align:right">{{(formatNumber(round($data['negosiasiHarga']->harga_total, -2)))}}</td>
+            <td style="border: 1px solid black; vertical-align:top; text-align:right">{{(formatNumber(round($data['negosiasiHarga']->harga_total, -2)))}}</td>
         </tr>
         <tr>
             <td colspan="4" style="border: 1px solid black; vertical-align:top; text-align:right"><strong>Jumlah</strong></td>
-            <td style="border: 1px solid black; vertical-align:top; text-align:right"><strong>{{(formatNumber(round($data['negosiasiHarga']->jumlah_total, -2)))}}</strong></td>
+            <td style="border: 1px solid black; vertical-align:top; text-align:right"><strong>{{(formatNumber(round($data['negosiasiHarga']->harga_total, -2)))}}</strong></td>
         </tr>       
     </tbody>
 </table>
@@ -176,7 +176,7 @@ Jangka waktu pelaksanaan adalah selama {{ $data['negosiasiHarga']->jumlah_hari_k
 <ol style="text-align: justify;margin-top:0px" type="1">
     <li>Jika terjadi perselisihan antara  kedua belah pihak, maka pada dasarnya akan diselesaikan secara musyawarah. </li>
     <li>Jika dalam musyawarah tersebut tidak ditemukan kesepakatan, maka kedua belah pihak sepakat untuk penyelesaikan menurut prosedur hukum yang berlaku melalui Kantor Kepaniteraan Pengadilan. </li>
-    <li>Segala akibat yang terjadi dari pelaksanaan Perjanjian ini, kedua belah pihak telah memilih tempat kedudukan (domisili) yang tetap dan sah di Kantor Kepaniteraan Pengadilan Negeri Tanah Paser. </li>
+    <li>Segala akibat yang terjadi dari pelaksanaan Perjanjian ini, kedua belah pihak telah memilih tempat kedudukan (domisili) yang tetap dan sah di Kantor Kepaniteraan Pengadilan Negeri Batang. </li>
     
 </ol>
 

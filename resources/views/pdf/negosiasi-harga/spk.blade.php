@@ -166,7 +166,7 @@
         @endforeach
         <tr>
           <td style="text-align: right" colspan="4">Jumlah</td>
-            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_negosiasi , 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_sebelum_pajak , 0, ',', '.') }}</td>
         </tr>
         <tr>
           <td style="text-align: right" colspan="4">PPN</td>

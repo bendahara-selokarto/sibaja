@@ -175,13 +175,14 @@ class NegosiasiHargaController extends Controller
     {
         
         $nomor_surat =  '/' .Auth::user()->kode_desa . '/' . Auth::user()->tahun_anggaran ;
-        
+         
         $kegiatan = Kegiatan::with('penawaran')
                                 ->with('pemberitahuan')
                                 ->with('negosiasiHarga')
                                 ->find( $id);
        
         $pemberitahuan = $kegiatan->pemberitahuan;
+         
         $pemberitahuan->load('belanjas');
         $penawaranHarga = $kegiatan->penawaran()->firstWhere('is_winner' , true);
         $penawaranHarga->load('hargaPenawaran');
@@ -206,36 +207,26 @@ class NegosiasiHargaController extends Controller
         $penawaranHarga->tgl_penawaran =  Carbon::parse($penawaranHarga->tgl_penawaran);
         $ppn = config('pajak.ppn');
         $pph_22 = config('pajak.pph_22');
-        $nilai_ppn = $penawaranHarga->nilai_penawaran * $ppn;
-        $nilai_pph_22 = $penawaranHarga->nilai_penawaran * $pph_22;
+        $jumlah_penawaran = $items->sum('jumlah_penawaran');
+        $nilai_ppn = $jumlah_penawaran  * $ppn;
+        $nilai_pph_22 = $jumlah_penawaran * $pph_22;
         $penawaranHarga->ppn = $nilai_ppn;
         $penawaranHarga->pph_22 = $nilai_pph_22;
-        $penawaranHarga->harga_total = floor($penawaranHarga->nilai_penawaran + $nilai_ppn + $nilai_pph_22); 
-        
-        $nilai_total_penawaran = $penawaranHarga->nilai_penawaran + ($penawaranHarga->nilai_penawaran * config('pajak.ppn')) + ($penawaranHarga->nilai_penawaran * config('pajak.pph_22'));
-        if(!$pemberitahuan){
-            flash()->error('pemberitahuna belum diset');
-            return redirect()->back();
-        };
-        if(!$penawaranHarga){
-            flash()->error('penawaran harga belum diset');
-            return redirect()->back();
-        };
-        if(!$negosiasiHarga){
-            flash()->error('Negosiasi Harga belum diset');
-            return redirect()->back();
-        };
-
-        $negosiasiHarga->ppn = $negosiasiHarga->harga_negosiasi *  config('pajak.ppn') ;
-        $negosiasiHarga->pph_22 = $negosiasiHarga->harga_negosiasi *  config('pajak.pph_22');
-        $negosiasiHarga->harga_total = round($negosiasiHarga->harga_negosiasi + $negosiasiHarga->ppn + $negosiasiHarga->pph_22, -2);      
+        $penawaranHarga->harga_sebelum_pajak = $jumlah_penawaran;
+        $penawaranHarga->harga_total = round($jumlah_penawaran * (1 + $ppn + $pph_22), -2, PHP_ROUND_HALF_DOWN); 
+          
+        $jumlah_negosiasi = $items->sum('jumlah_negosiasi');
+        $negosiasiHarga->ppn = $jumlah_negosiasi * $ppn;
+        $negosiasiHarga->pph_22 = $jumlah_negosiasi *  $pph_22;
+        $negosiasiHarga->harga_sebelum_pajak = $jumlah_negosiasi;      
         $negosiasiHarga->tgl_persetujuan = Carbon::parse($negosiasiHarga->tgl_persetujuan);
         $negosiasiHarga->tgl_negosiasi = Carbon::parse($negosiasiHarga->tgl_negosiasi);
         $negosiasiHarga->tgl_perjanjian = $negosiasiHarga->tgl_persetujuan;
         $negosiasiHarga->tgl_akhir_perjanjian = Carbon::parse($negosiasiHarga->tgl_akhir_perjanjian);
         $negosiasiHarga->jumlah_hari_kerja = $negosiasiHarga->tgl_akhir_perjanjian->diffInDays($negosiasiHarga->tgl_perjanjian) * -1;
+        $negosiasiHarga->harga_total = round($jumlah_negosiasi * (1 + $ppn + $pph_22), -2 , PHP_ROUND_HALF_DOWN);  
         
-        $negosiasi = $negosiasiHarga->item;
+        $negosiasi = $items;
 
         $pemberitahuan->no_spk = $pemberitahuan->no_pbj . '/SPK' . $nomor_surat;
         $pemberitahuan->no_ba_negosiasi = $pemberitahuan->no_pbj . '/BA-NEGO' . $nomor_surat;
@@ -248,12 +239,10 @@ class NegosiasiHargaController extends Controller
             'pemberitahuan' => $pemberitahuan,
             'penawaranHarga' => $penawaranHarga,
             'negosiasiHarga' => $negosiasiHarga,
-            'nilai_total_penawaran' => $nilai_total_penawaran,
-            'item' => json_decode($items, true),
+            'item' => $items,
         ];
 
         $pdf = Pdf::loadView('pdf.negosiasi-harga', compact('data'));
-        // Replace invalid filename characters with underscore
         $filename = '3. NEGOSIASI HARGA - (' . $kegiatan->kegiatan . ')';
         $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
 

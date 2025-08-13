@@ -35,16 +35,16 @@
                 <td>{{ $v['uraian'] }}</td>
                 <td>{{ $v['volume'] . ' '. $v['satuan'] }}</td>
                 <td style="text-align: right"> {{ number_format($v['harga_penawaran'], 0, ',', '.') }}</td>
-                <td style="text-align: right"> {{ number_format($v['volume'] * $v['harga_penawaran'], 0, ',', '.') }}</td>
+                <td style="text-align: right"> {{ number_format($v['jumlah_penawaran'], 0, ',', '.') }}</td>
                 <td style="text-align: right"> {{ number_format($v['harga_negosiasi'], 0, ',', '.' )}}</td>
-                <td style="text-align: right"> {{ number_format($v['volume'] * $v['harga_negosiasi'], 0, ',', '.') }}</td>
+                <td style="text-align: right"> {{ number_format($v['jumlah_negosiasi'], 0, ',', '.') }}</td>
             </tr>
              @endforeach
              <tr>
             <td style="text-align: right" colspan="4">Jumlah</td>
-            <td style="text-align: right">{{ number_format($data['penawaranHarga']['nilai_penawaran'] , 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format($data['penawaranHarga']->harga_sebelum_pajak , 0, ',', '.') }}</td>
             <td style="text-align: right; background-color:rgb(216, 216, 216);"></td>
-            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_negosiasi , 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_sebelum_pajak , 0, ',', '.') }}</td>
             </tr>
             <tr>
             <td style="text-align: right" colspan="4">PPN</td>

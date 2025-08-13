@@ -213,12 +213,10 @@ class PenawaranHargaController extends Controller
                     'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
                 ];
             });
-            $nilaiPenawaranPemenang = $penawaranPemenang->sum('jumlah');
 
             $pembandingId = collect($penawaran)->firstWhere('is_winner', false)->id;
             $pembanding = Penawaran::with('hargaPenawaran')->find($pembandingId);
             $penawaranPembanding = $pembanding->hargaPenawaran->map(function ($harga, $i) use ($belanja){
-                
                 return [
                     'uraian'       => $belanja[$i]->uraian ?? null,
                     'volume'       => $belanja[$i]->volume ?? null,
@@ -227,6 +225,7 @@ class PenawaranHargaController extends Controller
                     'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
                 ];
             });
+
 
             $nilaiPenawaranPembanding = $penawaranPembanding->sum('jumlah');
 
@@ -240,16 +239,14 @@ class PenawaranHargaController extends Controller
             }
 
           
-                
-            $jumlah = $nilaiPenawaranPemenang;
+            $jumlah = $penawaranPemenang->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
+            
             $ppn_1 = $jumlah * config('pajak.ppn');
             $pph_22_1 = $jumlah * config('pajak.pph_22');
             $jumlah_total_1 = $jumlah + $ppn_1 + $pph_22_1;
             $item = $penawaranPemenang;
-
-            // $item->dd();
-
-            $jumlah_2 = $nilaiPenawaranPembanding;
+            
+            $jumlah_2 = $penawaranPembanding->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
             $ppn_2 = $jumlah_2 * config('pajak.ppn');
             $pph_22_2 = $jumlah_2 * config('pajak.pph_22');
             $jumlah_total_2 = $jumlah_2 + $ppn_2 + $pph_22_2;

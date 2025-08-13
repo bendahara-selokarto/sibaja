@@ -41,43 +41,4 @@ class Penawaran extends Model
         return Carbon::parse($this->tgl_penawaran)->translatedFormat('j F Y');
     }
 
-    public function getPpnAttribute()
-    {
-        return $this->nilai_penawaran * config('pajak.ppn');
-    }
-
-    public function getPph22Attribute()
-    {
-        return $this->nilai_penawaran * config('pajak.pph_22');
-    }
-
-   public function getHargaTotalAttribute()
-        {
-            $this->loadMissing('pemberitahuan');
-
-            // Ambil data belanja dari JSON
-            $dataBelanja = collect(json_decode($this->pemberitahuan->belanjas, true));
-
-            // Hitung total langsung dari JSON
-            $total = $dataBelanja->map(function ($item) {
-                $volume = (float) ($item['volume'] ?? 0);
-                $hargaSatuan = (float) ($item['harga_satuan'] ?? 0);
-                return $volume * $hargaSatuan;
-            })->sum();
-
-            return $total;
-        }
-
-
-
-    public function getNilaiPenawaranAttribute()
-    {
-        return $this->relationLoaded('hargaPenawaran')
-            ? $this->hargaPenawaran->sum('harga_satuan')
-            : $this->hargaPenawaran()->sum('harga_satuan');
-    }
-
-
-    
-    
 }

@@ -107,15 +107,11 @@ class PembayaranController extends Controller
         
         $penyedia = Penyedia::find($penyediaId);
 
-        try {
-            $tgl_invoice =  Carbon::parse($kegiatan->pembayaran->tgl_invoice);
-            $tgl =  Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms);
-            $item = $items;
-            
-        } catch (\Exception $e) {
-            flash()->error('belum ada pembayaran');
-            return redirect()->back();
-        }
+        $tgl_invoice =  Carbon::parse($kegiatan->pembayaran->tgl_invoice);
+
+        $tgl =  Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms);
+
+        $item = $items;
 
         $negosiasiHarga->ppn = $negosiasiHarga->harga_negosiasi *  config('pajak.ppn') ;
 
@@ -127,6 +123,8 @@ class PembayaranController extends Controller
         
         $kegiatan->nomor = $kegiatan->pemberitahuan->no_pbj;
 
+        $pembayaran =  $kegiatan->pembayaran;
+        
         $pdf = Pdf::loadView('pdf.pembayaran.kuitansi', compact(
         'kegiatan',
         'penyedia',
@@ -134,7 +132,8 @@ class PembayaranController extends Controller
         'negosiasiHarga',
         'item',
         'tgl',
-        'tgl_invoice'
+        'tgl_invoice',
+        'pembayaran'
         ));
 
         $filename = '4. PEMBAYARAN - (' . $kegiatan->kegiatan . ')';
