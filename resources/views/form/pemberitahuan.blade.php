@@ -35,8 +35,9 @@
                                         id="no_pbj" 
                                         name="no_pbj" 
                                         type="number" 
-                                        value="{{ old('no_pbj', $pemberitahuan->no_pbj ?? '') }}" 
+                                        value="{{ old('no_pbj', $pemberitahuan?->no_pbj ?? $no_pbj ?? '') }}" 
                                     />
+
 
                                     <x-input-error class="mt-2" :messages="$errors->get('no_pbj')" />
                                 </div>

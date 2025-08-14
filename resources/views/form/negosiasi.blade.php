@@ -25,30 +25,30 @@
 
                                 <x-text-input id="id" name="kegiatan_id" type="hidden" class="mt-1 block w-full" value="{{ $kegiatan->id }}" />
 
-                                <div>
-                                    <x-input-label for="tgl_negosiasi" :value="__('Tanggal Negosiasi Harga')" />
-                                    <x-text-input id="tgl_negosiasi" name="tgl_negosiasi" type="date"
-                                        max="{{ Auth::user()->tahun_anggaran . '-12-31' }}"
-                                        class="mt-1 block"
-                                        required
-                                        {{-- autocomplete="tgl_negosiasi" --}}
-                                        value="{{ old('tgl_negosiasi', isset($negosiasi) ? $negosiasi->tgl_negosiasi : '') }}"
-                                    />
-                                    <x-input-error class="mt-2" :messages="$errors->get('tgl_negosiasi')" />
-                                </div>
+                                    <div>
+                                        <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
+                                        <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date"
+                                            max="{{ Auth::user()->tahun_anggaran . '-12-31' }}"
+                                            class="mt-1 block"
+                                            min="{{ $kegiatan->tgl }}"
+                                            required
+                                            {{-- autocomplete="tgl_persetujuan" --}}
+                                            value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
+                                        />
+                                        <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
+                                    </div>
+                                    <div>
+                                        <x-input-label for="tgl_negosiasi" :value="__('Tanggal Negosiasi Harga')" />
+                                        <x-text-input id="tgl_negosiasi" name="tgl_negosiasi" type="date"
+                                            max="{{ Auth::user()->tahun_anggaran . '-12-31' }}"
+                                            class="mt-1 block"
+                                            required
+                                            {{-- autocomplete="tgl_negosiasi" --}}
+                                            value="{{ old('tgl_negosiasi', isset($negosiasi) ? $negosiasi->tgl_negosiasi : '') }}"
+                                        />
+                                        <x-input-error class="mt-2" :messages="$errors->get('tgl_negosiasi')" />
+                                    </div>
 
-                                <div>
-                                    <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
-                                    <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date"
-                                        max="{{ Auth::user()->tahun_anggaran . '-12-31' }}"
-                                        class="mt-1 block"
-                                        min="{{ $kegiatan->tgl }}"
-                                        required
-                                        {{-- autocomplete="tgl_persetujuan" --}}
-                                        value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
-                                    />
-                                    <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
-                                </div>
 
                                 <div>
                                     <x-input-label for="tgl_akhir_perjanjian" :value="__('Tanggal Akhir Perjanjian')" />

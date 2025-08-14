@@ -12,22 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PemberitahuanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        // $kegiatan = Kegiatan::with('pemberitahuan')->find(8);
-        // $kegiatan = Kegiatan::find(8);
-        // $pemberitahuan = $kegiatan->pemberitahuan;
-        // $penyedia = $pemberitahuan->penyedia;
-       
-        // return view('menu.pemberitahuan' , ['kegiatan' => $kegiatan , 'pemberitahuan' => $pemberitahuan, "penyedia" => $penyedia]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create($id)
     {
         $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
@@ -75,26 +60,20 @@ class PemberitahuanController extends Controller
         ]);
 
         $data['pekerjaan'] = $pekerjaan;
-        $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan'); // otomatis parse ke Carbon
+
+        $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan'); 
 
         $saveSpem = Pemberitahuan::create($data);
+
         $saveSpem->belanjas()->createMany($belanja->toArray());
         
         $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
+
         return redirect()->route('kegiatan.show' , $request->kegiatan_id);
         
 
     }
- 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-   
+     
     public function edit(string $id)
     {
         $pemberitahuan = Pemberitahuan::with('belanjas')->find($id);

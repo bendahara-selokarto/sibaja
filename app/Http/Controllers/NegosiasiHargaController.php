@@ -122,7 +122,11 @@ class NegosiasiHargaController extends Controller
 
         $kegiatan->tgl = Carbon::parse($penawaranHarga->tgl_penawaran)->format('Y-m-d');
 
-        // $kegiatan->harga_penawaran = $items->sum(fn ($i) => $i['volume'] * $i['harga_penawaran']);
+        $negosiasi->tgl_negosiasi = Carbon::parse($negosiasi->tgl_negosiasi)->format('Y-m-d');
+
+        $negosiasi->tgl_persetujuan = Carbon::parse($negosiasi->tgl_persetujuan)->format('Y-m-d');
+
+        $negosiasi->tgl_akhir_perjanjian = Carbon::parse($negosiasi->tgl_akhir_perjanjian)->format('Y-m-d');
 
        return view('form.negosiasi', compact('kegiatan', 'items' , 'negosiasi'));
     }

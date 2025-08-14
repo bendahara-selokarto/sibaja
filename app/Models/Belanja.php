@@ -20,7 +20,7 @@ class Belanja extends Model
 
     public function pemberitahuan()
     {
-        return $this->belongsTo(pemberitahuan::class, 'pemberitahuan_id');
+        return $this->belongsTo(Pemberitahuan::class, 'pemberitahuan_id');
     }
     public function hargaPenawaran()
     {

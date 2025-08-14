@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('kode_desa')->nullable();
             $table->string('pekerjaan')->nullable();
             $table->string('rekening_apbdes')->nullable();
+            $table->json('penyedia')->nullable();
             $table->dateTime('tgl_surat_pemberitahuan')->nullable();
             $table->dateTime('tgl_batas_akhir_penawaran')->nullable();
             $table->integer('no_pbj')->uniqid();

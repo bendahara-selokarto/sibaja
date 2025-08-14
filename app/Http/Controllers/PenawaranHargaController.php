@@ -11,8 +11,6 @@ use App\Models\PenawaranHarga;
 use App\Models\Belanja;
 use App\Models\HargaPenawaran;
 use App\Models\Penawaran;
-use App\Models\Penawaran_1;
-use App\Models\Penawaran_2;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
@@ -34,12 +32,12 @@ class PenawaranHargaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($id, $id2)
+    public function create($kegiatanId, $penyediaId)
     {
         
-        $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
+        $kegiatan = Kegiatan::with('pemberitahuan')->find($kegiatanId);
         
-        $penyedia = Penyedia::find($id2);
+        $penyedia = Penyedia::find($penyediaId);
               
         $pemberitahuan = $kegiatan->pemberitahuan;
 
@@ -55,7 +53,6 @@ class PenawaranHargaController extends Controller
             'kegiatan' => $kegiatan,
             'pemberitahuan' => $pemberitahuan,
             'penyedia' => $penyedia,
-            'penawaran1' => '',
             'belanja' => $belanja
         ]);
     }
@@ -113,6 +110,7 @@ class PenawaranHargaController extends Controller
         $kegiatan = Kegiatan::with('pemberitahuan', 'penawaran')->findOrFail($id);
 
         $pemberitahuan = $kegiatan->pemberitahuan;
+
         $penyedia = $kegiatan->penawaran->penyedia;
 
 
