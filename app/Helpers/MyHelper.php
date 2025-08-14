@@ -24,3 +24,8 @@ if (!function_exists('tanggal_indo')) {
     {
         return number_format($number, 0, ',', '.');
     }
+
+    function hari($tanggal): string
+    {
+        return \Carbon\Carbon::parse($tanggal)->translatedFormat('l');
+    }

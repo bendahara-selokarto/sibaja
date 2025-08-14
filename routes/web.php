@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::get('kegiatan/detail/{id}', [KegiatanController::class , 'show'])->name('kegiatan.show');
     Route::delete('menu/kegiatan/{id}', [KegiatanController::class , 'destroy'])->name('kegiatan.destroy');
     
+    Route::get('kegiatan/rekap/{id}', [KegiatanController::class , 'rekap'])->name('kegiatan.rekap');
+    
     Route::get('menu/penyedia', [PenyediaController::class , 'index'])->middleware(CheckDefaultKode::class)->name('menu.penyedia');
     Route::get('penyedia/create', [PenyediaController::class , 'create'])->name('penyedia.create');
     Route::get('penyedia/edit/{id}', [PenyediaController::class , 'edit'])->name('penyedia.edit');

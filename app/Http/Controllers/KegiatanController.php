@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pemberitahuan;
-use App\Models\Penawaran_1;
-use App\Models\Penawaran_2;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 use function PHPUnit\Framework\isEmpty;
 
 class KegiatanController extends Controller
@@ -183,5 +181,30 @@ class KegiatanController extends Controller
             flash()->success('kegiatan berhasil diahpus');
        
         return redirect()->route('menu.kegiatan');
+    }
+
+    public function rekap(string $id){
+        $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran' , 'negosiasiHarga' , 'pembayaran' )->find($id);
+
+        $pemberitahuan = $kegiatan->pemberitahuan;
+
+        $penawaran = $kegiatan->penawaran;
+
+        $namaPenyedia1 = optional(
+            Penyedia::find(optional($kegiatan->penawaran->firstWhere('is_winner', true))->penyedia_id)
+        )->nama_penyedia;
+
+        $namaPenyedia2 = optional(
+            Penyedia::find(optional($kegiatan->penawaran->firstWhere('is_winner', false))->penyedia_id)
+        )->nama_penyedia;
+
+        $negosiasiHarga = $kegiatan->negosiasiHarga;
+
+        $pembayaran = $kegiatan->pembayaran;
+
+        $pdf = Pdf::loadView('pdf.rekap' , compact('kegiatan', 'pemberitahuan' , 'penawaran','namaPenyedia1' , 'namaPenyedia2' , 'negosiasiHarga' , 'pembayaran'));
+        
+        return $pdf->stream();
+       
     }
 }

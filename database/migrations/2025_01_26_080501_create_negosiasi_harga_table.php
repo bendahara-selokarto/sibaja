@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('rekening_apbdes')->nullable();
             $table->string('kode_desa')->nullable();
             $table->dateTime('tgl_negosiasi')->nullable();
-            $table->string('harga_negosiasi')->nullable();
             $table->dateTime('tgl_persetujuan')->nullable();
             $table->dateTime('tgl_perjanjian')->nullable();
             $table->dateTime('tgl_akhir_perjanjian')->nullable();

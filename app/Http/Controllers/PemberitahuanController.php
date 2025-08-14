@@ -50,7 +50,7 @@ class PemberitahuanController extends Controller
             ];
         });
 
-        $pekerjaan =  collect($belanja)->implode('uraian',',');
+        $pekerjaan =  collect($belanja)->implode('uraian',', ');
         
          $data = $request->only([
         'rekening_apbdes',

@@ -92,7 +92,7 @@
                                                     <x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">
                                                         Cetak
                                                     </x-bladewind::button>
-                                                </a>
+                                                </a>                                                
                                                 @endif
                                         </div>
                                     @endif
@@ -176,6 +176,10 @@
                                                 <a target="_blank" href="{{ route('pembayaran.render', $kegiatan['id']) }}">
                                                     <x-bladewind::button size='tiny' icon="printer" can_submit="true" color="indigo">
                                                         Cetak
+                                                    </x-bladewind::button>                                                    
+                                                </a>
+                                                <a target="_blank" href="{{ route('kegiatan.rekap', $kegiatan['id']) }}">
+                                                    <x-bladewind::button size='tiny' icon="printer" can_submit="true">
                                                     </x-bladewind::button>
                                                 </a>
                                             @endif

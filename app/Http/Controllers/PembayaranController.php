@@ -60,6 +60,9 @@ class PembayaranController extends Controller
         $pembayaran = Pembayaran::find($id);
 
         $pembayaran->tgl_pembayaran_cms = $request->tgl_pembayaran_cms;
+
+        $pembayaran->tgl_invoice = $request->tgl_invoice;
+
         $pembayaran->save();
         $kegiatan_id = $pembayaran->kegiatan_id;
 
