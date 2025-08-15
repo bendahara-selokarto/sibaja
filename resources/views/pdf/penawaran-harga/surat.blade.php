@@ -100,7 +100,7 @@ onerror="this.src='{{ asset('') }}'"
 
         
         <p style="text-align: justify">Menanggapi Surat permintaan penawaran dari Ketua Tim Pelaksana Kegiatan {{ $kegiatan->kegiatan }} Nomor {{ $pemberitahuan->no_pbj }}/Pemb/{{ Auth::user()->kode_desa }}/ {{ Auth::user()->tahun_anggaran }} tanggal {{ Illuminate\Support\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->isoFormat('D MMMM Y')}} perihal Pemberitahuan permintaan penawaran, maka bersama ini kami mengajukan penawaran harga untuk melaksanakan pekerjaan tersebut.</p>
-    <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format(round($jumlah_total_1,-2) , 0, ',', '.') }} ({{ Terbilang::make(round($jumlah_total_1, -2))  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
+    <p style="text-align: justify">Adapun harga penawaran yang kami ajukan adalah sebesar <strong>Rp. {{ number_format(round($jumlah_total_1,-3) , 0, ',', '.') }} ({{ Terbilang::make(round($jumlah_total_1, -2))  }} rupiah)</strong>   dengan rincian sebagaimana terlampir.</p>
     <p>Sesuai dengan persyaratan yang diminta bersama ini kami sampaikan :</p>
     <ol type="a">
         <li>Form isian pengadaan barang/jasa</li>

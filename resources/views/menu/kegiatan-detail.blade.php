@@ -26,7 +26,11 @@
                             
                             <tr>
                                 <td>
-                                    <div class="mt-2 font-semibold">1. Pemberitahuan kepada 2 Penyedia</div>
+                                    <div class="mt-2 font-semibold">1. Pemberitahuan kepada 2 Penyedia
+                                        @if(isset($kegiatan->pemberitahuan))
+                                        <x-bladewind::icon name="check-badge" type="solid" class="text-green-500" />                                       
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="mb-4">
                                     @if (!$kegiatan->pemberitahuan)
@@ -64,7 +68,11 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div class="mt-2 font-semibold">2. Penawaran Harga dari 2 Penyedia</div>
+                                    <div class="mt-2 font-semibold">2. Penawaran Harga dari 2 Penyedia
+                                        @if(!empty($btn['penawaran-create']) && $btn['penawaran-create'])
+                                        <x-bladewind::icon name="check-badge" type="solid" class="text-green-500" />                                       
+                                        @endif
+                                    </div>
                                 </td>
                                 <td colspan="2">
                                     @if ($kegiatan->pemberitahuan  )
@@ -110,7 +118,11 @@
                             <tr>
                                 <td>
 
-                                    <div class="mt-2 font-semibold">3. Negosiasi Harga dengan Penyedia Terpilih</div>
+                                    <div class="mt-2 font-semibold">3. Negosiasi Harga dengan Penyedia Terpilih
+                                        @if(!empty($btn['negosiasi-render']))
+                                        <x-bladewind::icon name="check-badge" type="solid" class="text-green-500" />                                       
+                                        @endif
+                                    </div>
                                 </td>
                                 <td colspan="2">
                                         <div class="mt-4">
@@ -152,7 +164,11 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div class="mt-2 font-semibold">4. Pembayaran</div>
+                                    <div class="mt-2 font-semibold">4. Pembayaran
+                                        @if(!empty($btn['pembayaran-render']))
+                                        <x-bladewind::icon name="check-badge" type="solid" class="text-green-500" />                                       
+                                        @endif
+                                    </div>
                                 </td>
                                 <td colspan="2">
                                     <div class="mt-4">

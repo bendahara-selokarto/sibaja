@@ -186,13 +186,11 @@ class PenawaranHargaController extends Controller
     public function destroy(string $id)
     {
         $penawaran = Penawaran::where('kegiatan_id', $id)->get();
-        // $penawaran_1 = Penawaran_1::where('kegiatan_id', $id)->first();
-        // $penawaran_2 = Penawaran_2::where('kegiatan_id', $id)->first();
-        // $penawaran_1->delete();
-        // $penawaran_2->delete();
+       
         $penawaran->each->delete();
 
         flash()->success('Penawaran berhasil dihapus.');
+        
         return redirect()->route('kegiatan.show', ['id' => $id]);
     }
     public function render(string $id)
