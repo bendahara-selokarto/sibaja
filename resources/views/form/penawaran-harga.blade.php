@@ -14,9 +14,13 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    <form action="{{ route('penawaran.store') }}" class="survey" method="POST" id="form_id">
+                    <form action="{{ isset($isEdit) ? route('penawaran.update' , $kegiatan->id) : route('penawaran.store') }}" class="survey" method="POST" id="form_id">
                         @method('post')
                         @csrf
+                        @if(isset($isEdit))
+                        @method('PATCH')
+
+                        @endif
                         <div>
                             <x-input-label for="penyedia" :value="__('Penyedia')" />
                             <input type="text" value="{{ $penyedia->nama_penyedia }}" readonly>

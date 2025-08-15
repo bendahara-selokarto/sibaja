@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('penawaran-harga', [PenawaranHargaController::class , 'index'])->name('penawaran');
     Route::post('penawaran-harga/create/{id}/{id2}', [PenawaranHargaController::class , 'create'])->name('penawaran.create');
     Route::post('penawaran-harga/store', [PenawaranHargaController::class , 'store'])->name('penawaran.store');
-    Route::post('penawaran-harga/edit/{id}', [PenawaranHargaController::class , 'edit'])->name('penawaran.edit');
+    Route::post('penawaran-harga/edit/{id}/{id2}', [PenawaranHargaController::class , 'edit'])->name('penawaran.edit');
     Route::patch('penawaran-harga/update/{id}', [PenawaranHargaController::class , 'update'])->name('penawaran.update');
     Route::get('penawaran-harga/render/{id}', [PenawaranHargaController::class , 'render'])->name('penawaran.render');
     Route::delete('penawaran-harga/destroy/{id}', [PenawaranHargaController::class , 'destroy'])->name('penawaran.destroy');

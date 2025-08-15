@@ -85,6 +85,7 @@ class PenawaranHargaController extends Controller
             'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
             'no_penawaran' => $request->no_penawaran,
             'is_winner' => $is_winner,
+            
         ]);
 
             $penawaran->hargaPenawaran()->createMany($harga_satuan_array);
@@ -104,26 +105,29 @@ class PenawaranHargaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $kegiatanId, string $penyediaId)
     {
-        
-        $kegiatan = Kegiatan::with('pemberitahuan', 'penawaran')->findOrFail($id);
+       $kegiatan = Kegiatan::with('pemberitahuan')->find($kegiatanId);
 
+        $penyedia = Penyedia::find($penyediaId);
+              
         $pemberitahuan = $kegiatan->pemberitahuan;
 
-        $penyedia = $kegiatan->penawaran->penyedia;
-
-
-        $penawaran_1 = $kegiatan->penawaran_1;
-        $penawaran_2 = $kegiatan->penawaran_2;
-
-        return view('form.penawaran-harga-edit', [
+        $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) {
+            return [
+                'uraian' => $item['uraian'],
+                'volume' => $item['volume'],
+                'satuan' => $item['satuan'],
+            ];
+        });
+        return view('form.penawaran-harga', [
             'kegiatan' => $kegiatan,
-            'penawaran_1' => $penawaran_1,
-            'penawaran_2' => $penawaran_2,
             'pemberitahuan' => $pemberitahuan,
-            'penyedia' => $penyedia ?? null,
-        ]);
+            'penyedia' => $penyedia,
+            'belanja' => $belanja,
+            'isEdit' => true
+        ]); 
+        
     }
 
     /**
@@ -131,45 +135,47 @@ class PenawaranHargaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $penawaran = PenawaranHarga::where('kegiatan_id', $id)->first();
+       $kegiatan_id = $id;
+       
+        // $penawaran = PenawaranHarga::where('kegiatan_id', $id)->first();
 
-        if (!$penawaran) {
-            flash()->error('Penawaran tidak ditemukan.');
-            return redirect()->back();
-        }
+        // if (!$penawaran) {
+        //     flash()->error('Penawaran tidak ditemukan.');
+        //     return redirect()->back();
+        // }
 
-        $volume = $request->volume;
-        $totalHarga = 0;
-        for ($i = 0; $i < count($volume); $i++) {
-            $totalHarga += $volume[$i] * $request->harga_satuan[$i];
-        }
+        // $volume = $request->volume;
+        // $totalHarga = 0;
+        // for ($i = 0; $i < count($volume); $i++) {
+        //     $totalHarga += $volume[$i] * $request->harga_satuan[$i];
+        // }
 
-        $item_penawaran = [
-            'uraian' => $request->uraian,
-            'volume' => $request->volume,
-            'satuan' => $request->satuan,
-            'harga_satuan' => $request->harga_satuan,
-        ];
+        // $item_penawaran = [
+        //     'uraian' => $request->uraian,
+        //     'volume' => $request->volume,
+        //     'satuan' => $request->satuan,
+        //     'harga_satuan' => $request->harga_satuan,
+        // ];
 
-        if ($request->pemenang) {
-            $penawaran->update([
-                'penyedia_1' => $request->id_penyedia,
-                'tgl_penawaran_1' => \Carbon\Carbon::parse($request->tgl_surat_penawaran),
-                'no_penawaran_1' => $request->no_penawaran,
-                'harga_penawaran_1' => $totalHarga,
-                'item_penawaran_1' => $item_penawaran
-            ]);
-            flash()->success('Penawaran pemenang berhasil diperbarui.');
-        } else {
-            $penawaran->update([
-                'penyedia_2' => $request->id_penyedia,
-                'tgl_penawaran_2' => \Carbon\Carbon::parse($request->tgl_surat_penawaran),
-                'no_penawaran_2' => $request->no_penawaran,
-                'harga_penawaran_2' => $totalHarga,
-                'item_penawaran_2' => $item_penawaran
-            ]);
-            flash()->success('Penawaran pembanding berhasil diperbarui.');
-        }
+        // if ($request->pemenang) {
+        //     $penawaran->update([
+        //         'penyedia_1' => $request->id_penyedia,
+        //         'tgl_penawaran_1' => \Carbon\Carbon::parse($request->tgl_surat_penawaran),
+        //         'no_penawaran_1' => $request->no_penawaran,
+        //         'harga_penawaran_1' => $totalHarga,
+        //         'item_penawaran_1' => $item_penawaran
+        //     ]);
+        //     flash()->success('Penawaran pemenang berhasil diperbarui.');
+        // } else {
+        //     $penawaran->update([
+        //         'penyedia_2' => $request->id_penyedia,
+        //         'tgl_penawaran_2' => \Carbon\Carbon::parse($request->tgl_surat_penawaran),
+        //         'no_penawaran_2' => $request->no_penawaran,
+        //         'harga_penawaran_2' => $totalHarga,
+        //         'item_penawaran_2' => $item_penawaran
+        //     ]);
+        //     flash()->success('Penawaran pembanding berhasil diperbarui.');
+        // }
 
         return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
     }

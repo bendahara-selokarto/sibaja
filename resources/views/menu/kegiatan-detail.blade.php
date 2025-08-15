@@ -78,6 +78,15 @@
                                                         </x-bladewind::button>
                                                     </form> 
                                                 @endforeach
+                                               @foreach ($penyediaAda as $penyediaItem)                                 
+                                                    <form action="{{ route('penawaran.edit', [$kegiatan['id'] , $penyediaItem->id]) }}" method="post" class="inline">
+                                                        @csrf
+                                                        @method('POST')
+                                                        <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="yellow">
+                                                            Ubah : {{ $penyediaItem->nama_penyedia }}
+                                                        </x-bladewind::button>
+                                                    </form> 
+                                                @endforeach
                                                 @if(!empty($btn['penawaran-create']) && $btn['penawaran-create'])
                                                 <form action="{{ route('penawaran.destroy', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf

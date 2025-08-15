@@ -91,13 +91,14 @@ class KegiatanController extends Controller
             $penawaran =  $pemberitahuan->penawaran;
         
                 if($penawaran){
-                    $ids = $pemberitahuan->penawaran->pluck('penyedia_id')
+                    $ids = $pemberitahuan->penawaran->pluck('penyedia_id')                   
                     ->flatten()
                     ->unique()
                     ->toArray();
                     $not_in = array_diff($penyedias, $ids);
                     $penyedia = Penyedia::whereIn('id', $not_in)->get();           
-                    
+                    $penyediaAda = Penyedia::whereIn('id', $ids)->get();  
+                                        
                 }
 
                 $btn['penawaran-create'] = ($penawaran && $penawaran->count() > 0);
@@ -116,6 +117,7 @@ class KegiatanController extends Controller
         ->with('btn' ,$btn)
         ->with('pemberitahuan', $pemberitahuan ?? collect())
         ->with('penawaran' , $penawaran ?? collect())
+        ->with('penyediaAda', $penyediaAda ?? collect())
         ->with('penyedia', $penyedia ?? collect());
        
     }
