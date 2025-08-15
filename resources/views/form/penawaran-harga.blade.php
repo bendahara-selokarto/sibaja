@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    <form action="{{ isset($isEdit) ? route('penawaran.update' , $kegiatan->id) : route('penawaran.store') }}" class="survey" method="POST" id="form_id">
+                    <form action="{{ isset($isEdit) ? route('penawaran.update' , $pemberitahuan->id) : route('penawaran.store') }}" class="survey" method="POST" id="form_id">
                         @method('post')
                         @csrf
                         @if(isset($isEdit))
@@ -25,19 +25,10 @@
                             <x-input-label for="penyedia" :value="__('Penyedia')" />
                             <input type="text" value="{{ $penyedia->nama_penyedia }}" readonly>
                             <input type="hidden" name="penyedia" value="{{ $penyedia->id }}" readonly>
-                            {{-- <select id="penyedia" name="penyedia" class="mt-1 block w-full" required>
-                                <option value="">pilih penyedia</option>
-                                @foreach ($pemberitahuan->penyedia as $p)
-                                    @php    
-                                        $nama_penyedia = App\Models\Penyedia::select('nama_penyedia')->where('id', $p)->first();
-                                    @endphp 
-                                        <option value="{{$p}}">{{$nama_penyedia->nama_penyedia}}</option>
-                                @endforeach
-                            </select> --}}
                             <x-input-error class="mt-2" :messages="$errors->get('penyedia')" />
                         </div>
                         <div>                           
-                                <label for="checkbox" class="inline-flex items-center">
+                            <label for="checkbox" class="inline-flex items-center">
                                     <input type="checkbox" id="checkbox" name="pemenang" value="true"
                                         class="form-checkbox">
                                     <span class="ml-2">Tetapkan sebagai Pemenang</span>
@@ -46,26 +37,33 @@
                         <br>
                         <div>
                             <input type="hidden" name="pemberitahuan_id" value="{{ $pemberitahuan->id }}">
-                            <!-- <input type="hidden" name="id_penyedia" value="{{ $p }}"> -->
                         </div>
                         <div>
                             <x-input-label for="tgl_surat_penawaran" :value="__('Tanggal Surat Penawaran')" />
-                            <x-text-input id="tgl_surat_penawaran" name="tgl_surat_penawaran" type="date"
+                           <x-text-input id="tgl_surat_penawaran" name="tgl_surat_penawaran" type="date"
                                 min="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') }}"
                                 max="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->format('Y-m-d') }}"
-                                class="mt-1 block " required autocomplete="tgl_surat_penawaran" />
+                                class="mt-1 block" required
+                                value="{{ old('tgl_persetujuan', 
+                                    isset($penawaran) && $penawaran->tgl_penawaran
+                                        ? \Carbon\Carbon::parse($penawaran->tgl_penawaran)->format('Y-m-d')
+                                        : ''
+                                ) }}"
+
+                            />
                             <x-input-error class="mt-2" :messages="$errors->get('tgl_surat_penawaran')" />
                         </div>
                         <br>
                         <div>
                             <x-input-label for="no_penawaran" :value="__('Nomor Penawaran')" />
                             <x-text-input id="no_penawaran" name="no_penawaran" type="number" min="0"
-                                class="mt-1 block " required autocomplete="no_penawaran" />
+                                class="mt-1 block " required 
+                                value="{{ old('no_penawaran' , isset($penawaran) && $penawaran->no_penawaran ? $penawaran->no_penawaran : '')}}"
+                                
+                                />
                             <x-input-error class="mt-2" :messages="$errors->get('no_penawaran')" />
                         </div>
-
                         <br>
-                                    {{-- Tabel Belanja --}}
                         <div class="overflow-x-auto">
                             <table class="min-w-full border border-gray-200 divide-y divide-gray-100 text-sm text-left">
                                 <thead class="bg-gray-100 text-gray-700">
@@ -83,7 +81,6 @@
                                         <tr>
                                             <td class="px-4 py-2">
                                                 {{ $loop->iteration  }}
-                                                {{-- <input type="hidden" name="no[]" value="{{ $k['nomor'] }}"> --}}
                                             </td>
                                             <td class="px-4 py-2">
                                                 {{ $k['uraian'] }}
@@ -98,7 +95,7 @@
                                                 <input type="hidden" name="satuan[]" value="{{ $k['satuan'] }}">
                                             </td>
                                             <td class="px-4 py-2 text-right">
-                                                <input type="number" min="0" step="any" name="harga_satuan[]" class="w-24 rounded-md border-gray-300 text-right" onblur="formatNumber(this)">
+                                                <input type="number" min="0" step="any" value="{{old('harga_satuan[]', isset($k['harga_satuan']) ? $k['harga_satuan'] : '')}}" name="harga_satuan[]" class="w-24 rounded-md border-gray-300 text-right" onblur="formatNumber(this)">
                                             </td>
                                             <td class="px-4 py-2 text-right" name="format_number"></td>
                                         </tr>
@@ -111,17 +108,18 @@
                                 </tbody>
                             </table>
                         </div>
+                        <br>
                         <div>
-                            <button type="submit" class="btn btn-primary">
-                                Simpan
-                            </button>
+                            <x-bladewind::button can_submit="true" 
+                                type="{{ isset($isEdit) ? 'primary' : 'secondary' }}">
+                                {{ isset($isEdit) ? 'Update' : 'Simpan' }}
+                            </x-bladewind::button>
                         </div>
                 </div>
                 </form>
             </div>
         </div>
         <br>
-
     </div>
     @pushOnce('scripts')
         <script>
