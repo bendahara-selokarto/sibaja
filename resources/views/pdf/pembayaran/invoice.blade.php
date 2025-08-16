@@ -56,23 +56,23 @@
             <td style="text-align: left">{{ $value['uraian'] }}</td>         
             <td style="text-align: center">{{ $value['volume']  }}</td>         
             <td style="text-align: center">{{ $value['satuan'] }}</td>         
-            <td style="text-align: right">{{ number_format($value['harga_negosiasi'], 0, ',', '.') }}</td>         
-            <td style="text-align: right">{{ number_format($value['jumlah_negosiasi'], 0, ',', '.') }}</td>         
+            <td style="text-align: right">{{ number_format(($value['harga_negosiasi'] * ( 1 / ( 1 + $factor_pajak))), 0, ',', '.') }}</td>         
+            <td style="text-align: right">{{ number_format(($value['jumlah_negosiasi'] * ( 1 / ( 1 + $factor_pajak))), 0, ',', '.') }}</td>         
         </tr>              
         @endforeach        
         <tr>
            
             <td style="text-indent: 300px"  colspan="5">Jumlah</td>
-            <td style="text-align: right">{{ number_format($harga_negosiasi, 0, ',', '.') }}</td>   </tr>
+            <td style="text-align: right">{{ number_format($negosiasiHarga->jumlah, 0, ',', '.') }}</td>   </tr>
         <tr>            
             <td style="text-indent: 300px" colspan="5">PPN dan PPh Pasal 22</td>
-            <td style="text-align: right">{{ number_format(round($pajak), 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format(round($negosiasiHarga->pajak), 0, ',', '.') }}</td>
         </tr>
         <tr>
            
             <td style="text-indent: 300px" colspan="5">Jumlah Total</td>
             <td style="text-align: right">
-                {{ number_format(round($kegiatan->negosiasiHarga->total), 0, ',', '.') }}
+                {{ number_format(round($negosiasiHarga->total), 0, ',', '.') }}
             </td>   
         </tr>
         <tr>

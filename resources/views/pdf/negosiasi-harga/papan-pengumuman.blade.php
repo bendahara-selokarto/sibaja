@@ -2,9 +2,9 @@
 <div class="papan-pengumuman">
     <h2 style="text-align: center">PAPAN PENGUMUMAN</h2>
     <br><br>
-    <table style="padding-left: 30px">
+    <table style="vertical-align:top; padding-left: 30px">
         <tr>
-            <td>1. Jenis Pekerjaan</td>
+            <td style="width: 180px">1. Jenis Pekerjaan</td>
             <td>:</td>
             <td> {{ $data['kegiatan']->kegiatan }}</td>
         </tr>       
@@ -34,8 +34,8 @@
           <td style="text-align: center">{{ $loop->iteration }}</td>
             <td >{{ $v['uraian'] }}</td>
             <td style="text-align: center">{{ $v['volume'] . ' '. $v['satuan']  }}</td>
-            <td style="text-align: right"> {{ number_format($v['harga_negosiasi'] * 1.14 , 0, ',', '.') }}</td>
-            <td style="text-align: right"> {{ number_format(round($v['volume'] * 1.14 * $v['harga_negosiasi'], -2), 0, ',', '.') }}</td>
+            <td style="text-align: right"> {{ number_format($v['harga_negosiasi'] , 0, ',', '.') }}</td>
+            <td style="text-align: right"> {{ number_format(round($v['volume'] * $v['harga_negosiasi'], -2), 0, ',', '.') }}</td>
         </tr>
         @endforeach
         <tr>

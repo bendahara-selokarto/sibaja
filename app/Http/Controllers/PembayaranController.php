@@ -116,21 +116,23 @@ class PembayaranController extends Controller
 
         $item = $items;
 
-        $harga_negosiasi = $items->sum('jumlah_negosiasi');
+        $total = $items->sum('jumlah_negosiasi');
 
-        $const_ppn = config('pajak.ppn');
+        
+        $factor_ppn = config('pajak.ppn');
+        
+        $factor_pph22 = config('pajak.pph_22');
 
-        $const_pph22 = config('pajak.pph_22');
+        $factor_pajak = $factor_ppn + $factor_pph22;
+        
+        $negosiasiHarga->ppn = $total * ( $factor_ppn / ( 1 + $factor_pajak ) );
+        
+        $negosiasiHarga->pph_22 = $total * ($factor_pph22 / ( 1 + $factor_pajak ));
+        
+        $negosiasiHarga->jumlah = $total * ( 1 / ( 1 + $factor_pajak));
+        $negosiasiHarga->pajak  = $total * ( $factor_pajak / ( 1 + $factor_pajak));
+        $negosiasiHarga->total  = $total;
 
-        $const_pajak = $const_ppn + $const_pph22;
-
-        $pajak = $const_pajak * $harga_negosiasi;
-
-        $negosiasiHarga->ppn = $harga_negosiasi * $const_ppn;
-
-        $negosiasiHarga->pph_22 = $harga_negosiasi * $const_pph22;
-
-        $negosiasiHarga->total = $harga_negosiasi * ( 1 + $const_pajak );
         
         $pemberitahuan = $kegiatan->pemberitahuan;
         
@@ -143,9 +145,8 @@ class PembayaranController extends Controller
         'penyedia',
         'pemberitahuan',
         'negosiasiHarga',
-        'harga_negosiasi',
-        'pajak',
         'item',
+        'factor_pajak',
         'tgl',
         'tgl_invoice',
         'pembayaran'

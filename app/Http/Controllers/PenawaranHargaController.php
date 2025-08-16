@@ -204,8 +204,13 @@ class PenawaranHargaController extends Controller
             $belanja = $pemberitahuan->belanjas;
 
             $penawaran = $pemberitahuan->penawaran;
+            $penawarPemenang = collect($penawaran)->firstWhere('is_winner', true);
+            if(!isset($penawarPemenang)){
+                return back()->with('error', 'belum ada pemenang di set');
+            }
 
-            $pemenangId = collect($penawaran)->firstWhere('is_winner', true)->id;
+            $pemenangId = $penawarPemenang->id;
+
             $pemenang = Penawaran::with('hargaPenawaran')->find($pemenangId);
             $penawaranPemenang = $pemenang->hargaPenawaran->map(function ($harga, $i) use ($belanja){
                 return [
@@ -217,7 +222,14 @@ class PenawaranHargaController extends Controller
                 ];
             });
 
-            $pembandingId = collect($penawaran)->firstWhere('is_winner', false)->id;
+            
+            $penawarPembanding = collect($penawaran)->firstWhere('is_winner', false);
+            if(!isset($penawarPembanding)){
+                return back()->with('error', 'pemenang tidak boleh lebih dari 1');
+            }
+
+            $pembandingId = $penawarPembanding->id;
+
             $pembanding = Penawaran::with('hargaPenawaran')->find($pembandingId);
             $penawaranPembanding = $pembanding->hargaPenawaran->map(function ($harga, $i) use ($belanja){
                 return [
@@ -230,29 +242,36 @@ class PenawaranHargaController extends Controller
             });
 
 
-            $nilaiPenawaranPembanding = $penawaranPembanding->sum('jumlah');
-
+            
             $penyedia1 = Penyedia::find($pemenang->penyedia_id);
             $penyedia2 = Penyedia::find($pembanding->penyedia_id);
             
             $pemberitahuan = $kegiatan->pemberitahuan; 
-            if(!$pemberitahuan){
-                flash()->error('Tidak ada pemberitahuan yang relevan');
-                return back();
-            }
-
-          
-            $jumlah = $penawaranPemenang->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
             
-            $ppn_1 = $jumlah * config('pajak.ppn');
-            $pph_22_1 = $jumlah * config('pajak.pph_22');
-            $jumlah_total_1 = $jumlah + $ppn_1 + $pph_22_1;
+            $jumlah_1 = $penawaranPemenang->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
+
+            $ppn = config('pajak.ppn');
+
+            $pph = config('pajak.pph_22');
+
+            $factor_pajak = $ppn + $pph;
+            
+            $ppn_1 = $jumlah_1 * ($ppn / (1 + $factor_pajak));
+            
+            $pph_22_1 = $jumlah_1 * ($pph / (1 + $factor_pajak));
+
+            $jumlah_sebelum_pajak_1 = $jumlah_1 * ( 1 / ( 1 + $factor_pajak) );
+            
             $item = $penawaranPemenang;
             
             $jumlah_2 = $penawaranPembanding->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
-            $ppn_2 = $jumlah_2 * config('pajak.ppn');
-            $pph_22_2 = $jumlah_2 * config('pajak.pph_22');
-            $jumlah_total_2 = $jumlah_2 + $ppn_2 + $pph_22_2;
+
+            $ppn_2 = $jumlah_2 * ($ppn / (1 + $factor_pajak));
+            
+            $pph_22_2 = $jumlah_2 * ($pph / (1 + $factor_pajak));
+
+            $jumlah_sebelum_pajak_2 = $jumlah_2 * ( 1 / ( 1 + $factor_pajak) );
+
             $item_2 = $penawaranPembanding;
 
             $pdf = Pdf::loadView('pdf.penawaran-harga', [
@@ -261,14 +280,14 @@ class PenawaranHargaController extends Controller
                 'kegiatan' => $kegiatan,
                 'penyedia1' => $penyedia1,
                 'penyedia2' => $penyedia2,
-                'jumlah' => $jumlah,
-                'jumlah_2' => $jumlah_2,
+                'jumlah' => $jumlah_sebelum_pajak_1,
+                'jumlah_2' => $jumlah_sebelum_pajak_2,
                 'ppn_1' => $ppn_1,
                 'ppn_2' => $ppn_2,
                 'pph_22_1' => $pph_22_1,
                 'pph_22_2' => $pph_22_2, 
-                'jumlah_total_1' => $jumlah_total_1,
-                'jumlah_total_2' => $jumlah_total_2,              
+                'jumlah_total_1' => $jumlah_1,
+                'jumlah_total_2' => $jumlah_2,              
                 'pemberitahuan' => $pemberitahuan,
                 'item' => $item,
                 'item_2' => $item_2

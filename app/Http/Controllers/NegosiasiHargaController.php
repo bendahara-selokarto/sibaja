@@ -216,24 +216,26 @@ class NegosiasiHargaController extends Controller
         $penawaranHarga->tgl_penawaran =  Carbon::parse($penawaranHarga->tgl_penawaran);
         $ppn = config('pajak.ppn');
         $pph_22 = config('pajak.pph_22');
+        $pajak = $ppn + $pph_22;
         $jumlah_penawaran = $items->sum('jumlah_penawaran');
-        $nilai_ppn = $jumlah_penawaran  * $ppn;
-        $nilai_pph_22 = $jumlah_penawaran * $pph_22;
+        $nilai_ppn = $jumlah_penawaran  * ( $ppn / ( 1 + $pajak ) );
+        $nilai_pph_22 = $jumlah_penawaran * ( $pph_22 / ( 1 + $pajak ));
         $penawaranHarga->ppn = $nilai_ppn;
         $penawaranHarga->pph_22 = $nilai_pph_22;
-        $penawaranHarga->harga_sebelum_pajak = $jumlah_penawaran;
-        $penawaranHarga->harga_total = round($jumlah_penawaran * (1 + $ppn + $pph_22), -2, PHP_ROUND_HALF_DOWN); 
+
+        $penawaranHarga->harga_sebelum_pajak = $jumlah_penawaran * ( 1 / (1 + $ppn + $pph_22));
+        $penawaranHarga->harga_total =  $jumlah_penawaran;
           
         $jumlah_negosiasi = $items->sum('jumlah_negosiasi');
-        $negosiasiHarga->ppn = $jumlah_negosiasi * $ppn;
-        $negosiasiHarga->pph_22 = $jumlah_negosiasi *  $pph_22;
-        $negosiasiHarga->harga_sebelum_pajak = $jumlah_negosiasi;      
+        $negosiasiHarga->ppn = $jumlah_negosiasi * ( $ppn / ( 1 + $pajak ) );
+        $negosiasiHarga->pph_22 = $jumlah_negosiasi * ( $pph_22 / ( 1 + $pajak ));
+        $negosiasiHarga->harga_sebelum_pajak = $jumlah_negosiasi * ( 1 / (1 + $ppn + $pph_22));      
         $negosiasiHarga->tgl_persetujuan = Carbon::parse($negosiasiHarga->tgl_persetujuan);
         $negosiasiHarga->tgl_negosiasi = Carbon::parse($negosiasiHarga->tgl_negosiasi);
         $negosiasiHarga->tgl_perjanjian = $negosiasiHarga->tgl_persetujuan;
         $negosiasiHarga->tgl_akhir_perjanjian = Carbon::parse($negosiasiHarga->tgl_akhir_perjanjian);
         $negosiasiHarga->jumlah_hari_kerja = $negosiasiHarga->tgl_akhir_perjanjian->diffInDays($negosiasiHarga->tgl_perjanjian) * -1;
-        $negosiasiHarga->harga_total = round($jumlah_negosiasi * (1 + $ppn + $pph_22), -2 , PHP_ROUND_HALF_DOWN);  
+        $negosiasiHarga->harga_total = round($jumlah_negosiasi , -2 , PHP_ROUND_HALF_DOWN);  
         
         $negosiasi = $items;
 

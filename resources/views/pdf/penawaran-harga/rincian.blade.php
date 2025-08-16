@@ -62,8 +62,8 @@ onerror="this.src='{{ asset('') }}'"
                 <td style="border: 1px solid black; text-align:center " >{{ $loop->iteration }}</td>
                 <td style="border: 1px solid black; text-align:left " >{{ $item['uraian'] }}</td>
                 <td style="border: 1px solid black; text-align:center " >{{ $item['volume'] .'  '. $item['satuan'] }}</td>
-                <td style="border: 1px solid black; text-align:right " >{{ number_format($item['harga_satuan'], 0, ',', '.') }}</td>
-                <td style="border: 1px solid black; text-align:right " >{{ number_format($item['harga_satuan'] *  $item['volume'], 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right " >{{ number_format(($item['harga_satuan'] * (100/114)), 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right " >{{ number_format(($item['harga_satuan'] * (100/114)) *  $item['volume'], 0, ',', '.') }}</td>
             </tr> 
           @endforeach
           <tr>
@@ -73,12 +73,12 @@ onerror="this.src='{{ asset('') }}'"
           <tr>
               {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
               <td colspan="4" style="border: 1px solid black; text-align:right">PPN 11%</td>
-              <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah * (11/100), 0, ',', '.') }}</td>
+              <td style="border: 1px solid black; text-align:right">{{ number_format($ppn_1, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
                 <td colspan="4" style="border: 1px solid black; text-align:right">PPh22 3%</td>
-                <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah * (3/100), 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right">{{ number_format($pph_22_1, 0, ',', '.') }}</td>
             </tr>
             
             <tr>

@@ -96,7 +96,7 @@
                 <tr>
                     <td>Dibayarkan</td>
                     <td>Rp. </td>
-                    <td style="text-align: right">{{formatNumber(round($harga_negosiasi, -2))}},-</td>
+                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->total, -2))}},-</td>
                 </tr>
             </table>
 
