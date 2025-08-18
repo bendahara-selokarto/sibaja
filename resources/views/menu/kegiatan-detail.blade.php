@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Kegiatan') }}
+            {{ __('Kegiatan Detail') }}
         </h2>
     </x-slot>
 
@@ -21,7 +21,7 @@
                     <div class="overflow-scroll">
                         <x-bladewind::table>
                             <x-slot name="header">
-                                <th class="w-xl">Kode Rekening</th>
+                                <th class="w-xl">Input Dokumen Pengadaan</th>
                             </x-slot>
                             
                             <tr>
