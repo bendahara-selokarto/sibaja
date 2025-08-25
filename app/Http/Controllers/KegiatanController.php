@@ -57,9 +57,13 @@ class KegiatanController extends Controller
                 'ketua_tpk' => 'required|string',
                 'sekretaris_tpk' => 'required|string',
                 'anggota_tpk' => 'required|string',
+                'nomor_sk_tpk' => 'required',
+                'tgl_sk_tpk' => 'required',
+                'nomor_sk_pka' => 'required',
+                'tgl_sk_pka' => 'required',
                 'pka' => 'required|string',
             ]);
-        
+            
             Kegiatan::create($validatedData);
             noty()->success('berhasil ditambahkan');
             
@@ -77,15 +81,15 @@ class KegiatanController extends Controller
         $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran' , 'negosiasiHarga' )->find($id);
         
         $btn = [];
-
+        
         if($kegiatan->pemberitahuan && $kegiatan->pemberitahuan->count() > 0){
         
             $pemberitahuanId = $kegiatan->pemberitahuan->id;
 
             $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran' , 'belanjas' )->find($pemberitahuanId);
-    
+            
             $penyedias = $pemberitahuan->penyedia;
-
+            
             $kegiatan_id = $id;
 
             $penawaran =  $pemberitahuan->penawaran;
@@ -100,7 +104,7 @@ class KegiatanController extends Controller
                     $penyediaAda = Penyedia::whereIn('id', $ids)->get();  
                                         
                 }
-
+                
                 $btn['penawaran-create'] = ($penawaran && $penawaran->count() > 0);
                 $btn['penawaran-render'] = ($penawaran && $penawaran->count() > 1);
                 $btn['negosiasi-create'] = ($btn['penawaran-render'] && $kegiatan->negosiasiHarga == null );
@@ -111,20 +115,20 @@ class KegiatanController extends Controller
             }
 
           
-
-        return view('menu.kegiatan-detail')
-        ->with('kegiatan', $kegiatan)
-        ->with('btn' ,$btn)
+            
+            return view('menu.kegiatan-detail')
+            ->with('kegiatan', $kegiatan)
+            ->with('btn' ,$btn)
         ->with('pemberitahuan', $pemberitahuan ?? collect())
         ->with('penawaran' , $penawaran ?? collect())
         ->with('penyediaAda', $penyediaAda ?? collect())
         ->with('penyedia', $penyedia ?? collect());
        
     }
-
+    
     /**
      * Show the form for editing the specified resource.
-     */
+    */
     public function edit(string $id)
     {
         $kegiatan = Kegiatan::find($id);
@@ -134,7 +138,7 @@ class KegiatanController extends Controller
         }
         return view('form.kegiatan', compact('kegiatan'));
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
@@ -147,7 +151,11 @@ class KegiatanController extends Controller
                 'lokasi_kegiatan' => 'required|string',
                 'ketua_tpk' => 'required|string',
                 'sekretaris_tpk' => 'required|string',
-                'anggota_tpk' => 'required|string',
+                'anggota_tpk' => 'required|string',                
+                'nomor_sk_tpk' => 'required',
+                'tgl_sk_tpk' => 'required',
+                'nomor_sk_pka' => 'required',
+                'tgl_sk_pka' => 'required',
                 'pka' => 'required|string',
             ]);
 

@@ -58,10 +58,34 @@
                             <x-input-error class="mt-2" :messages="$errors->get('anggota_tpk')" />
                         </div>
                         <div>
+                            <x-input-label for="nomor_sk_tpk" :value="__('Nomor SK TPK')" />
+                            <x-text-input id="nomor_sk_tpk" name="nomor_sk_tpk" type="number" min="1" class="mt-1 block w-full"
+                                :value="old('nomor_sk_tpk', $kegiatan['nomor_sk_tpk'])" required autofocus autocomplete="nomor_sk_tpk" />
+                            <x-input-error class="mt-2" :messages="$errors->get('nomor_sk_tpk')" />
+                        </div>
+                        <div>
+                            <x-input-label for="tgl_sk_tpk" :value="__('Tanggal SK TPK')" />
+                            <x-text-input id="tgl_sk_tpk" name="tgl_sk_tpk" type="date" class="mt-1 block w-full"
+                                :value="old('tgl_sk_tpk', $kegiatan['tgl_sk_tpk'])" required autofocus autocomplete="tgl_sk_tpk" />
+                            <x-input-error class="mt-2" :messages="$errors->get('tgl_sk_tpk')" />
+                        </div>
+                        <div>
                             <x-input-label for="pka" :value="__('PKA')" />
                             <x-text-input id="pka" name="pka" type="text" class="mt-1 block w-full"
-                                :value="old('pka', $kegiatan['pka'])" required autofocus autocomplete="pka" />
+                            :value="old('pka', $kegiatan['pka'])" required autofocus autocomplete="pka" />
                             <x-input-error class="mt-2" :messages="$errors->get('pka')" />
+                        </div>
+                        <div>
+                            <x-input-label for="nomor_sk_pka" :value="__('Nomor SK PKA')" />
+                            <x-text-input id="nomor_sk_pka" name="nomor_sk_pka" type="number" min="1" class="mt-1 block w-full"
+                                :value="old('nomor_sk_pka', $kegiatan['nomor_sk_pka'])" required autofocus autocomplete="nomor_sk_pka" />
+                            <x-input-error class="mt-2" :messages="$errors->get('nomor_sk_pka')" />
+                        </div>
+                        <div>
+                            <x-input-label for="tgl_sk_pka" :value="__('Tanggal SK PKA')" />
+                            <x-text-input id="tgl_sk_pka" name="tgl_sk_pka" type="date" class="mt-1 block w-full"
+                                :value="old('tgl_sk_pka', $kegiatan['tgl_sk_pka'])" required autofocus autocomplete="tgl_sk_pka" />
+                            <x-input-error class="mt-2" :messages="$errors->get('tgl_sk_pka')" />
                         </div>
                         <div>
                             <x-primary-button>{{ $kegiatan->exists ? 'Ubah' : 'Simpan' }}</x-primary-button>
