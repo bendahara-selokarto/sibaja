@@ -67,8 +67,8 @@
 
 <table style="width: 100%; border: 1px solid black;"><thead>
         <tr>
-          <td style='text-align: center; vertical-align: bottom; background-color: #b9b9b9; border-bottom: 1px solid #b9b9b9;' rowspan="3" >SURAT PERINTAH KERJA</td>
-          <td  style="border-left: 1px solid black; text-align: center;" colspan="2">KABUPATEN BATANG</td>
+          <td style='text-align: center; vertical-align: bottom; background-color: #b9b9b9; border-bottom: 1px solid #b9b9b9; ' rowspan="3" >SURAT PERINTAH KERJA</td>
+          <td  style="border-left: 1px solid black; text-align: center; min-width:350px" colspan="2">KABUPATEN BATANG</td>
         </tr>
         <tr>
           <td style="border-left: 1px solid black; text-align: center;"  colspan="2">KECAMATAN {{ strToUpper(Auth::user()->kecamatan) }}<</td>

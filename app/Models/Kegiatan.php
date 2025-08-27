@@ -54,4 +54,67 @@ class Kegiatan extends Model
             'kode_desa' => ['required', 'exists:users,kode_desa'],
         ];
     }
+
+    public function getNomorTpkAttribute()
+    {
+        $tgl = $this->tgl_sk_tpk ?? date('Y-m-d');
+        $month = date('m', strtotime($tgl));
+        $year = date('Y', strtotime($tgl));
+        $roman = $this->getRomanMonth($month);
+        return "140/" . $this->nomor_sk_tpk . "/" . $roman . "/" . $year;
+    }
+    public function getNomorPkaAttribute()
+    {
+        $tgl = $this->tgl_sk_pka ?? date('Y-m-d');
+        $month = date('m', strtotime($tgl));
+        $year = date('Y', strtotime($tgl));
+        $roman = $this->getRomanMonth($month);
+        return "140/" . $this->nomor_sk_pka . "/" . $roman . "/" . $year;
+    }
+    
+    
+
+    private function getRomanMonth($month)
+    {
+        $roman = '';
+        switch ($month) {
+            case 1:
+                $roman = 'I';
+                break;
+            case 2:
+                $roman = 'II';
+                break;
+            case 3:
+                $roman = 'III';
+                break;
+            case 4:
+                $roman = 'IV';
+                break;
+            case 5:
+                $roman = 'V';
+                break;
+            case 6:
+                $roman = 'VI';
+                break;
+            case 7:
+                $roman = 'VII';
+                break;
+            case 8:
+                $roman = 'VIII';
+                break;
+            case 9:
+                $roman = 'IX';
+                break;
+            case 10:
+                $roman = 'X';
+                break;
+            case 11:
+                $roman = 'XI';
+                break;
+            case 12:
+                $roman = 'XII';
+                break;
+        }
+        return $roman;
+    }
 }

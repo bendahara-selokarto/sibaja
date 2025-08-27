@@ -65,7 +65,7 @@
             <td></td>
             <td>2</td>
             <td>Nama</td>
-            <td> ..... </td>
+            <td>: {{$kegiatan->sekretaris_tpk}} </td>
             <td> 2. .........................  </td>
         </tr>
         <tr>
@@ -79,7 +79,7 @@
             <td></td>
             <td>3</td>
             <td>Nama</td>
-            <td> ..... </td>
+            <td>: {{$kegiatan->anggota_tpk}} </td>
             <td> 3. .........................  </td>
         </tr>
         <tr>

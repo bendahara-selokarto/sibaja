@@ -34,7 +34,7 @@
         <td></td>
         <td>Harga Penawaran</td>
         <td>:</td>
-        <td>{{ number_format(round($data['penawaranHarga']->harga_total, -2), 0, ',', '.') }} ( {{ Terbilang::make(round($data['penawaranHarga']->nilai_penawaran, -2)) }} rupiah )</td>
+        <td>{{ number_format(round($data['penawaranHarga']->harga_total, -2), 0, ',', '.') }} ( {{ Terbilang::make(round($data['penawaranHarga']->harga_total, -2)) }} rupiah )</td>
     </tr>
     <tr>
         <td></td>

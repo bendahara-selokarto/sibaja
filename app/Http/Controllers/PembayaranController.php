@@ -82,7 +82,6 @@ class PembayaranController extends Controller
 
     public function render($id){
         $kegiatan = Kegiatan::with('negosiasiHarga', 'pemberitahuan', 'penawaran', 'pembayaran' )->find($id);
-
         $pemberitahuan = $kegiatan->pemberitahuan;
         $pemberitahuan->load('belanjas');
         $penawaranHarga = $kegiatan->penawaran()->firstWhere('is_winner' , true);
@@ -126,11 +125,11 @@ class PembayaranController extends Controller
         $factor_pajak = $factor_ppn + $factor_pph22;
         
         $negosiasiHarga->ppn = $total * ( $factor_ppn / ( 1 + $factor_pajak ) );
-        
+
         $negosiasiHarga->pph_22 = $total * ($factor_pph22 / ( 1 + $factor_pajak ));
         
         $negosiasiHarga->jumlah = $total * ( 1 / ( 1 + $factor_pajak));
-        $negosiasiHarga->pajak  = $total * ( $factor_pajak / ( 1 + $factor_pajak));
+        $negosiasiHarga->pajak  = $negosiasiHarga->ppn + $negosiasiHarga->pph_22;
         $negosiasiHarga->total  = $total;
 
         

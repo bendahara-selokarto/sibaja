@@ -122,7 +122,7 @@ Jangka waktu pelaksanaan adalah selama {{ $data['negosiasiHarga']->jumlah_hari_k
 <div class="pasal">Pasal 5 <br> CARA PEMBAYARAN</div>
 <ol style="text-align: justify;margin-top:0px" type="1">
     <li>Pembayaran 100% dilakukan setelah pekerjaan selesai dan dilampiri berita acara.</li>
-    <li>Pembayaran dilakukan melalui DPA Desa {{Auth::user()->desa}} untuk belanja modal pengadaan Material kegiatan {{$data['kegiatan']->kegiatan}} kode rekening belanja {{$data['kegiatan']->rekening_apbdes}} secara Non Tunai / Transfer / CMS sejumlah nilai dalam kontrak sebesar Rp {{formatNumber(round($data['negosiasiHarga']->jumlah_total, -2))}} ( {{Terbilang::make(round($data['negosiasiHarga']->jumlah_total, -2))}} rupiah) dipotong pajak sesuai ketentuan Pemerintah.</li>
+    <li>Pembayaran dilakukan melalui DPA Desa {{Auth::user()->desa}} untuk belanja modal pengadaan Material kegiatan {{$data['kegiatan']->kegiatan}} kode rekening belanja {{$data['kegiatan']->rekening_apbdes}} secara Non Tunai / Transfer / CMS sejumlah nilai dalam kontrak sebesar Rp {{formatNumber(round($data['negosiasiHarga']->harga_total, -2))}} ( {{Terbilang::make(round($data['negosiasiHarga']->harga_total, -2))}} rupiah) dipotong pajak sesuai ketentuan Pemerintah.</li>
 </ol>
 
 <div class="pasal">Pasal 6 <br> HAK DAN KEWAJIBAN</div>

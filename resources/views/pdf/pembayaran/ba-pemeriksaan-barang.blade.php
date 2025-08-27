@@ -23,7 +23,7 @@
             <td>2.</td>
             <td>Nama</td>
             <td>:</td>
-            <td>..........</td>
+            <td>{{ $kegiatan->sekretaris_tpk}}</td>
             <td>Jabatan</td>
             <td>:</td>
             <td>Sekretaris</td>
@@ -32,14 +32,14 @@
             <td>3.</td>
             <td>Nama</td>
             <td>:</td>
-            <td>..........</td>
+            <td>{{ $kegiatan->anggota_tpk}}</td>
             <td>Jabatan</td>
             <td>:</td>
             <td>Anggota</td>
         </tr>
     </table>
 
-    <p style="text-align: justify">Berdasarkan Surat Keputusan Kepala Desa {{Auth::user()->desa}} Nomor : ………………. tanggal ……………….  Selaku Tim Pelaksana Kegiatan dan telah memeriksa Barang / Pekerjaan dengan teliti sebagai daftar terlampir yang telah diserahkan oleh : {{$penyedia->nama_penyedia}}</p>
+    <p style="text-align: justify">Berdasarkan Surat Keputusan Kepala Desa {{Auth::user()->desa}} Nomor : {{ $kegiatan->nomor_tpk}} tanggal {{ tanggal_indo($kegiatan->tgl_sk_tpk) }}  Selaku Tim Pelaksana Kegiatan dan telah memeriksa Barang / Pekerjaan dengan teliti sebagai daftar terlampir yang telah diserahkan oleh : {{$penyedia->nama_penyedia}}</p>
     <p style="text-align: justify">Berdasarkan Surat Pesanan SPK Nomor : {{$pemberitahuan->no_pbj}}/SPK/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran}} tanggal {{tanggal_indo($negosiasiHarga->tgl_persetujuan)}}.</p>
     <p style="text-align: justify">Dengan kesimpulan sebagai berikut :</p>
     <ol type="a">
@@ -68,7 +68,7 @@
             <td></td>
             <td>2</td>
             <td>Nama</td>
-            <td> ..... </td>
+            <td>: {{ $kegiatan->sekretaris_tpk}} </td>
             <td> 2. .........................  </td>
         </tr>
         <tr>
@@ -82,7 +82,7 @@
             <td></td>
             <td>3</td>
             <td>Nama</td>
-            <td> ..... </td>
+            <td>: {{ $kegiatan->anggota_tpk}} </td>
             <td> 3. .........................  </td>
         </tr>
         <tr>

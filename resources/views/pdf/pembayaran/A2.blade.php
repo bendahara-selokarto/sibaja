@@ -91,7 +91,7 @@
                 <tr>
                     <td>Potongan</td>
                     <td>Rp. </td>
-                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->ppn + $negosiasiHarga->pph_22))}},-</td>
+                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->pajak))}},-</td>
                 </tr>
                 <tr>
                     <td>Dibayarkan</td>

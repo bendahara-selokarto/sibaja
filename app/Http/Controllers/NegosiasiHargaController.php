@@ -200,24 +200,26 @@ class NegosiasiHargaController extends Controller
         $negosiasiHarga->load('hargaNegosiasi');
         $hargaNegosiasi = $negosiasiHarga->hargaNegosiasi;
 
+        $ppn = config('pajak.ppn');
+        $pph_22 = config('pajak.pph_22');
+        $pajak = $ppn + $pph_22;
+
         $items = $pemberitahuan->belanjas->map(function($item,$k) 
-        use ( $hargaPenawaran , $hargaNegosiasi )       
+        use ( $hargaPenawaran , $hargaNegosiasi, $ppn , $pph_22 , $pajak )       
         {
             return [
                 'uraian' => $item->uraian,
                 'volume' => $item->volume,
                 'satuan' => $item->satuan,
-                'harga_penawaran' => $hargaPenawaran[$k]->harga_satuan,
-                'harga_negosiasi' => $hargaNegosiasi[$k]->harga_satuan,
-                'jumlah_penawaran' => $item->volume * $hargaPenawaran[$k]->harga_satuan,
-                'jumlah_negosiasi' => $item->volume * $hargaNegosiasi[$k]->harga_satuan,
+                'harga_penawaran' => $hargaPenawaran[$k]->harga_satuan * ( 1 / (1 + $ppn + $pph_22)),
+                'harga_negosiasi' => $hargaNegosiasi[$k]->harga_satuan * ( 1 / (1 + $ppn + $pph_22)),
+                'jumlah_penawaran' => ($item->volume * $hargaPenawaran[$k]->harga_satuan) * ( 1 / (1 + $ppn + $pph_22)),
+                'jumlah_negosiasi' => ($item->volume * $hargaNegosiasi[$k]->harga_satuan) * ( 1 / (1 + $ppn + $pph_22)),
             ];
         });
+        // dd($items);
         $penawaranHarga->tgl_penawaran =  Carbon::parse($penawaranHarga->tgl_penawaran);
-        $ppn = config('pajak.ppn');
-        $pph_22 = config('pajak.pph_22');
-        $pajak = $ppn + $pph_22;
-        $jumlah_penawaran = $items->sum('jumlah_penawaran');
+        $jumlah_penawaran = $items->sum('jumlah_penawaran') * ( (1 + $ppn + $pph_22));
         $nilai_ppn = $jumlah_penawaran  * ( $ppn / ( 1 + $pajak ) );
         $nilai_pph_22 = $jumlah_penawaran * ( $pph_22 / ( 1 + $pajak ));
         $penawaranHarga->ppn = $nilai_ppn;
@@ -226,7 +228,7 @@ class NegosiasiHargaController extends Controller
         $penawaranHarga->harga_sebelum_pajak = $jumlah_penawaran * ( 1 / (1 + $ppn + $pph_22));
         $penawaranHarga->harga_total =  $jumlah_penawaran;
           
-        $jumlah_negosiasi = $items->sum('jumlah_negosiasi');
+        $jumlah_negosiasi = $items->sum('jumlah_negosiasi') * ( (1 + $ppn + $pph_22));
         $negosiasiHarga->ppn = $jumlah_negosiasi * ( $ppn / ( 1 + $pajak ) );
         $negosiasiHarga->pph_22 = $jumlah_negosiasi * ( $pph_22 / ( 1 + $pajak ));
         $negosiasiHarga->harga_sebelum_pajak = $jumlah_negosiasi * ( 1 / (1 + $ppn + $pph_22));      
