@@ -37,19 +37,19 @@
        <tr>
             <td>1</td>
             {{-- <td>{{ $data['kegiatan']->ketua_tpk }}</td> --}}
-            <td> .............. </td>
+            <td>{{$data['kegiatan']->ketua_tpk}} </td>
             <td>Ketua TPK</td>
             <td> .............. </td>
        </tr>
        <tr>
             <td>2</td>
-            <td> .............. </td>
+            <td>{{$data['kegiatan']->sekretaris_tpk}}  </td>
             <td> Sekretaris TPK </td>
             <td> .............. </td>
         </tr>
         <tr>
             <td>3</td>
-            <td> .............. </td>
+            <td> {{$data['kegiatan']->anggota_tpk}}  </td>
             <td> Anggota TPK </td>
             <td> .............. </td>
         </tr>

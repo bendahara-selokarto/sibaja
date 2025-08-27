@@ -217,7 +217,6 @@ class NegosiasiHargaController extends Controller
                 'jumlah_negosiasi' => ($item->volume * $hargaNegosiasi[$k]->harga_satuan) * ( 1 / (1 + $ppn + $pph_22)),
             ];
         });
-        // dd($items);
         $penawaranHarga->tgl_penawaran =  Carbon::parse($penawaranHarga->tgl_penawaran);
         $jumlah_penawaran = $items->sum('jumlah_penawaran') * ( (1 + $ppn + $pph_22));
         $nilai_ppn = $jumlah_penawaran  * ( $ppn / ( 1 + $pajak ) );
