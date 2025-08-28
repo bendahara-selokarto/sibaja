@@ -27,7 +27,10 @@ class NegosiasiHargaController extends Controller
         $kegiatan = Kegiatan::with('negosiasiHarga' , 'penawaran', 'pemberitahuan')->find($id);
 
         
-        $penawaran = $kegiatan->penawaran->firstWhere('is_winner', true);
+        $penawaran = $kegiatan->penawaran()
+        ->where('is_winner', true)
+        ->first();
+
         
         if(empty($penawaran)){
             return back()->with('error', 'PEMENANG belum di set');
