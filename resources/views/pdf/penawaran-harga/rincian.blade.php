@@ -11,7 +11,7 @@ onerror="this.src='{{ asset('') }}'"
     <tr>
         <td style="width: 120px">            
             <img 
-                src="{{public_path('storage/'.{{$penyedia1->logo_penyedia)}}" 
+                src="{{public_path('storage/'.$penyedia1->logo_penyedia)}}" 
                 class="logo-kop-desa" 
                 alt=" " 
                 width="120px" 

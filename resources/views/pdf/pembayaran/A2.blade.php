@@ -11,7 +11,7 @@
     <div style="border: 2px solid black">
     <table style="width: 100%; border-bottom: 1px solid black; margin:0px;">        
         <tr>
-            <td rowspan="5" style="width: 124px; text-align:center"><img src="{{ public_path('images/batang.png') }}" alt="batang" style="width: 80px; height:auto;"></td>
+            <td rowspan="5" style="width: 124px; text-align:center"><img src="{{public_path('batang.png')}}" alt="batang" style="width: 80px; height:auto;"></td>
             <td colspan="4" style="text-transform: uppercase; font-weight: bold">
                 PEMERINTAH KABUPATEN BATANG               
             </td>
