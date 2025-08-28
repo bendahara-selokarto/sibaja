@@ -1,6 +1,6 @@
 @if(!empty($penyedia2->kop_surat))
 <img 
-    src="storage/{{$penyedia2->kop_surat }}" 
+    src="{{public_path('storage/'.$penyedia2->kop_surat)}}" 
     alt=" " 
     style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
     onerror="this.src='{{ asset('') }}'" 
@@ -10,7 +10,7 @@
     <tr>
         <td style="width: 120px">            
             <img 
-                src="storage/{{$penyedia2->logo_penyedia }}" 
+                src="{{public_path('storage/'.$penyedia2->logo_penyedia)}}" 
                 class="logo-kop-desa" 
                 alt=" " 
                 width="120px" 

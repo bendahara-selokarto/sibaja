@@ -1,7 +1,7 @@
 <div class="new-cover" style="position: relative;margin: 0; padding: 0;">
 
    <div style="width: auto; height: 4cm; position: absolute; top: 60px; left: 0; right: 0; display: flex; align-items: center; justify-content: center;">
-    <img src="batang.png" alt="batang">
+    <img src="{{public_path('batang.png')}}" alt="batang">
     </div>
 
 

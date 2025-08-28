@@ -9,7 +9,7 @@
    <body>
     <div class="invoice">   
     <img 
-        src="storage/{{$penyedia->kop_surat }}" 
+        src="{{public_path('storage/'.$penyedia->kop_surat)}}" 
         alt=" " 
         style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
         onerror="this.src='{{ asset('') }}'" 
