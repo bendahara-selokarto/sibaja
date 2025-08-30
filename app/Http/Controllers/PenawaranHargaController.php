@@ -122,13 +122,14 @@ class PenawaranHargaController extends Controller
         $harga_penawaran = $penawaran->hargaPenawaran;
 
         
-        $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) use ($harga_penawaran){
+        $harga_satuan = $harga_penawaran->pluck('harga_satuan')->values();
+
+        $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) use ($harga_satuan) {
             return [
                 'uraian' => $item['uraian'],
                 'volume' => $item['volume'],
                 'satuan' => $item['satuan'],
-                'harga_satuan' => $harga_penawaran->pluck('harga_satuan')->get($key),
-
+                'harga_satuan' => $harga_satuan->get($key),
             ];
         });
 
