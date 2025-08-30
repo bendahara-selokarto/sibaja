@@ -9,13 +9,15 @@
    <body>
     <div class="invoice">   
 
-    {{-- <img 
-        src="{{public_path('storage/'.$penyedia->kop_surat)}}" 
-        alt=" " 
-        style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
-        onerror="this.src='{{ asset('') }}'" 
-        > --}}
-    <p style="text-align: right">{{ $penyedia->kabupaten }}, {{  Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_invoice)->isoFormat('D MMMM Y') }}</p>
+    @if($penyedia->kop_surat)
+        <img 
+            src="{{public_path('storage/'.$penyedia->kop_surat)}}" 
+            alt=" " 
+            style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
+            onerror="this.src='{{ asset('') }}'" 
+            >
+     @endif
+        <p style="text-align: right">{{ $penyedia->kabupaten }}, {{  Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_invoice)->isoFormat('D MMMM Y') }}</p>
     
     <table style="line-height: 1;" >
         <tr>
