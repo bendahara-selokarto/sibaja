@@ -6,7 +6,7 @@
     <title>Document</title>
 
 </head>
-<body style="line-height: 1.5">
+<body style="line-height: 1.3">
     <div class="ba-pembayaran">
     <h2 style="text-align: center; margin-bottom: 0">BERITA ACARA PEMBAYARAN</h2>
     <p style="text-align: center; margin-top: 0">NOMOR : {{$kegiatan->nomor }} /BA-Pemb/{{Auth::user()->kode_desa}}/{{Auth::user()->tahun_anggaran}}</p>
