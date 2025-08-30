@@ -15,7 +15,7 @@
             <tr>
                 <td>Nomor</td>
                 <td>:</td>
-                <td style="text-indent: 30px">/{{Terbilang::roman($tgl->isoFormat('M'))}}/{{Auth::user()->tahun_anggaran}}</td>
+                <td >{{$kegiatan->nomor}}/LHP/{{Terbilang::roman($tgl->isoFormat('M'))}}/{{Auth::user()->tahun_anggaran}}</td>
                 <td>Kepada :</td>
             </tr>
             <tr>
