@@ -155,11 +155,11 @@ class PenawaranHargaController extends Controller
         ->firstOrFail();
 
         $harga_satuan_array = collect($request->harga_satuan)->map(function ($item) {
-        return [
-            'id' => (string) Str::uuid(),
-            'harga_satuan' => $item
-        ];
-        })->toArray();
+            return [
+                'id' => (string) Str::uuid(),
+                'harga_satuan' => $item
+            ];
+        })->values()->toArray(); // <── ini reset index jadi 0,1,2,...
         
         $pemberitahuan = Pemberitahuan::with('kegiatan')->findOrFail($request->pemberitahuan_id);
         
