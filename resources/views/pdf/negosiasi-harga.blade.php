@@ -30,7 +30,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td style="text-align: right">{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_negosiasi)->isoFormat('D MMMM Y') }}</td>
+            <td style="text-align: right">{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_persetujuan)->isoFormat('D MMMM Y') }}</td>
         </tr>
         <tr>
             <td>Nomor</td>
