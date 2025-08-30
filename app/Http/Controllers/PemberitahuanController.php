@@ -61,17 +61,19 @@ class PemberitahuanController extends Controller
 
         $data['pekerjaan'] = $pekerjaan;
 
-        $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan'); 
+        $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
 
+        $data['tgl_batas_akhir_penawaran'] = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
+        
         $saveSpem = Pemberitahuan::create($data);
 
         $saveSpem->belanjas()->createMany($belanja->toArray());
         
         $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
-
+        
         return redirect()->route('kegiatan.show' , $request->kegiatan_id);
         
-
+        
     }
      
     public function edit(string $id)
@@ -90,14 +92,14 @@ class PemberitahuanController extends Controller
             return redirect()->back();
         }
         $belanja = $pemberitahuan->belanjas;
-
+        
         return view('form.pemberitahuan', [
             'pemberitahuan' => $pemberitahuan, 
             'penyedia' => $penyedia, 'kegiatan' => $kegiatan, 
             'penyediaTerpilih' => $penyediaTerpilih, 
             'belanja' => $belanja]);
-    }
-
+        }
+        
     /**
      * Update the specified resource in storage.
      */
@@ -108,7 +110,7 @@ public function update(Request $request, string $id)
     $uraian = $request->input('uraian');  
     $volume = $request->input('volume');  
     $satuan = $request->input('satuan');
-
+    
     $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
         return [
             // 'nomor' => $key + 1,
@@ -127,16 +129,15 @@ public function update(Request $request, string $id)
         'no_pbj',
     ]);
 
-    // $data['belanja'] = $belanja;
     $data['pekerjaan'] = $pekerjaan;
     $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
 
-
-    // ✅ update menggunakan instance
-    $pemberitahuan->update($data);
+    $data['tgl_batas_akhir_penawaran'] = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
 
     $pemberitahuan->update($data);
+    
     $pemberitahuan->belanjas()->delete(); // hapus semua relasi lama
+    
     $pemberitahuan->belanjas()->createMany($belanja->toArray()); // insert ulang
 
 
