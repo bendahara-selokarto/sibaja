@@ -37,7 +37,7 @@
             {{-- <p style="text-transform: uppercase; text-decoration:underline; margin-left:auto; width:300px; text-align:center"><b>{{Auth::user()->desa}}</b></p> --}}
         </table>
         <br><br>
-        <div style="text-align: justify; text-indent:30px; margin-left:154px; vertical-align:1.5; line-height: 2">
+        <div style="text-align: justify; text-indent:30px; margin-left:118px; vertical-align:1.5; line-height: 2">
             <p >Berdasarkan Keputusan Kepala Desa Nomor {{$kegiatan->nomor_pka}} Tahun {{Auth::user()->tahun_anggaran}} tentang Pelaksana Kegiatan Anggaran, maka dengan ini kami laporkan bahwa kegiatan {{$kegiatan->kegiatan}} telah selesai dilaksanakan pada {{tanggal_indo($negosiasiHarga->tgl_akhir_perjanjian)}} Adapun dokumen pelaksanaan kegiatan {{$kegiatan->kegiatan}} terlampir.</p>
 
 <p>Demikian untuk menjadikan periksa dan guna seperlunya.</p>
