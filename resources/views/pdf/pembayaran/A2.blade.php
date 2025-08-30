@@ -88,7 +88,7 @@
                 <tr>
                     <td>Jumlah Kotor</td>
                     <td>Rp. </td>
-                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->total, -2))}},-</td>
+                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->total))}},-</td>
                 </tr>
                 <tr>
                     <td>Potongan</td>
@@ -98,7 +98,7 @@
                 <tr>
                     <td>Dibayarkan</td>
                     <td>Rp. </td>
-                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->total, -2))}},-</td>
+                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->jumlah))}},-</td>
                 </tr>
             </table>
 
