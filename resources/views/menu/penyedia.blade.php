@@ -28,7 +28,9 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $i['nama_penyedia'] }} <br>
+                                @if($i['kop_surat'])
                                 <img style="width: 80pt; height: auto;" src="{{ asset('storage/' . $i['kop_surat']) }}" alt="kop surat">
+                                @endif
                              </td>
                             <td><ol>
                                 <li>Alamat: {{ $i['alamat_penyedia'] }}</li>
