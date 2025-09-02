@@ -28,7 +28,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $i['nama_penyedia'] }} <br>
-                                @if($i['kop_surat'])
+                                @if($i['kop_surat'] && file_exists(storage_path('app/public/' . $i['kop_surat']) && $i['kop_surat'] != 'kop_surat/default.png'))
                                 <img style="width: 80pt; height: auto;" src="{{ asset('storage/' . $i['kop_surat']) }}" alt="kop surat">
                                 @endif
                              </td>
