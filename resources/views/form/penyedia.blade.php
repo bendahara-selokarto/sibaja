@@ -91,21 +91,21 @@
                                 <x-text-input id="bank" name="bank" type="text" class="mt-1 block w-full" :value="old('bank', $penyedia->bank)" required autocomplete="bank" />
                                 <x-input-error class="mt-2" :messages="$errors->get('bank')" />
                             </div>
-                            <div>
+                            {{-- <div>
                                 <x-input-label for="logo_penyedia" :value="__('Logo')" />
                                 <x-text-input id="logo_penyedia" name="logo_penyedia" type="file" class="mt-1 block w-full" :value="old('logo_penyedia', $penyedia->logo_penyedia)" autocomplete="logo_penyedia" />
                                 <x-input-error class="mt-2" :messages="$errors->get('logo_penyedia')" />
-                            </div>
+                            </div> --}}
                             <div>
                                 <x-input-label for="kop_surat" :value="__('Kop Surat')" />
                                 <x-text-input id="kop_surat" name="kop_surat" type="file" class="mt-1 block w-full" :value="old('kop_surat', $penyedia->kop_surat)" autocomplete="kop_surat" />
                                 <x-input-error class="mt-2" :messages="$errors->get('kop_surat')" />
                             </div>
-                            <div>
+                            {{-- <div>
                                 <x-input-label for="data_dukung" :value="__('Lampiran data dukung .pdf')" />
                                 <x-text-input id="data_dukung" name="data_dukung" type="file" class="mt-1 block w-full" :value="old('data_dukung', $penyedia->data_dukung)" autocomplete="data_dukung" />
                                 <x-input-error class="mt-2" :messages="$errors->get('data_dukung')" />
-                            </div>
+                            </div> --}}
                         </div>
                     {{-- </div> --}}
                     <div>                        
