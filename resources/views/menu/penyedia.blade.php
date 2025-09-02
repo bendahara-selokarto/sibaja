@@ -28,7 +28,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $i['nama_penyedia'] }} <br>
-                                <img style="width: 80pt; height: auto;" src="/storage/{{ $i['logo_penyedia'] }}" alt="logo">
+                                <img style="width: 80pt; height: auto;" src="{{ asset('storage/' . $i['kop_surat']) }}" alt="kop surat">
                              </td>
                             <td><ol>
                                 <li>Alamat: {{ $i['alamat_penyedia'] }}</li>
