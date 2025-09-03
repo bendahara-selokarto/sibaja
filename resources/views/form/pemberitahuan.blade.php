@@ -44,7 +44,7 @@
                                 <div>
                                     <x-input-label for="tgl_pemberitahuan" :value="__('Tanggal Surat')" />
                                     <x-text-input 
-                                    value="{{ old('tgl_pemberitahuan', $pemberitahuan->tgl_surat_pemberitahuan ?? '') }}"
+                                    value="{{ old('tgl_pemberitahuan', isset($pemberitahuan->tgl_surat_pemberitahuan) ? \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') : '') }}"
                                     id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 inline " required autocomplete="tgl_pemberitahuan" /> <span id="hari-pemberitahuan"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_pemberitahuan')" />
                                 </div> <span id="tgl_pemberitahuan"></span>                               
