@@ -13,7 +13,7 @@
         @endforeach
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
+                <div class="max-w-full">
                     <form action="{{ isset($isEdit) ? route('penawaran.update' , $pemberitahuan->id) : route('penawaran.store') }}" class="survey" method="POST" id="form_id">
                         @method('post')
                         @csrf
@@ -67,15 +67,17 @@
                         </div>
                         <br>
                         <div class="overflow-x-auto">
-                            <table class="min-w-full border border-gray-200 divide-y divide-gray-100 text-sm text-left">
+                            <table class="w-full table-fixed border border-gray-200 divide-y divide-gray-100 text-sm text-left">
                                 <thead class="bg-gray-100 text-gray-700">
                                     <tr>
-                                        <th class="px-4 py-2 w-10">NO</th>
-                                        <th class="px-4 py-2 w-3/10">Uraian</th>
-                                        <th class="px-4 py-2 w-1/10">Volume</th>
-                                        <th class="px-4 py-2 w-1/10">Satuan</th>
-                                        <th class="px-4 py-2 w-2/10 text-right">Harga Satuan</th>
-                                        <th class="px-4 py-2 w-2/10 text-right">Jumlah</th>
+                                        <tr>
+                                            <th class="px-4 py-2 w-[5%]">NO</th>
+                                            <th class="px-4 py-2 w-[35%]">Uraian</th>
+                                            <th class="px-4 py-2 w-[10%]">Volume</th>
+                                            <th class="px-4 py-2 w-[10%]">Satuan</th>
+                                            <th class="px-4 py-2 w-[20%] text-right">Harga Satuan</th>
+                                            <th class="px-4 py-2 w-[20%] text-right">Jumlah</th>
+                                        </tr>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-100">
@@ -97,7 +99,7 @@
                                                 <input type="hidden" name="satuan[]" value="{{ $k['satuan'] }}">
                                             </td>
                                             <td class="px-4 py-2 text-right">
-                                                <input type="number" min="0" step="any" value="{{old('harga_satuan[]', isset($k['harga_satuan']) ? $k['harga_satuan'] : '')}}" name="harga_satuan[]" class="w-24 rounded-md border-gray-300 text-right" onblur="formatNumber(this)">
+                                                <input type="number" min="0" step="any" value="{{old('harga_satuan[]', isset($k['harga_satuan']) ? $k['harga_satuan'] : '')}}" name="harga_satuan[]" class="w-40 rounded-md border-gray-300 text-right" onblur="formatNumber(this)">
                                             </td>
                                             <td class="px-4 py-2 text-right" name="format_number"></td>
                                         </tr>
