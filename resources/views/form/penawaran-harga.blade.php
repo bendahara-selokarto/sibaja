@@ -31,7 +31,7 @@
                             <label for="checkbox" class="inline-flex items-center">
                                 <input type="checkbox" id="checkbox" name="pemenang" value="true"
                                     class="form-checkbox"
-                                    @if($penawaran->is_winner) checked @endif>
+                                    {{ isset($penawaran) && $penawaran->is_winner ? 'checked' : '' }}>
                                 <span class="ml-2">Tetapkan sebagai Pemenang</span>
                             </label>                            
                         </div>
