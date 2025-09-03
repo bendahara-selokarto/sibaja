@@ -77,7 +77,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-100">
-                                    @foreach ($belanja as $y => $k)
+                                    @foreach ($belanja as $k)
                                         <tr>
                                             <td class="px-4 py-2">
                                                 {{ $loop->iteration  }}

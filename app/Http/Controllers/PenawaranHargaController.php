@@ -123,7 +123,7 @@ class PenawaranHargaController extends Controller
 
         
         $harga_satuan = $harga_penawaran->pluck('harga_satuan')->values();
-
+        
         $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) use ($harga_satuan) {
             return [
                 'uraian' => $item['uraian'],
@@ -132,7 +132,7 @@ class PenawaranHargaController extends Controller
                 'harga_satuan' => $harga_satuan->get($key),
             ];
         });
-
+    
         $penawaran->tgl_penawaran = Carbon::parse($penawaran->tgl_penawaran)->format('Y-m-d');
 
         return view('form.penawaran-harga', [
@@ -155,12 +155,13 @@ class PenawaranHargaController extends Controller
         ->where('pemberitahuan_id', $request->pemberitahuan_id)
         ->firstOrFail();
 
-        $harga_satuan_array = collect($request->harga_satuan)->map(function ($item) {
-            return [
-                'id' => (string) Str::uuid(),
-                'harga_satuan' => $item
-            ];
-        })->values()->toArray(); // <── ini reset index jadi 0,1,2,...
+        $harga_satuan_array = $request->harga_satuan;
+
+        $hargaLama = $penawaran->hargaPenawaran()->orderBy('id')->get();
+
+        if ($hargaLama->count() !== count($harga_satuan_array)) {
+            throw new \Exception("Jumlah item harga tidak sesuai dengan data belanja!");
+        };
         
         $pemberitahuan = Pemberitahuan::with('kegiatan')->findOrFail($request->pemberitahuan_id);
         
@@ -174,10 +175,14 @@ class PenawaranHargaController extends Controller
             'no_penawaran' => $request->no_penawaran,
             'is_winner' => $is_winner,
         ]);
-
-        $penawaran->hargaPenawaran()->delete();
         
-        $penawaran->hargaPenawaran()->createMany($harga_satuan_array);
+        foreach ($hargaLama as $index => $row) {
+            $row->update([
+                'harga_satuan' => $harga_satuan_array[$index],
+            ]);
+        };
+
+        flash()->success('Penawaran berhasil diupdate.');
 
         return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
     }
