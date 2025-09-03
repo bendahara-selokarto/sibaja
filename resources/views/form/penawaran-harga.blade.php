@@ -29,11 +29,13 @@
                         </div>
                         <div>                           
                             <label for="checkbox" class="inline-flex items-center">
-                                    <input type="checkbox" id="checkbox" name="pemenang" value="true"
-                                        class="form-checkbox">
-                                    <span class="ml-2">Tetapkan sebagai Pemenang</span>
-                                </label>                            
+                                <input type="checkbox" id="checkbox" name="pemenang" value="true"
+                                    class="form-checkbox"
+                                    @if($penawaran->is_winner) checked @endif>
+                                <span class="ml-2">Tetapkan sebagai Pemenang</span>
+                            </label>                            
                         </div>
+
                         <br>
                         <div>
                             <input type="hidden" name="pemberitahuan_id" value="{{ $pemberitahuan->id }}">
