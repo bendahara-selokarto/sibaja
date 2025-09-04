@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\KegiatanRequest;
 use App\Models\Pemberitahuan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use function PHPUnit\Framework\isEmpty;
@@ -47,26 +48,12 @@ class KegiatanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+
+    public function store(KegiatanRequest $request)
     {
         try {
-            $validatedData = $request->validate([
-                'rekening_apbdes' => 'required|string',
-                'kegiatan' => 'required|string',
-                'lokasi_kegiatan' => 'required|string',
-                'ketua_tpk' => 'required|string',
-                'sekretaris_tpk' => 'required|string',
-                'anggota_tpk' => 'required|string',
-                'nomor_sk_tpk' => 'required',
-                'tgl_sk_tpk' => 'required',
-                'nomor_sk_pka' => 'required',
-                'tgl_sk_pka' => 'required',
-                'pka' => 'required|string',
-            ]);
-            
-            Kegiatan::create($validatedData);
+            Kegiatan::create($request->validated());
             noty()->success('berhasil ditambahkan');
-            
         } catch (\Throwable $th) {
             noty()->error($th->getMessage());
         }
@@ -142,31 +129,16 @@ class KegiatanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(KegiatanRequest $request, string $id)
     {
         try {
-            $validatedData = $request->validate([
-                'rekening_apbdes' => 'required|string',
-                'kegiatan' => 'required|string',
-                'lokasi_kegiatan' => 'required|string',
-                'ketua_tpk' => 'required|string',
-                'sekretaris_tpk' => 'required|string',
-                'anggota_tpk' => 'required|string',                
-                'nomor_sk_tpk' => 'required',
-                'tgl_sk_tpk' => 'required',
-                'nomor_sk_pka' => 'required',
-                'tgl_sk_pka' => 'required',
-                'pka' => 'required|string',
-            ]);
+            $kegiatan = Kegiatan::findOrFail($id);
+            $kegiatan->update($request->validated());
 
-            $kegiatan = Kegiatan::find($id);
-            $kegiatan->update($validatedData);
-            noty()->success('terupdate');
-            
+            noty()->success('Data kegiatan berhasil diperbarui');
         } catch (\Throwable $th) {
             noty()->error($th->getMessage());
         }
-
 
         return redirect()->route('menu.kegiatan');
     }
