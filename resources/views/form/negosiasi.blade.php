@@ -6,8 +6,9 @@
     </x-slot>   
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-3">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <p>{{ $kegiatan->rekening_apbdes }} : {{ $kegiatan->kegiatan }}</p>
             </div>
 
                 <form action="{{ isset($negosiasi) ? route('negosiasi.update', $negosiasi->id) : route('negosiasi.store') }}" method="POST">
@@ -20,11 +21,10 @@
 
                     <div class="py-12">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                            <p>{{ $kegiatan->rekening_apbdes }} : {{ $kegiatan->kegiatan }}</p>
+                        
                             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
 
                                 <x-text-input id="id" name="kegiatan_id" type="hidden" class="mt-1 block w-full" value="{{ $kegiatan->id }}" />
-
                                     <div>
                                         <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
                                         <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date"
@@ -32,7 +32,6 @@
                                             class="mt-1 block"
                                             min="{{ $kegiatan->tgl }}"
                                             required
-                                            {{-- autocomplete="tgl_persetujuan" --}}
                                             value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
                                         />
                                         <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
@@ -61,31 +60,37 @@
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
                                 </div>
-
+                                <br>
                                 <div>
-                                    <table class="w-full">
-                                        <tr>
-                                            <th class="w-64">Uraian</th>
-                                            <th class="w-64">Vol/Sat</th>
-                                            <th class="w-64">Harga Penawaran</th>
-                                            <th class="w-64">Harga Negosiasi</th>
-                                        </tr>
-                                        @foreach ($items as $i => $item)
-                                        <tr>
-                                            <td>{{ $item['uraian'] }}</td>
-                                            <td>{{ $item['volume'] }} {{ $item['satuan'] }}</td>
-                                            <td>{{ $item['harga_penawaran'] }}</td>
-                                            <td>
-                                                <input type="number" name="harga_satuan_negosiasi[]" required
-                                                    value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? $item['harga_negosiasi'] : '') }}"
-                                                    class="w-full border border-gray-300 rounded px-2 py-1"
-                                                >
-                                            </td>
-                                        </tr>
-                                            
-                                        @endforeach
+                                    <table class="w-full border border-gray-200 text-left">
+                                        <thead class="bg-gray-100">
+                                            <tr>
+                                                <th class="w-64 px-2 py-1">Uraian</th>
+                                                <th class="w-64 px-2 py-1">Vol/Sat</th>
+                                                <th class="w-64 px-2 py-1">Harga Penawaran</th>
+                                                <th class="w-64 px-2 py-1">Harga Negosiasi</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody class="bg-white divide-y divide-gray-100">
+                                            @foreach ($items as $i => $item)
+                                            <tr class="odd:bg-gray-50 even:bg-white"> 
+                                                <td class="px-2 py-1">{{ $item['uraian'] }}</td>
+                                                <td class="px-2 py-1">{{ $item['volume'] }} {{ $item['satuan'] }}</td>
+                                                <td class="px-2 py-1">{{ $item['harga_penawaran'] }}</td>
+                                                <td class="px-2 py-1">
+                                                    <input type="number" name="harga_satuan_negosiasi[]" required
+                                                        value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? $item['harga_negosiasi'] : '') }}"
+                                                        class="w-full border border-gray-300 rounded px-2 py-1"
+                                                    >
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
                                     </table>
+
                                 </div>
+                                <br>
 
                                 <div>
                                     <x-primary-button type='submit'>{{ isset($negosiasi) ? 'Perbarui' : 'Simpan' }}</x-primary-button>
