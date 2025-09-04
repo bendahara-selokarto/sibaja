@@ -161,15 +161,18 @@ class NegosiasiHargaController extends Controller
             'tgl_akhir_perjanjian' => Carbon::parse($request->tgl_akhir_perjanjian)           
         ]);
 
-        $item_negosiasi =$request->harga_satuan_negosiasi; 
+        $harga_satuan_array =$request->harga_satuan_negosiasi; 
 
-        $item_negosiasi_array = collect($item_negosiasi)->map(function ($item) { return [ 
-            'id' => (string) Str::uuid(),
-            'harga_satuan' => $item
-        ];})->toArray();
+        $hargaLama = $negosiasi->hargaNegosiasi()->orderBy('id')->get();
 
-        $negosiasi->hargaNegosiasi()->delete();
-        $negosiasi->hargaNegosiasi()->createMany($item_negosiasi_array);
+        if ($hargaLama->count() !== count($harga_satuan_array)) {
+            throw new \Exception("Jumlah item harga tidak sesuai dengan data belanja!");
+        }
+
+        foreach ($hargaLama as $index => $harga) {
+            $harga->update(['harga_satuan' => $harga_satuan_array[$index]]);
+        }
+
         return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil memperbarui data');
     }
 
