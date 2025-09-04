@@ -208,29 +208,37 @@
       </tr>
       
     </table>
-    <table style="width: 100%; border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; text-align: center;">
-    <tr>kepada ketentuan dalam SPK ini, Penyedia Barang dan Jasa berkewajiban untuk mematuhi Standar Ketentuan dan Syarat Umum SPK terlampir.</tr>  
-    <tr >
+    <table style="width: 100%; border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; text-align: center; border-collapse: collapse; page-break-inside: avoid;">
+      <tr>
+        <td colspan="2" style="text-align: justify; padding: 5px;">
+          kepada ketentuan dalam SPK ini, Penyedia Barang dan Jasa berkewajiban untuk mematuhi
+          Standar Ketentuan dan Syarat Umum SPK terlampir.
+        </td>
+      </tr>
+      <tr>
         <td></td>
-        <td style="text-align:center">{{ ucwords(Auth::user()->desa) .', '. $data['negosiasiHarga']->tgl_perjanjian->isoFormat('D MMMM Y') }}</td>
-        </tr>
-        <tr>
-          <td>PIHAK KEDUA</td>
-          <td>PIHAK PERTAMA</td>
-        </tr>
-        <tr>
-          <td>{{ $data['penyedia']->jabata_pemilik ." ". $data['penyedia']->nama_penyedia }}</td>
-          <td>PKA</td>
-        </tr>
-        <tr>
-          <td><br><br><br></td>
-          <td></td> 
-        </tr>
-        <tr>
-          <td>{{ $data['penyedia']->nama_pemilik }}</td>
-          <td>{{ $data['kegiatan']->pka }}</td>
-        </tr>
-     </table>
+        <td style="text-align:center; padding: 5px;">
+          {{ ucwords(Auth::user()->desa) .', '. $data['negosiasiHarga']->tgl_perjanjian->isoFormat('D MMMM Y') }}
+        </td>
+      </tr>
+      <tr>
+        <td>PIHAK KEDUA</td>
+        <td>PIHAK PERTAMA</td>
+      </tr>
+      <tr>
+        <td>{{ $data['penyedia']->jabata_pemilik ." ". $data['penyedia']->nama_penyedia }}</td>
+        <td>PKA</td>
+      </tr>
+      <tr>
+        <td style="height: 60px;"></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{ $data['penyedia']->nama_pemilik }}</td>
+        <td>{{ $data['kegiatan']->pka }}</td>
+      </tr>
+    </table>
+
 <div style="page-break-before: always;">
 @include('pdf.negosiasi-harga.standar-ketentuan-dan-syarat-umum')
 </div>

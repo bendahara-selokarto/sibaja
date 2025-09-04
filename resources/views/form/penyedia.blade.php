@@ -116,4 +116,24 @@
             </div>
         </div>
     </div>
+    @pushOnce('scripts')
+    <script>
+
+        //konfirmasi sebelum meninggalkan halaman jika ada perubahan pada form
+        let formChanged = false;
+
+    document.querySelectorAll("form input, form textarea, form select").forEach(el => {
+        el.addEventListener("change", () => {
+            formChanged = true;
+        });
+    });
+
+    window.addEventListener("beforeunload", function (e) {
+        if (formChanged) {
+            e.preventDefault();
+            e.returnValue = "Perubahan Anda belum disimpan. Yakin mau keluar?";
+        }
+    });
+    </script>
+    @endPushOnce
 </x-app-layout>
