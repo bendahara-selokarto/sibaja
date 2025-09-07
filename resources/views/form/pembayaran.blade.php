@@ -31,7 +31,7 @@
                                         type="date"
                                         class="mt-1 block"
                                         min="{{ \Carbon\Carbon::parse($kegiatan->negosiasiHarga->tgl_akhir_perjanjian)->format('Y-m-d') }}"
-                                        value="{{ old('tgl_invoice', isset($pembayaran) ? $pembayaran->tgl_invoice : '') }}"
+                                        value="{{ old('tgl_invoice', isset($pembayaran) ? \Carbon\Carbon::parse($pembayaran->tgl_invoice)->format('Y-m-d') : '') }}"
                                         required
                                         autocomplete="tgl_invoice"
                                     />
@@ -46,7 +46,7 @@
                                         type="date"
                                         class="mt-1 block"
                                         min="{{ \Carbon\Carbon::parse($kegiatan->negosiasiHarga->tgl_akhir_perjanjian)->format('Y-m-d') }}"
-                                        value="{{ old('tgl_pembayaran_cms', isset($pembayaran) ? $pembayaran->tgl_pembayaran_cms : '') }}"
+                                        value="{{ old('tgl_pembayaran_cms', isset($pembayaran) ? \Carbon\Carbon::parse($pembayaran->tgl_pembayaran_cms)->format('Y-m-d') : '') }}"
                                         required
                                         autocomplete="tgl_pembayaran_cms"
                                     />
