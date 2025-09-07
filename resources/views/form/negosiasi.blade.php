@@ -118,22 +118,50 @@
     }).format(nilai);
     formatCurency.innerText = format;
     });
-
-    //konfirmasi sebelum meninggalkan halaman jika ada perubahan pada form
+    </script>
+        <script>
+    (function () {
+    // flag: ada perubahan pada form
     let formChanged = false;
+    // flag: form sedang disubmit secara normal (boleh melewati warning)
+    let isSubmitting = false;
 
-    document.querySelectorAll("form input, form textarea, form select").forEach(el => {
-        el.addEventListener("change", () => {
-            formChanged = true;
+    const selector = 'form input, form textarea, form select';
+
+    // tandai perubahan: gunakan 'input' untuk text-like fields, 'change' untuk lainnya
+    document.querySelectorAll(selector).forEach(el => {
+        const tag = el.tagName.toLowerCase();
+        if (tag === 'textarea' || (el.tagName.toLowerCase() === 'input' && [
+            'text','search','email','number','password','tel','url'
+        ].includes(el.type))) {
+        el.addEventListener('input', () => formChanged = true);
+        } else {
+        el.addEventListener('change', () => formChanged = true);
+        }
+    });
+
+    // Saat form disubmit secara normal, matikan warning
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', () => {
+        isSubmitting = true;
+        formChanged = false; // optional: reset supaya SPA/ajax tidak memicu warning
         });
     });
 
-    window.addEventListener("beforeunload", function (e) {
-        if (formChanged) {
-            e.preventDefault();
-            e.returnValue = "Perubahan Anda belum disimpan. Yakin mau keluar?";
-        }
+    // beforeunload handler — hanya tampilkan kalau ada perubahan dan bukan karena submit
+    window.addEventListener('beforeunload', (e) => {
+        if (!formChanged || isSubmitting) return;
+        e.preventDefault();
+        // modern browser mengabaikan pesan kustom; cukup set returnValue.
+        e.returnValue = '';
     });
-</script>
+
+    // Helpers (panggil ini bila pakai AJAX / Livewire: setelah berhasil submit, panggil __disableUnloadWarning())
+    window.__disableUnloadWarning = function () { formChanged = false; isSubmitting = true; };
+    window.__enableUnloadWarning  = function () { formChanged = true;  isSubmitting = false; };
+    })();
+    </script>
+
+    
 @endPushOnce
 </x-app-layout> 
