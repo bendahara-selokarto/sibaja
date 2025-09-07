@@ -40,7 +40,6 @@ class PenawaranHargaController extends Controller
         $penyedia = Penyedia::find($penyediaId);
               
         $pemberitahuan = $kegiatan->pemberitahuan;
-
         $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) {
             return [
                 'uraian' => $item['uraian'],
@@ -64,11 +63,14 @@ class PenawaranHargaController extends Controller
     {
      
     $harga_satuan = $request->harga_satuan;
-        
-        $harga_satuan_array = collect($harga_satuan)->map(function ($item) { return [ 
-            'id' => (string) Str::uuid(),
+    
+    $harga_satuan_array = [];
+    foreach ($harga_satuan as $item) {
+        $harga_satuan_array[] = [
             'harga_satuan' => $item
-        ];})->toArray();
+        ];
+    }
+
     
     $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran' , 'belanjas')->find($request->pemberitahuan_id);
    
@@ -119,7 +121,7 @@ class PenawaranHargaController extends Controller
 
         $penawaran->load('hargaPenawaran');
 
-        $harga_penawaran = $penawaran->hargaPenawaran;
+        $harga_penawaran = $penawaran->hargaPenawaran()->orderBy('id', 'ASC')->get();
 
         
         $harga_satuan = $harga_penawaran->pluck('harga_satuan')->values();
@@ -132,7 +134,6 @@ class PenawaranHargaController extends Controller
                 'harga_satuan' => $harga_satuan->get($key),
             ];
         });
-    
         $penawaran->tgl_penawaran = Carbon::parse($penawaran->tgl_penawaran)->format('Y-m-d');
 
         return view('form.penawaran-harga', [
@@ -157,7 +158,7 @@ class PenawaranHargaController extends Controller
 
         $harga_satuan_array = $request->harga_satuan;
 
-        $hargaLama = $penawaran->hargaPenawaran()->orderBy('id')->get();
+        $hargaLama = $penawaran->hargaPenawaran()->orderBy('id' , 'ASC')->get();
 
         if ($hargaLama->count() !== count($harga_satuan_array)) {
             throw new \Exception("Jumlah item harga tidak sesuai dengan data belanja!");
@@ -207,9 +208,9 @@ class PenawaranHargaController extends Controller
                                        
             $pemberitahuanId = $kegiatan->pemberitahuan->id;
             $pemberitahuan = Pemberitahuan::with('belanjas')->find($pemberitahuanId);
-            $belanja = $pemberitahuan->belanjas;
+            $belanja = $pemberitahuan->belanjas()->orderBy('id')->get();
 
-            $penawaran = $pemberitahuan->penawaran;
+            $penawaran = $pemberitahuan->penawaran()->orderBy('id')->get();
             $penawarPemenang = collect($penawaran)->firstWhere('is_winner', true);
             if(!isset($penawarPemenang)){
                 return back()->with('error', 'belum ada pemenang di set');
@@ -217,7 +218,7 @@ class PenawaranHargaController extends Controller
 
             $pemenangId = $penawarPemenang->id;
 
-            $pemenang = Penawaran::with('hargaPenawaran')->find($pemenangId);
+            $pemenang = Penawaran::with('hargaPenawaran')->orderBy('id', 'asc')->find($pemenangId);
             $penawaranPemenang = $pemenang->hargaPenawaran->map(function ($harga, $i) use ($belanja){
                 return [
                     'uraian'       => $belanja[$i]->uraian ?? null,
