@@ -40,6 +40,8 @@ class NegosiasiHargaController extends Controller
 
         $belanja = Belanja::where('pemberitahuan_id' , $pemberitahuanId )->get();
 
+        
+
         $items = $penawaran->hargaPenawaran->map(function ($harga, $i) use ($belanja){
                 return [
                     'uraian'       => $belanja[$i]->uraian ?? null,
@@ -70,8 +72,7 @@ class NegosiasiHargaController extends Controller
         
         $item_negosiasi =$request->harga_satuan_negosiasi; 
 
-        $item_negosiasi_array = collect($item_negosiasi)->map(function ($item) { return [ 
-            'id' => (string) Str::uuid(),
+        $item_negosiasi_array = collect($item_negosiasi)->map(function ($item) { return [             
             'harga_satuan' => $item
         ];})->toArray();
         
