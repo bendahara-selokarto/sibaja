@@ -28,9 +28,9 @@
                                     <div>
                                         <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
                                         <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date"
-                                            max="{{ Auth::user()->tahun_anggaran . '-12-31' }}"
+                                            max="{{ \Carbon\Carbon::parse(Auth::user()->tahun_anggaran . '-12-31')->format('Y-m-d') }}"
                                             class="mt-1 block"
-                                            min="{{ $kegiatan->tgl }}"
+                                            min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
                                             required
                                             value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
                                         />
@@ -39,7 +39,8 @@
                                     <div>
                                         <x-input-label for="tgl_negosiasi" :value="__('Tanggal Negosiasi Harga')" />
                                         <x-text-input id="tgl_negosiasi" name="tgl_negosiasi" type="date"
-                                            max="{{ Auth::user()->tahun_anggaran . '-12-31' }}"
+                                            max="{{ \Carbon\Carbon::parse(Auth::user()->tahun_anggaran . '-12-31')->format('Y-m-d') }}"
+                                            min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
                                             class="mt-1 block"
                                             required
                                             {{-- autocomplete="tgl_negosiasi" --}}
@@ -52,7 +53,8 @@
                                 <div>
                                     <x-input-label for="tgl_akhir_perjanjian" :value="__('Tanggal Akhir Perjanjian')" />
                                     <x-text-input id="tgl_akhir_perjanjian" name="tgl_akhir_perjanjian" type="date"
-                                        max="{{ Auth::user()->tahun_anggaran . '-12-31' }}"
+                                        max="{{ \Carbon\Carbon::parse(Auth::user()->tahun_anggaran . '-12-31')->format('Y-m-d') }}"
+                                        min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
                                         class="mt-1 block"
                                         required
                                         {{-- autocomplete="tgl_akhir_perjanjian" --}}
