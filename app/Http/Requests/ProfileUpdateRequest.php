@@ -24,8 +24,8 @@ class ProfileUpdateRequest extends FormRequest
             'bendahara_desa' => ['nullable', 'string', 'max:255'],
             'alamat_kantor' => ['nullable', 'string', 'max:255'],
             'website' => ['nullable', 'string', 'max:255'],
-            'kode_desa' => ['nullable', 'string', 'max:255'],
-            'tahun_anggaran' => ['nullable', 'string', 'max:255'],
+            'kode_desa' => ['nullable', 'string', 'min:10', 'max:10'],
+            'tahun_anggaran' => ['nullable', 'integer', 'min:2024', 'max:2100'],
             'email' => [
                 'required',
                 'string',

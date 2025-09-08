@@ -26,7 +26,7 @@
 </div>
 <div>
     <x-input-label for="kode_desa" :value="__('Kode Desa')" />
-    <x-text-input id="kode_desa" name="kode_desa" type="text" placeholder="3325142000" class="mt-1 block w-full" :value="old('kode_desa', $user->kode_desa)" required autocomplete="kode_desa" />
+    <x-text-input id="kode_desa" name="kode_desa" type="text" maxlength="10" minlength="10" placeholder="3325142000" class="mt-1 block w-full" :value="old('kode_desa', $user->kode_desa)" required autocomplete="kode_desa" />
     <x-input-error class="mt-2" :messages="$errors->get('kode_desa')" />
 </div>
 <div>
@@ -35,7 +35,7 @@
     <x-input-error class="mt-2" :messages="$errors->get('alamat_kantor')" />
 </div>
 <div>
-    <x-input-label for="tahun_anggaran" :value="__('tahun_anggaran')" />
-    <x-text-input id="tahun_anggaran" name="tahun_anggaran" placeholder="YYYY" min="2024" max="2045" class="mt-1 block w-full" :value="old('tahun_anggaran', $user->tahun_anggaran)" required autocomplete="tahun_anggaran" />
+    <x-input-label for="tahun_anggaran" :value="__('tahun anggaran')" />
+    <x-text-input type="number" min="2024" max="{{ date('Y') }}" id="tahun_anggaran" name="tahun_anggaran" placeholder="YYYY" min="2024" max="{{ date('Y') }}" class="mt-1 block w-full" :value="old('tahun_anggaran', $user->tahun_anggaran)" required autocomplete="tahun_anggaran" />
     <x-input-error class="mt-2" :messages="$errors->get('Tahun Anggaran')" />
 </div>

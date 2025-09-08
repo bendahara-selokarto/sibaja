@@ -34,18 +34,28 @@
                                     <x-text-input 
                                         id="no_pbj" 
                                         name="no_pbj" 
-                                        type="number" 
+                                        type="number"
+                                        min="1"
+                                        class="mt-1 block w-1/4 sm:w-1/3 lg:w-1/4" 
+                                        required
+                                        autofocus 
                                         value="{{ old('no_pbj', $pemberitahuan?->no_pbj ?? $no_pbj ?? '') }}" 
                                     />
-
-
                                     <x-input-error class="mt-2" :messages="$errors->get('no_pbj')" />
                                 </div>
                                 <div>
                                     <x-input-label for="tgl_pemberitahuan" :value="__('Tanggal Surat')" />
                                     <x-text-input 
-                                    value="{{ old('tgl_pemberitahuan', isset($pemberitahuan->tgl_surat_pemberitahuan) ? \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') : '') }}"
-                                    id="tgl_pemberitahuan" name="tgl_pemberitahuan" type="date" min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" class="mt-1 inline " required autocomplete="tgl_pemberitahuan" /> <span id="hari-pemberitahuan"></span>
+                                    id="tgl_pemberitahuan"
+                                    name="tgl_pemberitahuan" 
+                                    type="date" 
+                                    min="{{ Auth::user()->tahun_anggaran . '-01-01' }}" 
+                                    max="{{ Auth::user()->tahun_anggaran . '-12-31' }}" 
+                                    class="mt-1 inline block w-1/4 sm:w-1/3 lg:w-1/4" 
+                                    required 
+                                    autocomplete="tgl_pemberitahuan" 
+                                    value="{{ old('tgl_pemberitahuan', isset($pemberitahuan->tgl_surat_pemberitahuan) ? \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') : '') }}" /> 
+                                    <span id="hari-pemberitahuan"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_pemberitahuan')" />
                                 </div> <span id="tgl_pemberitahuan"></span>                               
                                 <br>
@@ -53,6 +63,7 @@
                                 @foreach ($penyedia as  $p)
                                 <x-bladewind::checkbox
                                 name="penyedia[]"
+                                class="mr-4 mb-2  inline-block"
                                 value="{{ $p['id'] }}"
                                 label="{{ $p['nama_penyedia'] }}" 
                                 :checked="in_array($p['id'], old('penyedia', $penyediaTerpilih ?? []))"
@@ -70,7 +81,7 @@
                                         <div class="flex w-xl items-center gap-1 mb-2">
                                             <input class="rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500" type="text" name="uraian[]" placeholder="Uraian" required value="{{ $val }}">
                                             
-                                            <input class="rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right" type="number" min="0" step="any" name="volume[]" placeholder="Vol" required value="{{ $volume[$index] ?? '' }}">  
+                                            <input class="rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 text-right" type="number" min="0" step="any" name="volume[]" placeholder="Vol" autocomplete="off" required value="{{ $volume[$index] ?? '' }}">  
                                             
                                             <input class="rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500" type="text" name="satuan[]" placeholder="Satuan" required value="{{ $satuan[$index] ?? '' }}">  
 

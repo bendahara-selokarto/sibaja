@@ -23,7 +23,7 @@
                         @endif
                         <div>
                             <x-input-label for="penyedia" :value="__('Penyedia')" />
-                            <input type="text" value="{{ $penyedia->nama_penyedia }}" readonly>
+                            <input class="w-full" type="text"  value="{{ $penyedia->nama_penyedia }}" readonly>
                             <input type="hidden" name="penyedia" value="{{ $penyedia->id }}" readonly>
                             <x-input-error class="mt-2" :messages="$errors->get('penyedia')" />
                         </div>
@@ -58,7 +58,7 @@
                         <br>
                         <div>
                             <x-input-label for="no_penawaran" :value="__('Nomor Penawaran')" />
-                            <x-text-input id="no_penawaran" name="no_penawaran" type="number" min="0"
+                            <x-text-input id="no_penawaran" name="no_penawaran" type="number" min="1"
                                 class="mt-1 block " required 
                                 value="{{ old('no_penawaran' , isset($penawaran) && $penawaran->no_penawaran ? $penawaran->no_penawaran : '')}}"
                                 
