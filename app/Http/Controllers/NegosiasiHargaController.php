@@ -62,9 +62,10 @@ class NegosiasiHargaController extends Controller
         
         $kegiatan = Kegiatan::with('penawaran')->find($request->kegiatan_id);
 
-        $request->validate([
-            'tgl_negosiasi' => 'required|date',
+        $validatedData = $request->validate([
+            'kegiatan_id' => 'required',
             'tgl_persetujuan' => 'required|date',
+            'tgl_negosiasi' => 'required|date',
             'tgl_akhir_perjanjian' => 'required|date',
             'harga_satuan_negosiasi' => 'required|array',
             'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
@@ -82,11 +83,12 @@ class NegosiasiHargaController extends Controller
         }
         $tgl = Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan);
 
-        $negosiasi = NegosiasiHarga::create( [
-            'kegiatan_id' => $request->kegiatan_id,
-            'tgl_persetujuan' => Carbon::parse($request->tgl_persetujuan),
-            'tgl_negosiasi' => Carbon::parse($request->tgl_negosiasi),
-            'tgl_akhir_perjanjian' => Carbon::parse($request->tgl_akhir_perjanjian),
+
+        $negosiasi = NegosiasiHarga::create([
+            'kegiatan_id' => $validatedData['kegiatan_id'],
+            'tgl_persetujuan' => Carbon::parse($validatedData['tgl_persetujuan']),
+            'tgl_negosiasi' => Carbon::parse($validatedData['tgl_negosiasi']),
+            'tgl_akhir_perjanjian' => Carbon::parse($validatedData['tgl_akhir_perjanjian']),
         ]);
 
         $negosiasi->hargaNegosiasi()->createMany($item_negosiasi_array);
@@ -153,13 +155,17 @@ class NegosiasiHargaController extends Controller
 
         
 
-        $negosiasi->update( [
+        $validatedData = $request->validate([
+            'tgl_negosiasi' => 'required|date',
+            'tgl_persetujuan' => 'required|date',
+            'tgl_akhir_perjanjian' => 'required|date',
+        ]);
+
+        $negosiasi->update([
             'kegiatan_id' => $request->kegiatan_id,
-            'rekening_apbdes' =>$kegiatan->rekening_apbdes,
-            'tgl_persetujuan' => Carbon::parse($request->tgl_persetujuan),
-            'tgl_negosiasi' => Carbon::parse($request->tgl_negosiasi),
-            'tgl_perjanjian' => Carbon::parse($request->tgl_perjanjian),
-            'tgl_akhir_perjanjian' => Carbon::parse($request->tgl_akhir_perjanjian)           
+            'tgl_persetujuan' => Carbon::parse($validatedData['tgl_persetujuan']),
+            'tgl_negosiasi' => Carbon::parse($validatedData['tgl_negosiasi']),
+            'tgl_akhir_perjanjian' => Carbon::parse($validatedData['tgl_akhir_perjanjian'])
         ]);
 
         $harga_satuan_array =$request->harga_satuan_negosiasi; 
