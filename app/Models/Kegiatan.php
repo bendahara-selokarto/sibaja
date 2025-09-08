@@ -45,6 +45,7 @@ class Kegiatan extends Model
 
         static::creating(function ($model) {
             $model->kode_desa = Auth::user()->kode_desa;
+            $model->tahun_anggaran = Auth::user()->tahun_anggaran;
         });
     }
 
