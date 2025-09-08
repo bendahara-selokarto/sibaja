@@ -21,6 +21,7 @@ class KegiatanController extends Controller
     public function index(): View
     {
         $kegiatan = Kegiatan::where('kode_desa', Auth::user()->kode_desa)
+            ->where('tahun_anggaran', Auth::user()->tahun_anggaran)
             ->orderBy('created_at', 'desc')
             ->get();
 
