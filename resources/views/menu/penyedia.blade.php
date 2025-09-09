@@ -41,10 +41,18 @@
                                 <li>{{ $i['nomor_npwp'] }}</li>                                
                             </ol></td>
                             <td>
-                                <form action="{{ route('penyedia.destroy', $i['id']) }}" method="post">
+                                <form id="delete-form-{{ $i->id }}" 
+                                    action="{{ route('penyedia.destroy', $i->id) }}" 
+                                    method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <x-bladewind::button can_submit="true" size='tiny' color="red">hapus</x-bladewind::button>
+
+                                    <button type="button" 
+                                            data-id="{{ $i->id }}"
+                                            onclick="confirmDelete(this)"
+                                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                        Hapus
+                                    </button>
                                 </form>
                                 <form action="{{ route('penyedia.edit', $i['id']) }}" method="get">
                                     @csrf
