@@ -190,10 +190,15 @@
                                                     </x-bladewind::button>
                                                 </form>
 
-                                                <form action="{{ route('pembayaran.destroy', $kegiatan['id']) }}" method="post" class="inline">
+                                                <form 
+                                                id="delete-form-{{ $kegiatan->id }}"
+                                                action="{{ route('pembayaran.destroy', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <x-bladewind::button size='tiny' icon="trash" can_submit="true" color="red">
+                                                    <x-bladewind::button
+                                                    data-id="{{  $kegiatan->id }}"
+                                                    onclick="confirmDelete(this)" 
+                                                    size='tiny' icon="trash" color="red">
                                                         Hapus
                                                     </x-bladewind::button>
                                                 </form>
