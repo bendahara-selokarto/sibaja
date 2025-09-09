@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Penyedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\PenyediaRequest;
 
 class PenyediaController extends Controller
 {
@@ -19,7 +20,7 @@ class PenyediaController extends Controller
         return view('form.penyedia' , compact('penyedia'));
     }
 
-    public function store(Request $request) {
+    public function store(PenyediaRequest $request) {
 
  
         if ($request->hasFile('logo_penyedia')) {

@@ -28,9 +28,9 @@
                                     <div>
                                         <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
                                         <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date"
-                                            max="{{ \Carbon\Carbon::parse(Auth::user()->tahun_anggaran . '-12-31')->format('Y-m-d') }}"
+                                            max="{{ \Carbon\Carbon::create(Auth::user()->tahun_anggaran, 12 , 31)->toDateString() }}"
                                             class="mt-1 block"
-                                            min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
+                                            min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
                                             required
                                             value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
                                         />
@@ -39,8 +39,8 @@
                                     <div>
                                         <x-input-label for="tgl_negosiasi" :value="__('Tanggal Negosiasi Harga')" />
                                         <x-text-input id="tgl_negosiasi" name="tgl_negosiasi" type="date"
-                                            max="{{ \Carbon\Carbon::parse(Auth::user()->tahun_anggaran . '-12-31')->format('Y-m-d') }}"
-                                            min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
+                                            max="{{ \Carbon\Carbon::create(Auth::user()->tahun_anggaran , 12, 31)->toDateString() }}"
+                                            min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
                                             class="mt-1 block"
                                             required
                                             {{-- autocomplete="tgl_negosiasi" --}}
