@@ -37,12 +37,19 @@
                                     <td><a href="{{ route('kegiatan.edit', $kegiatan['id']) }}"> <x-bladewind::button
                                                 size='tiny' outline="true" can_submit="true" color="yellow"
                                                 size='tiny'>Ubah</x-bladewind::button></a>
-                                        <form action="{{ route('kegiatan.destroy', $kegiatan['id']) }}" method="POST"
-                                            class="inline">
+                                        <form 
+                                        id="delete-form-{{ $kegiatan->id }}"
+                                        action="{{ route('kegiatan.destroy', $kegiatan['id']) }}" method="POST"
+                                            class="inline"
+                                            >
                                             @csrf
                                             @method('DELETE')
-                                            <x-bladewind::button size='tiny' outline="true" can_submit="true"
-                                                color="red" size='tiny'>Hapus</x-bladewind::button>
+                                            <button type="button" 
+                                                    data-id="{{  $kegiatan->id }}"
+                                                    onclick="confirmDelete(this)"
+                                                    class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                                Hapus
+                                            </button>
                                         </form>
                                     </td>
                                     <td>
@@ -65,11 +72,18 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const rows = document.querySelectorAll(".clickable-row");
+
             rows.forEach(row => {
-                row.addEventListener("click", function() {
+                row.addEventListener("click", function(e) {
+                    // Kalau elemen yang diklik adalah button atau anak button, jangan navigate
+                    if (e.target.closest("button")) {
+                        return; // stop, jangan navigasi
+                    }
+
                     window.location = this.dataset.href;
                 });
             });
         });
-    </script>
+        </script>
+
 </x-app-layout>
