@@ -26,17 +26,6 @@
 
                                 <x-text-input id="id" name="kegiatan_id" type="hidden" class="mt-1 block w-full" value="{{ $kegiatan->id }}" />
                                     <div>
-                                        <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
-                                        <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date"
-                                            max="{{ \Carbon\Carbon::create(Auth::user()->tahun_anggaran, 12 , 31)->toDateString() }}"
-                                            class="mt-1 block"
-                                            min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
-                                            required
-                                            value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
-                                        />
-                                        <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
-                                    </div>
-                                    <div>
                                         <x-input-label for="tgl_negosiasi" :value="__('Tanggal Negosiasi Harga')" />
                                         <x-text-input id="tgl_negosiasi" name="tgl_negosiasi" type="date"
                                             max="{{ \Carbon\Carbon::create(Auth::user()->tahun_anggaran , 12, 31)->toDateString() }}"
@@ -48,50 +37,60 @@
                                         />
                                         <x-input-error class="mt-2" :messages="$errors->get('tgl_negosiasi')" />
                                     </div>
+                                    
+                                    
+                                    <div>
+                                        <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
+                                        <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date"
+                                            max="{{ \Carbon\Carbon::create(Auth::user()->tahun_anggaran, 12 , 31)->toDateString() }}"
+                                            class="mt-1 block"
+                                            min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
+                                            required
+                                            value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
+                                        />
+                                        <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
+                                    </div>
+                                    <div>
+                                        <x-input-label for="tgl_akhir_perjanjian" :value="__('Tanggal Akhir Perjanjian')" />
+                                        <x-text-input id="tgl_akhir_perjanjian" name="tgl_akhir_perjanjian" type="date"
+                                            max="{{ \Carbon\Carbon::parse(Auth::user()->tahun_anggaran . '-12-31')->format('Y-m-d') }}"
+                                            min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
+                                            class="mt-1 block"
+                                            required
+                                            {{-- autocomplete="tgl_akhir_perjanjian" --}}
+                                            value="{{ old('tgl_akhir_perjanjian', isset($negosiasi) ? $negosiasi->tgl_akhir_perjanjian : '') }}"
+                                        />
+                                        <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <table class="w-full border border-gray-200 text-left">
+                                            <thead class="bg-gray-100">
+                                                <tr>
+                                                    <th class="w-64 px-2 py-1">Uraian</th>
+                                                    <th class="w-64 px-2 py-1">Vol/Sat</th>
+                                                    <th class="w-64 px-2 py-1">Harga Penawaran</th>
+                                                    <th class="w-64 px-2 py-1">Harga Negosiasi</th>
+                                                </tr>
+                                            </thead>
 
-
-                                <div>
-                                    <x-input-label for="tgl_akhir_perjanjian" :value="__('Tanggal Akhir Perjanjian')" />
-                                    <x-text-input id="tgl_akhir_perjanjian" name="tgl_akhir_perjanjian" type="date"
-                                        max="{{ \Carbon\Carbon::parse(Auth::user()->tahun_anggaran . '-12-31')->format('Y-m-d') }}"
-                                        min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
-                                        class="mt-1 block"
-                                        required
-                                        {{-- autocomplete="tgl_akhir_perjanjian" --}}
-                                        value="{{ old('tgl_akhir_perjanjian', isset($negosiasi) ? $negosiasi->tgl_akhir_perjanjian : '') }}"
-                                    />
-                                    <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
-                                </div>
-                                <br>
-                                <div>
-                                    <table class="w-full border border-gray-200 text-left">
-                                        <thead class="bg-gray-100">
-                                            <tr>
-                                                <th class="w-64 px-2 py-1">Uraian</th>
-                                                <th class="w-64 px-2 py-1">Vol/Sat</th>
-                                                <th class="w-64 px-2 py-1">Harga Penawaran</th>
-                                                <th class="w-64 px-2 py-1">Harga Negosiasi</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody class="bg-white divide-y divide-gray-100">
-                                            @foreach ($items as $i => $item)
-                                            <tr class="odd:bg-gray-50 even:bg-white"> 
-                                                <td class="px-2 py-1">{{ $item['uraian'] }}</td>
-                                                <td class="px-2 py-1">{{ $item['volume'] }} {{ $item['satuan'] }}</td>
-                                                <td class="px-2 py-1">{{ $item['harga_penawaran'] }}</td>
-                                                <td class="px-2 py-1">
-                                                    <input type="number" name="harga_satuan_negosiasi[]" required
-                                                        value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? $item['harga_negosiasi'] : '') }}"
-                                                        class="w-full border border-gray-300 rounded px-2 py-1"
-                                                    >
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-
-                                </div>
+                                            <tbody class="bg-white divide-y divide-gray-100">
+                                                @foreach ($items as $i => $item)
+                                                <tr class="odd:bg-gray-50 even:bg-white"> 
+                                                    <td class="px-2 py-1">{{ $item['uraian'] }}</td>
+                                                    <td class="px-2 py-1">{{ $item['volume'] }} {{ $item['satuan'] }}</td>
+                                                    <td class="px-2 py-1">{{ $item['harga_penawaran'] }}</td>
+                                                    <td class="px-2 py-1">
+                                                        <input type="number" name="harga_satuan_negosiasi[]" required
+                                                            value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? $item['harga_negosiasi'] : '') }}"
+                                                            class="w-full border border-gray-300 rounded px-2 py-1"
+                                                        >
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 <br>
 
                                 <div>

@@ -244,8 +244,8 @@ class NegosiasiHargaController extends Controller
         $negosiasiHarga->ppn = $jumlah_negosiasi * ( $ppn / ( 1 + $pajak ) );
         $negosiasiHarga->pph_22 = $jumlah_negosiasi * ( $pph_22 / ( 1 + $pajak ));
         $negosiasiHarga->harga_sebelum_pajak = $jumlah_negosiasi * ( 1 / (1 + $ppn + $pph_22));      
-        $negosiasiHarga->tgl_persetujuan = Carbon::parse($negosiasiHarga->tgl_persetujuan);
         $negosiasiHarga->tgl_negosiasi = Carbon::parse($negosiasiHarga->tgl_negosiasi);
+        $negosiasiHarga->tgl_persetujuan = Carbon::parse($negosiasiHarga->tgl_persetujuan);
         $negosiasiHarga->tgl_perjanjian = $negosiasiHarga->tgl_persetujuan;
         $negosiasiHarga->tgl_akhir_perjanjian = Carbon::parse($negosiasiHarga->tgl_akhir_perjanjian);
         $negosiasiHarga->jumlah_hari_kerja = $negosiasiHarga->tgl_akhir_perjanjian->diffInDays($negosiasiHarga->tgl_perjanjian) * -1;

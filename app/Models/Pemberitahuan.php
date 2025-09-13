@@ -50,10 +50,10 @@ class Pemberitahuan extends Model
         return $this->hasMany(Belanja::class);
     }
 
-    public function penawaranHarga()
-    {
-        return $this->hasOne(PenawaranHarga::class, 'kegiatan_id');
-    }
+    // public function penawaranHarga()
+    // {
+    //     return $this->hasOne(PenawaranHarga::class, 'kegiatan_id');
+    // }
 
     public function penawaran()
     {
