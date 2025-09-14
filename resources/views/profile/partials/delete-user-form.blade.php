@@ -5,7 +5,7 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }}
+            {{ __('Kalau akun kamu dihapus, semua data dan informasi akan hilang permanen. Sebelum lanjut, pastikan kamu sudah mengunduh data yang masih ingin disimpan.') }}
         </p>
     </header>
 
@@ -20,11 +20,11 @@
             @method('delete')
 
             <h2 class="text-lg font-medium text-gray-900">
-                {{ __('Are you sure you want to delete your account?') }}
+                {{ __('Yakin mau hapus akun kamu?') }}
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                {{ __('Hapus akun berarti semua data bakal hilang selamanya. Masukin kata sandi dulu buat konfirmasi ya, biar nggak salah klik. 🙈') }}
             </p>
 
             <div class="mt-6">
