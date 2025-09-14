@@ -32,6 +32,7 @@ class KegiatanRequest extends FormRequest
             'tgl_sk_tpk' => 'required|date',
             'nomor_sk_pka' => 'required',
             'tgl_sk_pka' => 'required|date',
+            'pph_22' => 'required|numeric',
             'pka' => 'required|string',
         ];
     }

@@ -213,8 +213,8 @@ class NegosiasiHargaController extends Controller
         $negosiasiHarga->load('hargaNegosiasi');
         $hargaNegosiasi = $negosiasiHarga->hargaNegosiasi;
 
-        $ppn = config('pajak.ppn');
-        $pph_22 = config('pajak.pph_22');
+        $ppn = $kegiatan->ppn ? config('pajak.ppn') : 0;
+        $pph_22 = $kegiatan->pph_22 ? config('pajak.pph_22') : 0;
         $pajak = $ppn + $pph_22;
 
         $items = $pemberitahuan->belanjas->map(function($item,$k) 

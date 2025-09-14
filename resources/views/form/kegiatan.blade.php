@@ -88,6 +88,18 @@
                             <x-input-error class="mt-2" :messages="$errors->get('tgl_sk_pka')" />
                         </div>
                         <div>
+                        <div>
+                            <x-input-label for="pph_22" :value="__('PPh Pasal 22')" />
+                            <select id="pph_22" name="pph_22" 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                required autofocus>
+                                <option value="0.015" {{ old('pph_22', $kegiatan['pph_22']) == 0.015 ? 'selected' : '' }}>1.5 %</option>
+                                <option value="0.03" {{ old('pph_22', $kegiatan['pph_22']) == 0.03 ? 'selected' : '' }}>3 %</option>
+                            </select>
+                            <x-input-error class="mt-2" :messages="$errors->get('pph_22')" />
+                        </div>
+
+                        <div>
                             <x-primary-button>{{ $kegiatan->exists ? 'Ubah' : 'Simpan' }}</x-primary-button>
                         </div>
                     </form>

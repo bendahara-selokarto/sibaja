@@ -257,9 +257,9 @@ class PenawaranHargaController extends Controller
             
             $jumlah_1 = $penawaranPemenang->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
 
-            $ppn = config('pajak.ppn');
+            $ppn = $kegiatan->ppn ? config('pajak.ppn') : 0;
 
-            $pph = config('pajak.pph_22');
+            $pph = $kegiatan->pph_22 ? config('pajak.pph_22') : 0;
 
             $factor_pajak = $ppn + $pph;
             

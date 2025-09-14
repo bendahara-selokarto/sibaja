@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('kegiatans', function (Blueprint $table) {
-            $table->decimal('ppn', 5, 2)->after('pka')->default(0.11);
-            $table->decimal('pph_22', 5, 2)->after('ppn')->default(0.03);
+            $table->decimal('ppn', 5, 3)->after('pka')->default(0.11);
+            $table->decimal('pph_22', 5, 3)->after('ppn')->default(0.03);
         });
     }
 

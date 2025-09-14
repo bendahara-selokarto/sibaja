@@ -118,9 +118,9 @@ class PembayaranController extends Controller
         $total = $items->sum('jumlah_negosiasi');
 
         
-        $factor_ppn = config('pajak.ppn');
+        $factor_ppn = $kegiatan->ppn ? config('pajak.ppn') : 0;
         
-        $factor_pph22 = config('pajak.pph_22');
+        $factor_pph22 = $kegiatan->pph_22 ? config('pajak.pph_22') : 0;
 
         $factor_pajak = $factor_ppn + $factor_pph22;
         
