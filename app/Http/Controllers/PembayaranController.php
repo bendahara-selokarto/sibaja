@@ -110,25 +110,31 @@ class PembayaranController extends Controller
         $penyedia = Penyedia::find($penyediaId);
 
         $tgl_invoice =  Carbon::parse($kegiatan->pembayaran->tgl_invoice);
-
+        
         $tgl =  Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms);
 
+        $ppn = $kegiatan->ppn;
+        
+        $pph22 = $kegiatan->pph_22;
+
+        $denom = 1 + $ppn + $pph22;
+
         $item = $items;
+        $total = $item->sum('jumlah_negosiasi');
 
-        $total = $items->sum('jumlah_negosiasi');
+        $item->transform(function ($item, $key)  use ($denom) {
+            $item['harga_penawaran'] = $item['harga_penawaran'] / $denom;
+            $item['harga_negosiasi'] = $item['harga_negosiasi'] / $denom;
+            $item['jumlah_penawaran'] = $item['jumlah_penawaran'] / $denom;
+            $item['jumlah_negosiasi'] = $item['jumlah_negosiasi'] / $denom;
+            return $item;
+        });      
+        
+        $negosiasiHarga->ppn = $total * ( $ppn / $denom );
 
+        $negosiasiHarga->pph_22 = $total * ($pph22 / $denom);
         
-        $factor_ppn = $kegiatan->ppn ? config('pajak.ppn') : 0;
-        
-        $factor_pph22 = $kegiatan->pph_22 ? config('pajak.pph_22') : 0;
-
-        $factor_pajak = $factor_ppn + $factor_pph22;
-        
-        $negosiasiHarga->ppn = $total * ( $factor_ppn / ( 1 + $factor_pajak ) );
-
-        $negosiasiHarga->pph_22 = $total * ($factor_pph22 / ( 1 + $factor_pajak ));
-        
-        $negosiasiHarga->jumlah = $total * ( 1 / ( 1 + $factor_pajak));
+        $negosiasiHarga->jumlah = $total / $denom;
         $negosiasiHarga->pajak  = $negosiasiHarga->ppn + $negosiasiHarga->pph_22;
         $negosiasiHarga->total  = $total;
 
@@ -145,7 +151,6 @@ class PembayaranController extends Controller
         'pemberitahuan',
         'negosiasiHarga',
         'item',
-        'factor_pajak',
         'tgl',
         'tgl_invoice',
         'pembayaran'

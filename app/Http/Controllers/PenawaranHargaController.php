@@ -260,19 +260,6 @@ class PenawaranHargaController extends Controller
             $jumlah_1 = $penawaranPemenang->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
 
             
-            
-            // $ppn = $kegiatan->ppn ? config('pajak.ppn') : 0;
-
-            // $pph = $kegiatan->pph_22 ? config('pajak.pph_22') : 0;
-
-            // $factor_pajak = $ppn + $pph;
-            
-            // $ppn_1 = $jumlah_1 * ($ppn / (1 + $factor_pajak));
-            
-            // $pph_22_1 = $jumlah_1 * ($pph / (1 + $factor_pajak));
-
-            // $jumlah_sebelum_pajak_1 = $jumlah_1 * ( 1 / ( 1 + $factor_pajak) );
-            
             $item = $penawaranPemenang;      
             
             $denom = 1 / ($kegiatan->ppn + $kegiatan->pph_22 + 1);
@@ -284,20 +271,8 @@ class PenawaranHargaController extends Controller
 
                 return $item;
             });
-
-            // dd($item);
-
-
-            
-            
             
             $jumlah_2 = $penawaranPembanding->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
-            
-            // $ppn_2 = $jumlah_2 * ($ppn / (1 + $factor_pajak));
-            
-            // $pph_22_2 = $jumlah_2 * ($pph / (1 + $factor_pajak));
-            
-            // $jumlah_sebelum_pajak_2 = $jumlah_2 * ( 1 / ( 1 + $factor_pajak) );
             
             $item_2 = $penawaranPembanding;
 

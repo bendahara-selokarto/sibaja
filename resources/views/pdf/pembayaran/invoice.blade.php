@@ -59,8 +59,8 @@
             <td style="text-align: left">{{ $value['uraian'] }}</td>         
             <td style="text-align: center">{{ $value['volume']  }}</td>         
             <td style="text-align: center">{{ $value['satuan'] }}</td>         
-            <td style="text-align: right">{{ number_format(($value['harga_negosiasi'] * ( 1 / ( 1 + $factor_pajak))), 0, ',', '.') }}</td>         
-            <td style="text-align: right">{{ number_format(($value['jumlah_negosiasi'] * ( 1 / ( 1 + $factor_pajak))), 0, ',', '.') }}</td>         
+            <td style="text-align: right">{{ number_format($value['harga_negosiasi'] , 0, ',', '.') }}</td>         
+            <td style="text-align: right">{{ number_format($value['jumlah_negosiasi'] , 0, ',', '.') }}</td>         
         </tr>              
         @endforeach        
         <tr>

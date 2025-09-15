@@ -213,37 +213,38 @@ class NegosiasiHargaController extends Controller
         $negosiasiHarga->load('hargaNegosiasi');
         $hargaNegosiasi = $negosiasiHarga->hargaNegosiasi;
 
-        $ppn = $kegiatan->ppn ? config('pajak.ppn') : 0;
-        $pph_22 = $kegiatan->pph_22 ? config('pajak.pph_22') : 0;
-        $pajak = $ppn + $pph_22;
+        $ppn = $kegiatan->ppn;
+        $pph_22 = $kegiatan->pph_22;
+        $denom = 1 + $ppn + $pph_22;
 
         $items = $pemberitahuan->belanjas->map(function($item,$k) 
-        use ( $hargaPenawaran , $hargaNegosiasi, $ppn , $pph_22 , $pajak )       
+        use ( $hargaPenawaran , $hargaNegosiasi, $ppn , $pph_22 , $denom )       
         {
             return [
                 'uraian' => $item->uraian,
                 'volume' => $item->volume,
                 'satuan' => $item->satuan,
-                'harga_penawaran' => $hargaPenawaran[$k]->harga_satuan * ( 1 / (1 + $ppn + $pph_22)),
-                'harga_negosiasi' => $hargaNegosiasi[$k]->harga_satuan * ( 1 / (1 + $ppn + $pph_22)),
-                'jumlah_penawaran' => ($item->volume * $hargaPenawaran[$k]->harga_satuan) * ( 1 / (1 + $ppn + $pph_22)),
-                'jumlah_negosiasi' => ($item->volume * $hargaNegosiasi[$k]->harga_satuan) * ( 1 / (1 + $ppn + $pph_22)),
+                'harga_penawaran' => $hargaPenawaran[$k]->harga_satuan / $denom,
+                'harga_negosiasi' => $hargaNegosiasi[$k]->harga_satuan / $denom,
+                'jumlah_penawaran' => ($item->volume * $hargaPenawaran[$k]->harga_satuan) / $denom,
+                'jumlah_negosiasi' => ($item->volume * $hargaNegosiasi[$k]->harga_satuan) / $denom,
             ];
         });
         $penawaranHarga->tgl_penawaran =  Carbon::parse($penawaranHarga->tgl_penawaran);
-        $jumlah_penawaran = $items->sum('jumlah_penawaran') * ( (1 + $ppn + $pph_22));
-        $nilai_ppn = $jumlah_penawaran  * ( $ppn / ( 1 + $pajak ) );
-        $nilai_pph_22 = $jumlah_penawaran * ( $pph_22 / ( 1 + $pajak ));
+        $jumlah_penawaran = $items->sum('jumlah_penawaran') * $denom;
+        $nilai_ppn = $jumlah_penawaran  * ( $ppn / $denom );
+        $nilai_pph_22 = $jumlah_penawaran * ( $pph_22 / $denom);
         $penawaranHarga->ppn = $nilai_ppn;
         $penawaranHarga->pph_22 = $nilai_pph_22;
 
-        $penawaranHarga->harga_sebelum_pajak = $jumlah_penawaran * ( 1 / (1 + $ppn + $pph_22));
+        $penawaranHarga->harga_sebelum_pajak = $jumlah_penawaran / $denom ;
         $penawaranHarga->harga_total =  $jumlah_penawaran;
           
-        $jumlah_negosiasi = $items->sum('jumlah_negosiasi') * ( (1 + $ppn + $pph_22));
-        $negosiasiHarga->ppn = $jumlah_negosiasi * ( $ppn / ( 1 + $pajak ) );
-        $negosiasiHarga->pph_22 = $jumlah_negosiasi * ( $pph_22 / ( 1 + $pajak ));
-        $negosiasiHarga->harga_sebelum_pajak = $jumlah_negosiasi * ( 1 / (1 + $ppn + $pph_22));      
+        $jumlah_negosiasi = $items->sum('jumlah_negosiasi') * $denom;
+
+        $negosiasiHarga->ppn = $jumlah_negosiasi * ( $ppn / $denom );
+        $negosiasiHarga->pph_22 = $jumlah_negosiasi * ( $pph_22 / $denom);
+        $negosiasiHarga->harga_sebelum_pajak = $jumlah_negosiasi / $denom ;      
         $negosiasiHarga->tgl_negosiasi = Carbon::parse($negosiasiHarga->tgl_negosiasi);
         $negosiasiHarga->tgl_persetujuan = Carbon::parse($negosiasiHarga->tgl_persetujuan);
         $negosiasiHarga->tgl_perjanjian = $negosiasiHarga->tgl_persetujuan;
