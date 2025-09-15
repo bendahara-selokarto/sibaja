@@ -33,6 +33,16 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function penyedias()
+    {
+        return $this->belongsToMany(Penyedia::class, 'daftar_penyedia');
+    }
+    public function createdPenyedias()
+    {
+        return $this->hasMany(Penyedia::class, 'created_by');
+    }
+
+
     /**
      * Get the attributes that should be cast.
      *

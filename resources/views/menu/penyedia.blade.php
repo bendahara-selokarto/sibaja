@@ -9,7 +9,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-950">
-                    <a href="{{ route('penyedia.create') }}"><x-bladewind::button color="cyan">Tambah</x-bladewind::button></a>                    
+                    <a href="{{ route('submenu.penyedia') }}"><x-bladewind::button color="cyan">Tambah Dari Daftar Penyedia</x-bladewind::button></a>                    
+                    <a href="{{ route('penyedia.create') }}"><x-bladewind::button color="cyan">Tambah Baru</x-bladewind::button></a>                    
                 </div>
             </div>
             <br>
@@ -41,6 +42,7 @@
                                 <li>{{ $i['nomor_npwp'] }}</li>                                
                             </ol></td>
                             <td>
+                                @if($i['createdBy'] && $i['createdBy']->desa === Auth::user()->desa)
                                 <form id="delete-form-{{ $i->id }}" 
                                     action="{{ route('penyedia.destroy', $i->id) }}" 
                                     method="POST">
@@ -59,6 +61,19 @@
                                     @method('GET')
                                     <x-bladewind::button can_submit="true" size='tiny' color="cyan">ubah</x-bladewind::button>
                                 </form>
+                                @else
+                                <p>{{$i->createdBy->desa}}</p>
+                                <form action="{{ route('penyedia.detach', $i->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" 
+                                            data-id="{{ $i->id }}"
+                                            onclick="confirmCerai(this)"
+                                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                        ceraikan
+                                    </button>
+                                </form>
+                                @endif
 
                             </td>
                         </tr> 

@@ -37,12 +37,14 @@ Route::middleware('auth')->group(function () {
     
     Route::get('kegiatan/rekap/{id}', [KegiatanController::class , 'rekap'])->name('kegiatan.rekap');
     
-    Route::get('menu/penyedia', [PenyediaController::class , 'index'])->middleware(CheckDefaultKode::class)->name('menu.penyedia');
+    Route::get('menu/bank-penyedia', [PenyediaController::class , 'index'])->middleware(CheckDefaultKode::class)->name('submenu.penyedia');
+    Route::get('menu/penyedia', [PenyediaController::class , 'show'])->middleware(CheckDefaultKode::class)->name('menu.penyedia');
     Route::get('penyedia/create', [PenyediaController::class , 'create'])->name('penyedia.create');
     Route::get('penyedia/edit/{id}', [PenyediaController::class , 'edit'])->name('penyedia.edit');
     Route::patch('penyedia/update/{id}', [PenyediaController::class , 'update'])->name('penyedia.update');
     Route::post('penyedia/store', [PenyediaController::class , 'store'])->name('penyedia.store');
     Route::delete('menu/penyedia/{id}', [PenyediaController::class , 'destroy'])->name('penyedia.destroy');
+    Route::delete('/penyedia/{penyedia}', [PenyediaController::class, 'detachPenyedia'])->name('penyedia.detach');
     
     Route::get('menu/pemberitahuan', [PemberitahuanController::class , 'index'])->name('menu.pemberitahuan');
     Route::post('pemberitahuan/create/{id}', [PemberitahuanController::class , 'create'])->name('pemberitahuan.create');

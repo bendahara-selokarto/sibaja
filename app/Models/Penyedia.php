@@ -10,10 +10,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Penyedia extends Model
 {
     use HasUuids;
+
     public function kegiatan(): BelongsToMany
     {
         return $this->belongsToMany(Kegiatan::class, 'kegiatan_penyedia');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'daftar_penyedia');
+    }
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
     
     // public function penyedia()
     // {

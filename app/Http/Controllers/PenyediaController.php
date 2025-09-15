@@ -11,9 +11,39 @@ class PenyediaController extends Controller
 {
     public function index(){
        
-        $data = Penyedia::where('kode_desa' , Auth::user()->kode_desa)->get();
-        return view('menu.penyedia', ['penyedia' => $data ]);
+       $data = Penyedia::with('createdBy')
+        ->whereHas('createdBy', fn($q) => $q->where('id', '!=', Auth::id()))
+        ->whereDoesntHave('users', fn($q) => $q->where('users.id', Auth::id()))
+        ->get();
+        return view('submenu.bank-penyedia', ['penyedia' => $data ]);
     }
+
+    public function detachPenyedia($id)
+    {
+        $user = Auth::user();
+        $user->penyedias()->detach($id);
+
+        return back()->with('success', 'Relasi penyedia berhasil dihapus');
+    }
+
+    public function show()
+    {
+        $user = Auth::user();
+
+        $penyedia = $user->penyedias()->get();
+        $penyedia->load('createdBy');
+        $penyedia->transform(function ($item) use ($user) {
+           $createdBy = $item->createdBy->desa === $user->desa ? true : $item->createdBy->desa;
+            return $item;
+        });
+
+        
+        return view('menu.penyedia', [
+          'penyedia' => $penyedia
+        ]);
+    }
+
+
     public function create() {
         $penyedia = new Penyedia;
         
@@ -55,6 +85,7 @@ class PenyediaController extends Controller
     
         $nama_penyedia = $request->nama_penyedia;
         $data = [
+            'created_by' => Auth::id(),
             'nama_penyedia' => $nama_penyedia,
             'alamat_penyedia' => $request->alamat_penyedia,
             'nama_pemilik' => $request->nama_pemilik,
@@ -74,6 +105,9 @@ class PenyediaController extends Controller
             ];
 
         $penyedia = Penyedia::create($data);
+        $user = Auth::user();
+        $user->penyedias()->syncWithoutDetaching([ $penyedia->id ]);
+        flash()->success('Berhasi Menambah Penyedia ' . $nama_penyedia);
          
         
         return redirect()->route('menu.penyedia');
@@ -160,6 +194,8 @@ class PenyediaController extends Controller
                 ];
 
             $penyedia->update($data);
+            $user = Auth::user();
+            $user->penyedias()->syncWithoutDetaching([ $penyedia->id ]);
             flash()->success('Berhasi Update Penyedia');
             return redirect()->route('menu.penyedia');
 
