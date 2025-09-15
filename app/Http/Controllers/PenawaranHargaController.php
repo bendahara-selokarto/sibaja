@@ -15,6 +15,8 @@ use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Helpers\PajakHelper;
+
 
 class PenawaranHargaController extends Controller
 {
@@ -257,29 +259,68 @@ class PenawaranHargaController extends Controller
             
             $jumlah_1 = $penawaranPemenang->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
 
-            $ppn = $kegiatan->ppn ? config('pajak.ppn') : 0;
-
-            $pph = $kegiatan->pph_22 ? config('pajak.pph_22') : 0;
-
-            $factor_pajak = $ppn + $pph;
             
-            $ppn_1 = $jumlah_1 * ($ppn / (1 + $factor_pajak));
             
-            $pph_22_1 = $jumlah_1 * ($pph / (1 + $factor_pajak));
+            // $ppn = $kegiatan->ppn ? config('pajak.ppn') : 0;
 
-            $jumlah_sebelum_pajak_1 = $jumlah_1 * ( 1 / ( 1 + $factor_pajak) );
+            // $pph = $kegiatan->pph_22 ? config('pajak.pph_22') : 0;
+
+            // $factor_pajak = $ppn + $pph;
             
-            $item = $penawaranPemenang;
+            // $ppn_1 = $jumlah_1 * ($ppn / (1 + $factor_pajak));
+            
+            // $pph_22_1 = $jumlah_1 * ($pph / (1 + $factor_pajak));
+
+            // $jumlah_sebelum_pajak_1 = $jumlah_1 * ( 1 / ( 1 + $factor_pajak) );
+            
+            $item = $penawaranPemenang;      
+            
+            $denom = 1 / ($kegiatan->ppn + $kegiatan->pph_22 + 1);
+
+            $item->transform(function ($item) use ($denom) {
+                // ubah harga_satuan saja
+                $item['harga_satuan'] = $item['harga_satuan'] * $denom;
+                $item['jumlah'] = $item['jumlah'] * $denom;
+
+                return $item;
+            });
+
+            // dd($item);
+
+
+            
+            
             
             $jumlah_2 = $penawaranPembanding->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
-
-            $ppn_2 = $jumlah_2 * ($ppn / (1 + $factor_pajak));
             
-            $pph_22_2 = $jumlah_2 * ($pph / (1 + $factor_pajak));
-
-            $jumlah_sebelum_pajak_2 = $jumlah_2 * ( 1 / ( 1 + $factor_pajak) );
-
+            // $ppn_2 = $jumlah_2 * ($ppn / (1 + $factor_pajak));
+            
+            // $pph_22_2 = $jumlah_2 * ($pph / (1 + $factor_pajak));
+            
+            // $jumlah_sebelum_pajak_2 = $jumlah_2 * ( 1 / ( 1 + $factor_pajak) );
+            
             $item_2 = $penawaranPembanding;
+
+            $item_2->transform(function ($item) use ($denom) {
+                // ubah harga_satuan saja
+                $item['harga_satuan'] = $item['harga_satuan'] * $denom;
+                $item['jumlah'] = $item['jumlah'] * $denom;
+
+                return $item;
+            });
+
+            // ✅ pakai helper
+            $pajak_1 = PajakHelper::hitung(
+                $jumlah_1, 
+                $kegiatan->ppn,
+                $kegiatan->pph_22
+            );
+
+            $pajak_2 = PajakHelper::hitung(
+                $jumlah_2, 
+                $kegiatan->ppn,
+                $kegiatan->pph_22
+            );
 
             $pdf = Pdf::loadView('pdf.penawaran-harga', [
                 'penawaran_1' => $pemenang,
@@ -287,14 +328,14 @@ class PenawaranHargaController extends Controller
                 'kegiatan' => $kegiatan,
                 'penyedia1' => $penyedia1,
                 'penyedia2' => $penyedia2,
-                'jumlah' => $jumlah_sebelum_pajak_1,
-                'jumlah_2' => $jumlah_sebelum_pajak_2,
-                'ppn_1' => $ppn_1,
-                'ppn_2' => $ppn_2,
-                'pph_22_1' => $pph_22_1,
-                'pph_22_2' => $pph_22_2, 
-                'jumlah_total_1' => $jumlah_1,
-                'jumlah_total_2' => $jumlah_2,              
+                'jumlah'            => $pajak_1['dpp'],
+                'jumlah_2'          => $pajak_2['dpp'],
+                'ppn_1'             => $pajak_1['ppn'],
+                'ppn_2'             => $pajak_2['ppn'],
+                'pph_22_1'          => $pajak_1['pph'],
+                'pph_22_2'          => $pajak_2['pph'],
+                'jumlah_total_1'    => $pajak_1['total'],
+                'jumlah_total_2'    => $pajak_2['total'],    
                 'pemberitahuan' => $pemberitahuan,
                 'item' => $item,
                 'item_2' => $item_2

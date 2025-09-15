@@ -62,8 +62,8 @@ onerror="this.src='{{ asset('') }}'"
                 <td style="border: 1px solid black; text-align:center " >{{ $loop->iteration }}</td>
                 <td style="border: 1px solid black; text-align:left " >{{ $item['uraian'] }}</td>
                 <td style="border: 1px solid black; text-align:center " >{{ $item['volume'] .'  '. $item['satuan'] }}</td>
-                <td style="border: 1px solid black; text-align:right " >{{ number_format(($item['harga_satuan'] * (100/114)), 0, ',', '.') }}</td>
-                <td style="border: 1px solid black; text-align:right " >{{ number_format(($item['harga_satuan'] * (100/114)) *  $item['volume'], 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right " >{{ number_format($item['harga_satuan'] , 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right " >{{ number_format($item['jumlah'] )}}</td>
             </tr> 
           @endforeach
           <tr>
@@ -77,19 +77,19 @@ onerror="this.src='{{ asset('') }}'"
             </tr>
             <tr>
                 {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
-                <td colspan="4" style="border: 1px solid black; text-align:right">PPh22 3%</td>
+                <td colspan="4" style="border: 1px solid black; text-align:right">PPh22</td>
                 <td style="border: 1px solid black; text-align:right">{{ number_format($pph_22_1, 0, ',', '.') }}</td>
             </tr>
             
             <tr>
                 {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
                 <td colspan="4" style="border: 1px solid black; text-align:right">Jumlah Total (Harga + Pajak)</td>
-                <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah * (114/100), 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right">{{ number_format($jumlah_total_1, 0, ',', '.') }}</td>
             </tr>
             <tr>
                 {{-- <td colspan="2" style="border: 1px solid black;"></td>         --}}
                 <td colspan="4" style="border: 1px solid black; text-align:right; background-color: rgb(216,216,216)">Dibulatkan</td>
-                <td style="border: 1px solid black; text-align:right; background-color: rgb(216,216,216)">{{ number_format(round($jumlah * (114/100), -2 ), 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right; background-color: rgb(216,216,216)">{{ number_format(round($jumlah_total_1, -2 ), 0, ',', '.') }}</td>
             </tr>
           </table>
           <strong><p>Terbilang : {{ Terbilang::make(round($jumlah_total_1, -2)) }} rupiah</p></strong>
