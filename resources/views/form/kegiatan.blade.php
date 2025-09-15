@@ -66,7 +66,7 @@
                         <div>
                             <x-input-label for="tgl_sk_tpk" :value="__('Tanggal SK TPK')" />
                             <x-text-input id="tgl_sk_tpk" name="tgl_sk_tpk" type="date" class="mt-1 block w-full"
-                                :value="old('tgl_sk_tpk', $kegiatan['tgl_sk_tpk'])" required autofocus autocomplete="tgl_sk_tpk" />
+                                :value="old('tgl_sk_tpk', \Carbon\Carbon::parse($kegiatan['tgl_sk_tpk'])->format('Y-m-d'))" required autofocus autocomplete="tgl_sk_tpk" />
                             <x-input-error class="mt-2" :messages="$errors->get('tgl_sk_tpk')" />
                         </div>
                         <div>
@@ -84,7 +84,7 @@
                         <div>
                             <x-input-label for="tgl_sk_pka" :value="__('Tanggal SK PKA')" />
                             <x-text-input id="tgl_sk_pka" name="tgl_sk_pka" type="date" class="mt-1 block w-full"
-                                :value="old('tgl_sk_pka', $kegiatan['tgl_sk_pka'])" required autofocus autocomplete="tgl_sk_pka" />
+                                :value="old('tgl_sk_pka', \Carbon\Carbon::parse($kegiatan['tgl_sk_pka']))->format('Y-m-d')" required autofocus autocomplete="tgl_sk_pka" />
                             <x-input-error class="mt-2" :messages="$errors->get('tgl_sk_pka')" />
                         </div>
                         <div>
