@@ -15,8 +15,9 @@ class PemberitahuanController extends Controller
     
     public function create($id)
     {
-        $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
-        
+        // $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
+        $user = Auth::user();
+        $penyedia = $user->penyedias()->get();     
         $kegiatan = Kegiatan::find($id);
         $nomor = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->count() + 1;
 
@@ -38,6 +39,20 @@ class PemberitahuanController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = $request->validate([
+            'rekening_apbdes' => 'required|string|max:255',
+            'kegiatan_id' => 'required|exists:kegiatans,id',
+            'penyedia'   => 'required|array|size:2',
+            'penyedia.*' => 'required|distinct|exists:penyedias,id',
+            'no_pbj' => 'required|string|max:255',
+            'tgl_pemberitahuan' => 'required|date',
+            'uraian.*' => 'required|string|max:255',
+            'volume.*' => 'nullable|numeric',
+            'satuan.*' => 'nullable|string|max:100',
+        ]);
+
+                 
+       
         $uraian = $request->input('uraian');  
         $volume = $request->input('volume');  
         $satuan = $request->input('satuan');

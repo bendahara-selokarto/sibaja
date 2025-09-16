@@ -69,6 +69,9 @@
                                 :checked="in_array($p['id'], old('penyedia', $penyediaTerpilih ?? []))"
                                 />            
                                 @endforeach
+                                <div id="penyedia-error" class="text-sm mt-1 text-red-500">
+                                    @error('penyedia') {{ $message }} @enderror
+                                </div>
                                 
                                     @php
                                         $uraian = old('uraian', collect($belanja)->pluck('uraian')->toArray());
@@ -218,6 +221,49 @@ tglPemberitahuan.addEventListener('change', (e) => {
     window.__enableUnloadWarning  = function () { formChanged = true;  isSubmitting = false; };
     })();
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+  const checkboxSelector = 'input[type="checkbox"][name="penyedia[]"]';
+  const checkboxes = Array.from(document.querySelectorAll(checkboxSelector));
+  if (!checkboxes.length) return;
+
+  // kumpulkan semua form yang mengandung checkbox tersebut
+  const forms = [...new Set(checkboxes.map(cb => cb.closest('form')).filter(Boolean))];
+
+  forms.forEach(form => {
+    // submit listener yang memeriksa jumlah tercentang
+    form.addEventListener('submit', function (e) {
+      const checkedCount = form.querySelectorAll(checkboxSelector + ':checked').length;
+      if (checkedCount !== 2) {
+        e.preventDefault();
+        showError(form, `Anda harus memilih tepat 2 penyedia. Saat ini terpilih: ${checkedCount}`);
+        // scroll ke area checkbox (pilihan)
+        const first = form.querySelector(checkboxSelector);
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+
+    // live feedback: update pesan saat user mencentang/menyentang
+    form.addEventListener('change', function () {
+      const checkedCount = form.querySelectorAll(checkboxSelector + ':checked').length;
+      if (checkedCount === 2) removeError(form);
+      else showError(form, `Pilih tepat 2 penyedia (saat ini: ${checkedCount}).`);
+    });
+  });
+
+  function showError(form, message) {
+  const err = form.querySelector('#penyedia-error');
+  if (err) err.textContent = message;
+}
+
+function removeError(form) {
+  const err = form.querySelector('#penyedia-error');
+  if (err) err.textContent = '';
+}
+
+});
+</script>
+
 
 
 
