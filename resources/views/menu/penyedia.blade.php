@@ -21,6 +21,7 @@
                             <th>No</th>
                             <th>Penyedia</th>
                             <th>Detail Penyedia</th>
+                            <th>Dibuat Oleh</th>
                             <th>Aksi</th>
                         </x-slot>
                        
@@ -41,8 +42,10 @@
                                 <li>{{ $i['nomor_identitas'] }}</li>
                                 <li>{{ $i['nomor_npwp'] }}</li>                                
                             </ol></td>
+                            <td>Desa {{ $i['createdBy'] ? $i['createdBy']->desa : '' }}</td>
                             <td>
                                 @if($i['createdBy'] && $i['createdBy']->desa === Auth::user()->desa)
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-2">                                   
                                 <form id="delete-form-{{ $i->id }}" 
                                     action="{{ route('penyedia.destroy', $i->id) }}" 
                                     method="POST">
@@ -61,16 +64,16 @@
                                     @method('GET')
                                     <x-bladewind::button can_submit="true" size='tiny' color="cyan">ubah</x-bladewind::button>
                                 </form>
+                                </div>
                                 @else
-                                <p>{{$i->createdBy->desa}}</p>
-                                <form action="{{ route('penyedia.detach', $i->id) }}" method="POST">
+                                <form action="{{ route('penyedia.detach', $i->id) }}" method="POST" id="delete-form-{{ $i->id }}">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" 
                                             data-id="{{ $i->id }}"
                                             onclick="confirmCerai(this)"
                                             class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
-                                        ceraikan
+                                        hapus
                                     </button>
                                 </form>
                                 @endif
