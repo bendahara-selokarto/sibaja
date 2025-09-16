@@ -170,7 +170,7 @@ class PenyediaController extends Controller
                 'public'
             );
         } else {
-            $path_kop = 'kop_surat/default.png';
+            $path_kop = $penyedia->kop_surat;
         }
 
         
