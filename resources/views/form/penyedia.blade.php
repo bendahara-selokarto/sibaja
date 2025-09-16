@@ -98,6 +98,15 @@
                             </div> --}}
                             <div>
                                 <x-input-label for="kop_surat" :value="__('Kop Surat')" />
+                                @if ($penyedia->kop_surat)
+                                    @php
+                                        $namaFile = basename($penyedia->kop_surat);
+                                        $tampilNama = substr($namaFile, 10); // pangkas 10 karakter pertama
+                                    @endphp
+                                    <div class="mb-2 text-sm text-green-600">
+                                        <strong>{{ $tampilNama }}</strong>
+                                    </div>
+                                @endif
                                 <x-text-input id="kop_surat" name="kop_surat" type="file" class="mt-1 block w-full" :value="old('kop_surat', $penyedia->kop_surat)" autocomplete="kop_surat" />
                                 <x-input-error class="mt-2" :messages="$errors->get('kop_surat')" />
                             </div>
