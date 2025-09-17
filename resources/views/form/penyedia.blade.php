@@ -107,9 +107,7 @@
                                     @endif
                                     </div>
                                     <div>
-                                        <x-bladewind::filepicker 
-                                        placeholder_line1="Pilih atau seret file ke sini"
-                                        placeholder_line2="format jpg, png"  
+                                        <x-bladewind::filepicker
                                         accepted_file_types="image/*"
                                         name="kop_surat"
                                             />

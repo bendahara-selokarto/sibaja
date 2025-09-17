@@ -1,4 +1,4 @@
-@props(['icons_array' => null, 'row' => null])
+{{-- format-ignore-start --}}@props(['icons_array' => null, 'row' => null]){{-- format-ignore-end --}}
 @if( !empty($icons_array) )
     <td class="text-right space-x-2 actions">
         @foreach($icons_array as $icon)
@@ -9,6 +9,7 @@
                                 size="tiny"
                                 icon="{{ $icon['icon'] }}"
                                 color="{{ $icon['color'] ?? '' }}"
+                                outline="true"
                                 onclick="{!! build_click($icon['click'], $row) ?? 'void(0)' !!}"
                                 type="{!! isset($icon['color']) ? 'primary' : 'secondary' !!}"/>
                         @if(!empty($icon['tip'])) </a>
