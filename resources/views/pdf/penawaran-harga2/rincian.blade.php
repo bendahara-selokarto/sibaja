@@ -52,9 +52,9 @@ onerror="this.src='{{ asset('') }}'"
         <tr>
           <td style="border: 1px solid black; text-align:center; width: 6mm">No</td>
           <td style="border: 1px solid black; text-align:center; ">Jenis Pekerjaan <br> yang dikerjakan</td>
-          <td style="border: 1px solid black; text-align:center; width: 20mm">Volume / Satuan <br>(Meter, Unit, Btg, Kg)</td>
-          <td style="border: 1px solid black; text-align:center; width: 30mm">Harga Satuan</td>
-          <td style="border: 1px solid black; text-align:center; width: 30mm; ">Jumlah</td>
+          <td style="border: 1px solid black; text-align:center; ">Volume / Satuan <br>(Meter, Unit, Btg, Kg)</td>
+          <td style="border: 1px solid black; text-align:center; width: 25mm">Harga Satuan</td>
+          <td style="border: 1px solid black; text-align:center; width: 25mm; ">Jumlah</td>
         </tr>
          @foreach ($item_2 as $item)
             <tr>
