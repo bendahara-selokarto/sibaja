@@ -7,14 +7,14 @@
     <title>Penyerahan Hasil Pekerjaan</title>
 </head>
 <body>
-    {{-- @if(isset($penyedia->kop_surat) && $penyedia->kop_surat != null)
-    <img 
-    src="{{ public_path('storage/' . $penyedia->kop_surat) }}" 
-    alt=" " 
-    style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
-    onerror="this.src='{{ asset('') }}'" 
-    >
-    @endif --}}
+    @if($penyedia->kop_surat)
+        <img 
+            src="{{public_path('storage/'.$penyedia->kop_surat)}}" 
+            alt=" " 
+            style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
+            onerror="this.src='{{ asset('') }}'" 
+            >
+     @endif
 <br>
     <p style="text-align: right">{{ $penyedia->kabupaten}}, {{ $tgl_invoice->isoFormat('D MMMM Y')}}</p>
     <table style="width:100%; margin-bottom: 20px;">
