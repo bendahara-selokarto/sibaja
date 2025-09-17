@@ -59,9 +59,7 @@
     <div>
         @include('pdf.pemberitahuan.new-cover') 
     </div>
-    <div style="page-break-before: always;">
-        @include('pdf.pemberitahuan.check-list-PBJ')
-    </div>
+    
     <div style="page-break-before: always;">
         @include('pdf.pemberitahuan.surat-pemberitahuan')    
     </div>

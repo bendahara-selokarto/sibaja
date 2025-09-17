@@ -93,3 +93,6 @@
         </tr>
     </table>
 </div>
+<div style="page-break-before: always;">
+        @include('pdf.pemberitahuan.check-list-PBJ')
+</div>
