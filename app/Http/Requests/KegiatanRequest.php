@@ -23,6 +23,7 @@ class KegiatanRequest extends FormRequest
     {
         return [
             'rekening_apbdes' => 'required|string',
+            'sumber_dana' => 'required|string',
             'kegiatan' => 'required|string',
             'lokasi_kegiatan' => 'required|string',
             'ketua_tpk' => 'required|string',
