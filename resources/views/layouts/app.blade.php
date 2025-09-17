@@ -13,6 +13,8 @@
         <link href="{{ asset('vendor/bladewind/css/animate.min.css') }}" rel="stylesheet" />
         <link href="{{ asset('vendor/bladewind/css/bladewind-ui.min.css') }}" rel="stylesheet" />
         <link rel="stylesheet" href="{{ asset('vendor/toastr/toastr.min.css') }}">
+        <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
+
         <!-- PWA  -->
         <meta name="theme-color" content="#6777ef"/>
         <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
@@ -54,7 +56,7 @@
                 {{ $slot }}
             </main>
         </div>
-        <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script>
+        {{-- <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script> --}}
         <script src="//unpkg.com/alpinejs" defer></script>
         @stack('scripts')
     </body>

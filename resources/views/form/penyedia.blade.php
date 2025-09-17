@@ -91,32 +91,30 @@
                                 <x-text-input id="bank" name="bank" type="text" class="mt-1 block w-full" :value="old('bank', $penyedia->bank)" required autocomplete="bank" />
                                 <x-input-error class="mt-2" :messages="$errors->get('bank')" />
                             </div>
-                            {{-- <div>
-                                <x-input-label for="logo_penyedia" :value="__('Logo')" />
-                                <x-text-input id="logo_penyedia" name="logo_penyedia" type="file" class="mt-1 block w-full" :value="old('logo_penyedia', $penyedia->logo_penyedia)" autocomplete="logo_penyedia" />
-                                <x-input-error class="mt-2" :messages="$errors->get('logo_penyedia')" />
-                            </div> --}}
                             <div>
-                                <x-input-label for="kop_surat" :value="__('Kop Surat')" />
                                 @if ($penyedia->kop_surat)
                                     @php
                                         $namaFile = basename($penyedia->kop_surat);
                                         $tampilNama = substr($namaFile, 10); // pangkas 10 karakter pertama
                                     @endphp
                                     <div class="mb-2 text-sm text-green-600">
-                                        <strong>{{ $tampilNama }}</strong>
+                                        <strong>Kop Surat {{ $tampilNama }}</strong>
                                     </div>
-                                @endif
-                                <x-text-input id="kop_surat" name="kop_surat" type="file" class="mt-1 block w-full" :value="old('kop_surat', $penyedia->kop_surat)" autocomplete="kop_surat" />
-                                <x-input-error class="mt-2" :messages="$errors->get('kop_surat')" />
-                            </div>
-                            {{-- <div>
-                                <x-input-label for="data_dukung" :value="__('Lampiran data dukung .pdf')" />
-                                <x-text-input id="data_dukung" name="data_dukung" type="file" class="mt-1 block w-full" :value="old('data_dukung', $penyedia->data_dukung)" autocomplete="data_dukung" />
-                                <x-input-error class="mt-2" :messages="$errors->get('data_dukung')" />
-                            </div> --}}
+                                    @else
+                                    <div class="mb-2 text-sm text-gray-600">
+                                        <strong>Kop Surat </strong>
+                                    </div>
+                                    @endif
+                                    </div>
+                                    <div>
+                                        <x-bladewind::filepicker 
+                                        placeholder_line1="Pilih atau seret file ke sini"
+                                        placeholder_line2="format jpg, png"  
+                                        accepted_file_types="image/*"
+                                        name="kop_surat"
+                                            />
+                                    </div>
                         </div>
-                    {{-- </div> --}}
                     <div>                        
                         <x-primary-button>Simpan</x-primary-button>  
                     </div>
