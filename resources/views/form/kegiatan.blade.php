@@ -92,11 +92,25 @@
                             <x-input-label for="pph_22" :value="__('PPh Pasal 22')" />
                             <select id="pph_22" name="pph_22" 
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                required autofocus>
-                                <option value="0.015" {{ old('pph_22', $kegiatan['pph_22']) == 0.015 ? 'selected' : '' }}>1.5 %</option>
+                                required>
                                 <option value="0.03" {{ old('pph_22', $kegiatan['pph_22']) == 0.03 ? 'selected' : '' }}>3 %</option>
+                                <option value="0.015" {{ old('pph_22', $kegiatan['pph_22']) == 0.015 ? 'selected' : '' }}>1.5 %</option>
                             </select>
                             <x-input-error class="mt-2" :messages="$errors->get('pph_22')" />
+                        </div>
+                        <div>
+                            <x-input-label for="sumber_dana" :value="__('Sumber Dana')" />
+                            <select id="sumber_dana" name="sumber_dana" 
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                required>
+                                <option value="dana desa" {{ old('sumber_dana', $kegiatan['sumber_dana']) == 'dana desa' ? 'selected' : '' }}>DD</option>
+                                <option value="alokasi dana desa" {{ old('sumber_dana', $kegiatan['sumber_dana']) == 'alokasi dana desa' ? 'selected' : '' }}>ADD</option>
+                                <option value="bantuan keuangan provinsi" {{ old('sumber_dana', $kegiatan['sumber_dana']) == 'bantuan keuang provinsi' ? 'selected' : '' }}>PBP</option>
+                                <option value="bantuan keuangan kabupaten" {{ old('sumber_dana', $kegiatan['sumber_dana']) == 'bantuan keuang kabupaten' ? 'selected' : '' }}>PBK</option>
+                                <option value="bagi hasil pajak dan retribusi daerah" {{ old('sumber_dana', $kegiatan['sumber_dana']) == 'bagi hasil pajak dan retribusi daerah' ? 'selected' : '' }}>PBH</option>
+                                <option value="pendapatan asli desa" {{ old('sumber_dana', $kegiatan['sumber_dana']) == 'pendapatan asli desa' ? 'selected' : '' }}>PAD</option>
+                            </select>
+                            <x-input-error class="mt-2" :messages="$errors->get('sumber_dana')" />
                         </div>
 
                         <div>
