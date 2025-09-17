@@ -1,12 +1,13 @@
 <div class="new-cover" style="position: relative;margin: 0; padding: 0;">
 
-   <div style="width: auto; height: 4cm; position: absolute; top: 60px; left: 0; right: 0; display: flex; align-items: center; justify-content: center;">
-    <img src="{{public_path('batang.png')}}" alt="batang">
+   <div style="width: auto; height: auto; position: absolute; top: 100px; left: 0; right: 0; display: flex; align-items: center; justify-content: center;">
+    <img src="{{ public_path('batang.png') }}" alt="batang" style="height: 140px; width: auto;">
     </div>
 
 
 
-        <h1 style="margin-top:420px">DOKUMEN <br> PENGADAAN BARANG / JASA</h1>
+
+        <h1 style="margin-top:400px">DOKUMEN <br> PENGADAAN BARANG / JASA</h1>
         <br><br><br>
         
         
