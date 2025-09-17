@@ -20,7 +20,7 @@
         </tr>       
     </table>
     <br><br>
-    <table class="papan-pengumuman">
+    {{-- <table class="papan-pengumuman">
         <tr>
             <th>NO</th>
             <th>JENIS PEKERJAAN</th>
@@ -42,7 +42,7 @@
             <td colspan="4" style="text-align: right">JUMLAH</td>
             <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
         </tr>
-    </table>
+    </table> --}}
     <br>
     <table>
         <tr>
