@@ -67,17 +67,15 @@
                         </div>
                         <br>
                         <div class="overflow-x-auto">
-                            <table class="w-full table-fixed border border-gray-200 divide-y divide-gray-100 text-sm text-left">
-                                <thead class="bg-gray-100 text-gray-700">
+                            <table class="table-auto w-full border-collapse border border-gray-300 text-sm">
+                                <thead class="bg-gray-100">
                                     <tr>
-                                        <tr>
-                                            <th class="px-4 py-2 w-[5%]">NO</th>
-                                            <th class="px-4 py-2 w-[35%]">Uraian</th>
-                                            <th class="px-4 py-2 w-[10%]">Volume</th>
-                                            <th class="px-4 py-2 w-[10%]">Satuan</th>
-                                            <th class="px-4 py-2 w-[20%] text-right">Harga Satuan</th>
-                                            <th class="px-4 py-2 w-[20%] text-right">Jumlah</th>
-                                        </tr>
+                                        <th class="px-4 py-2 min-w-[50px] border border-gray-300">NO</th>
+                                        <th class="px-4 py-2 min-w-[250px] border border-gray-300">Uraian</th>
+                                        <th class="px-4 py-2 min-w-[100px] border border-gray-300">Volume</th>
+                                        <th class="px-4 py-2 min-w-[100px] border border-gray-300">Satuan</th>
+                                        <th class="px-4 py-2 min-w-[150px] border border-gray-300 text-right">Harga Satuan</th>
+                                        <th class="px-4 py-2 min-w-[150px] border border-gray-300 text-right">Jumlah</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-100">
@@ -90,7 +88,7 @@
                                                 {{ $k['uraian'] }}
                                                 <input type="hidden" name="uraian[]" value="{{ $k['uraian'] }}">
                                             </td>
-                                            <td class="px-4 py-2">
+                                            <td class="px-4 py-2 text-center">
                                                 {{ $k['volume'] }}
                                                 <input type="hidden" name="volume[]" value="{{ $k['volume'] }}">
                                             </td>
