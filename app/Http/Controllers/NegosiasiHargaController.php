@@ -38,6 +38,8 @@ class NegosiasiHargaController extends Controller
        
         $pemberitahuanId = $penawaran->pemberitahuan_id;
 
+        $tgl_surat_pemberitahuan = $kegiatan->pemberitahuan->tgl_surat_pemberitahuan;
+
         $belanja = Belanja::where('pemberitahuan_id' , $pemberitahuanId )->get();
 
         
@@ -52,7 +54,7 @@ class NegosiasiHargaController extends Controller
                 ];
             });
               
-        $kegiatan->tgl = Carbon::parse($penawaran->tgl_penawaran)->format('Y-m-d');
+        $kegiatan->tgl = Carbon::parse($tgl_surat_pemberitahuan )->addDays(3)->format('Y-m-d');
 
        return view('form.negosiasi', compact('kegiatan', 'items'));
     }

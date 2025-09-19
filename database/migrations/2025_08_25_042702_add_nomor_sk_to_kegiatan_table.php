@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('kegiatans', function (Blueprint $table) {
-            $table->decimal('nomor_sk_tpk')->nullable();
+            $table->unsignedInteger('nomor_sk_tpk')->nullable();
             $table->dateTime('tgl_sk_tpk')->nullable();
-            $table->decimal('nomor_sk_pka')->nullable();
+            $table->unsignedInteger('nomor_sk_pka')->nullable();
             $table->dateTime('tgl_sk_pka')->nullable();
         });
     }

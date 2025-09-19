@@ -25,52 +25,44 @@
                             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
 
                                 <x-text-input id="id" name="kegiatan_id" type="hidden" class="mt-1 block w-full" value="{{ $kegiatan->id }}" />
-                                    <div>
-                                        <x-input-label for="tgl_negosiasi" :value="__('Tanggal Negosiasi Harga')" />
-                                        <x-text-input id="tgl_negosiasi" name="tgl_negosiasi" type="date"
-                                            max="{{ \Carbon\Carbon::create(Auth::user()->tahun_anggaran , 12, 31)->toDateString() }}"
-                                            min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
-                                            class="mt-1 block"
-                                            required
-                                            {{-- autocomplete="tgl_negosiasi" --}}
-                                            value="{{ old('tgl_negosiasi', isset($negosiasi) ? $negosiasi->tgl_negosiasi : '') }}"
-                                        />
-                                        <x-input-error class="mt-2" :messages="$errors->get('tgl_negosiasi')" />
-                                    </div>
-                                    
-                                    
-                                    <div>
-                                        <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
-                                        <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date"
-                                            max="{{ \Carbon\Carbon::create(Auth::user()->tahun_anggaran, 12 , 31)->toDateString() }}"
-                                            class="mt-1 block"
-                                            min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
-                                            required
-                                            value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
-                                        />
-                                        <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
-                                    </div>
-                                    <div>
-                                        <x-input-label for="tgl_akhir_perjanjian" :value="__('Tanggal Akhir Perjanjian')" />
-                                        <x-text-input id="tgl_akhir_perjanjian" name="tgl_akhir_perjanjian" type="date"
-                                            max="{{ \Carbon\Carbon::parse(Auth::user()->tahun_anggaran . '-12-31')->format('Y-m-d') }}"
-                                            min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
-                                            class="mt-1 block"
-                                            required
-                                            {{-- autocomplete="tgl_akhir_perjanjian" --}}
-                                            value="{{ old('tgl_akhir_perjanjian', isset($negosiasi) ? $negosiasi->tgl_akhir_perjanjian : '') }}"
-                                        />
-                                        <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
-                                    </div>
+                                    <x-input-label for="tgl_negosiasi" :value="__('Tanggal Negosiasi Harga')" />
+                                    <x-text-input id="tgl_negosiasi" name="tgl_negosiasi" type="date"
+                                        max="{{ \Carbon\Carbon::create(Auth::user()->tahun_anggaran , 12, 31)->toDateString() }}"
+                                        min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
+                                        class="mt-1 block"
+                                        required
+                                        value="{{ old('tgl_negosiasi', isset($negosiasi) ? $negosiasi->tgl_negosiasi : '') }}"
+                                    />
+                                    <x-input-error class="mt-2" :messages="$errors->get('tgl_negosiasi')" />
+                                    <br>
+                                    <x-input-label for="tgl_persetujuan" :value="__('Tanggal Persetujuan Penawaran')" />
+                                    <x-text-input id="tgl_persetujuan" name="tgl_persetujuan" type="date"
+                                        max="{{ \Carbon\Carbon::create(Auth::user()->tahun_anggaran, 12 , 31)->toDateString() }}"
+                                        class="mt-1 block"
+                                        min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
+                                        required
+                                        value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
+                                    />
+                                    <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
+                                    <br>
+                                    <x-input-label for="tgl_akhir_perjanjian" :value="__('Tanggal Akhir Perjanjian')" />
+                                    <x-text-input id="tgl_akhir_perjanjian" name="tgl_akhir_perjanjian" type="date"
+                                    max="{{ \Carbon\Carbon::parse(Auth::user()->tahun_anggaran . '-12-31')->format('Y-m-d') }}"
+                                    min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
+                                    class="mt-1 block"
+                                    required
+                                    value="{{ old('tgl_akhir_perjanjian', isset($negosiasi) ? $negosiasi->tgl_akhir_perjanjian : '') }}"
+                                    />
+                                    <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
                                     <br>
                                     <div>
-                                        <table class="w-full border border-gray-200 text-left">
+                                        <table class="w-4/5 border border-gray-200 text-left">
                                             <thead class="bg-gray-100">
                                                 <tr>
-                                                    <th class="w-64 px-2 py-1">Uraian</th>
-                                                    <th class="w-64 px-2 py-1">Vol/Sat</th>
-                                                    <th class="w-64 px-2 py-1">Harga Penawaran</th>
-                                                    <th class="w-64 px-2 py-1">Harga Negosiasi</th>
+                                                    <th class="w-2/5 px-2 py-1">Uraian</th>
+                                                    <th class="w-1/5 px-2 py-1">Vol/Sat</th>
+                                                    <th class="w-1/5 px-2 py-1">Harga Penawaran</th>
+                                                    <th class="w-1/5 px-2 py-1">Harga Negosiasi</th>
                                                 </tr>
                                             </thead>
 
@@ -79,7 +71,7 @@
                                                 <tr class="odd:bg-gray-50 even:bg-white"> 
                                                     <td class="px-2 py-1">{{ $item['uraian'] }}</td>
                                                     <td class="px-2 py-1">{{ $item['volume'] }} {{ $item['satuan'] }}</td>
-                                                    <td class="px-2 py-1">{{ $item['harga_penawaran'] }}</td>
+                                                    <td class="px-2 py-1 text-right">{{ number_format($item['harga_penawaran'], 0, ',', '.') }}</td>
                                                     <td class="px-2 py-1">
                                                         <input type="number" name="harga_satuan_negosiasi[]" required
                                                             value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? $item['harga_negosiasi'] : '') }}"
@@ -162,6 +154,37 @@
     window.__enableUnloadWarning  = function () { formChanged = true;  isSubmitting = false; };
     })();
     </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tglNegosiasi = document.getElementById("tgl_negosiasi");
+        const tglPersetujuan = document.getElementById("tgl_persetujuan");
+        const tglAkhir = document.getElementById("tgl_akhir_perjanjian");
+
+        tglNegosiasi.addEventListener("change", function () {
+            if (this.value) {
+                // set minimal tanggal persetujuan = tanggal negosiasi
+                tglPersetujuan.min = this.value;
+
+                // kalau tanggal persetujuan < tanggal nego, reset ke tanggal nego
+                if (tglPersetujuan.value < this.value) {
+                    tglPersetujuan.value = this.value;
+                }
+
+                // set minimal tanggal akhir perjanjian = tanggal nego + 1
+                let negoDate = new Date(this.value);
+                negoDate.setDate(negoDate.getDate() + 1);
+
+                let minAkhir = negoDate.toISOString().split("T")[0];
+                tglAkhir.min = minAkhir;
+
+                // kalau nilai akhir < min baru, reset
+                if (tglAkhir.value < minAkhir) {
+                    tglAkhir.value = minAkhir;
+                }
+            }
+        });
+    });
+</script>
 
     
 @endPushOnce
