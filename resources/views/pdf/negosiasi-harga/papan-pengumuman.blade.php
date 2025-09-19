@@ -20,7 +20,7 @@
         </tr>       
     </table>
     <br><br>
-    {{-- <table class="papan-pengumuman">
+    <table class="papan-pengumuman">
         <tr>
             <th>NO</th>
             <th>JENIS PEKERJAAN</th>
@@ -28,7 +28,14 @@
             <th>HARGA <br> SATUAN <br>(Rp.)</th>
             <th>JUMLAH <br>(Rp.)</th>
         </tr>
-        @foreach ($data['item'] as $k => $v )
+        <tr>
+            <td>1</td>
+            <td>{{ $data['kegiatan']->kegiatan}}</td>
+            <td>1 paket</td>
+            <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
+        </tr>
+        {{-- @foreach ($data['item'] as $k => $v )
             
         <tr>
           <td style="text-align: center">{{ $loop->iteration }}</td>
@@ -37,12 +44,12 @@
             <td style="text-align: right"> {{ number_format($v['harga_negosiasi'] , 0, ',', '.') }}</td>
             <td style="text-align: right"> {{ number_format(round($v['volume'] * $v['harga_negosiasi'], -2), 0, ',', '.') }}</td>
         </tr>
-        @endforeach
+        @endforeach --}}
         <tr>
             <td colspan="4" style="text-align: right">JUMLAH</td>
             <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
         </tr>
-    </table> --}}
+    </table>
     <br>
     <table>
         <tr>
