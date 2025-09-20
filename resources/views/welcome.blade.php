@@ -1294,7 +1294,7 @@
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ route('/dashboard') }}"
+                        <a href="{{ url('/dashboard') }}"
                             class="bg-primary text-white block px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}"
