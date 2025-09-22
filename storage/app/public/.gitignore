@@ -1,4 +1,4 @@
 *
 !.gitignore
 !errors/
-!errors/*.svg
+!errors/*
