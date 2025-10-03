@@ -22,11 +22,11 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('access-desa-panel', function (User $user) {
-            return in_array($user->role, ['desa' || 'superadmin']);
+            return in_array($user->role, ['desa',  'super-admin']);
         });
         
         Gate::define('access-kecamatan-panel', function (User $user) {
-            return in_array($user->role, ['kecamatan' || 'superadmin']);
+            return in_array($user->role, ['kecamatan' , 'super-admin']);
         });
     }
 }
