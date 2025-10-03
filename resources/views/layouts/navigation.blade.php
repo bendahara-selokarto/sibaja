@@ -11,11 +11,14 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                </div>
+                @can('access-kecamatan-panel')
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    </div>
+                @endcan
+                @can('access-desa-panel')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('menu.penyedia')" :active="request()->routeIs('menu.penyedia')">
                         {{ __('Penyedia') }}
@@ -30,7 +33,8 @@
                     <x-nav-link :href="route('menu.pelaksana')" :active="request()->routeIs('menu.pelaksana')">
                         {{ __('Pelaksana') }}
                     </x-nav-link>
-                </div>             
+                </div>  
+                @endcan           
                 {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('menu.pemberitahuan')" :active="request()->routeIs('menu.pemberitahuan')">
                         {{ __('pemberitahuan') }}
@@ -91,11 +95,14 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+        @can('access-kecamatan-panel')
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+        @endcan
+        @can('access-desa-panel')
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('menu.penyedia')" :active="request()->routeIs('menu.penyedia')">
                 {{ __('Penyedia') }}
@@ -106,6 +113,7 @@
                 {{ __('Kegiatan') }}
             </x-responsive-nav-link>
         </div>
+        @endcan
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
