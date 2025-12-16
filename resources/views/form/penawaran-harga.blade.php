@@ -125,80 +125,126 @@
     </div>
     @pushOnce('scripts')
         <script>
-            window.addEventListener('DOMContentLoaded', (event) => {
-                const inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
-                inputsHargaSatuan.forEach(input => {
-                    if (!input.getAttribute('nilai-sebelumnya')) {
-                        input.setAttribute('nilai-sebelumnya', 0);
-                    }
+            function formatRupiah(angka) {
+                return angka.toLocaleString('id-ID', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
                 });
-            });
-            var total = 0;
-
-            function formatNumber(input) {
-                var tr = input.parentNode.parentNode;
-                var volume = tr.querySelector('input[name="volume[]"]').value;
-                var angka = input.value.replace(/[^0-9]/g, '');
-                var formattedNumber = (angka * volume).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                tr.querySelector('td[name="format_number"]').textContent = formattedNumber;
-
-                // Hitung nilai sebelumnya sebelum diubah
-                var nilaiSebelumnya = input.value * volume; // Nilai input * volume
-                input.setAttribute('nilai-sebelumnya', nilaiSebelumnya);
-
-                updateTotal(formattedNumber, input);
             }
 
-            function updateTotal(formattedNumber, input) {
-                var tr = input.parentNode.parentNode;
-                var nilaiSebelumnya = input.getAttribute('nilai-sebelumnya');
+            function hitungTotal() {
+                let total = 0;
 
-                console.log("Nilai Sebelumnya:", nilaiSebelumnya); // Debugging
+                document.querySelectorAll('tr').forEach(tr => {
+                    const volumeInput = tr.querySelector('input[name="volume[]"]');
+                    const hargaInput  = tr.querySelector('input[name="harga_satuan[]"]');
+                    const cellTotal   = tr.querySelector('td[name="format_number"]');
 
-                if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
-                    total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
-                }
+                    if (!volumeInput || !hargaInput || !cellTotal) return;
 
-                total += parseInt(formattedNumber.replace(/\./g, ''));
+                    const volume = parseFloat(volumeInput.value) || 0;
+                    const harga  = parseInt(hargaInput.value.replace(/\D/g, '')) || 0;
 
-                document.getElementById('total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                    const subtotal = volume * harga;
+                    cellTotal.textContent = formatRupiah(subtotal);
+
+                    total += subtotal;
+                });
+
+                document.getElementById('total').textContent = formatRupiah(total);
                 document.getElementById('total_input').value = total;
             }
 
-            var inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
-            inputsHargaSatuan.forEach(function(input) {
-                input.addEventListener('focus', function() {
-                    var tr = this.parentNode.parentNode;
-                    var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
-                    formattedNumber = formattedNumber ? formattedNumber : '0';
-
-                    var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
-                    var nilaiSebelumnya = this.value * volume; // Hitung nilai sebelumnya
-
-                    if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
-                        total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
-                    }
-
-                    document.getElementById('total').textContent = total.toString().replace(
-                        /\B(?=(\d{3})+(?!\d))/g, ".");
-                    document.getElementById('total_input').value = total;
-                });
-
-                input.addEventListener('blur', function() {
-                    var tr = this.parentNode.parentNode;
-                    var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
-                    formattedNumber = formattedNumber ? formattedNumber : '0';
-
-                    var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
-                    var nilaiSaatIni = this.value * volume; // Hitung nilai saat ini
-                    this.setAttribute('nilai-sebelumnya', nilaiSaatIni); // Update nilai sebelumnya
-
-                    total += parseInt(formattedNumber.replace(/\./g, ''));
-                    document.getElementById('total').textContent = total.toString().replace(
-                        /\B(?=(\d{3})+(?!\d))/g, ".");
-                    document.getElementById('total_input').value = total;
-                });
+            // trigger setiap ada perubahan harga / volume
+            document.addEventListener('input', function (e) {
+                if (
+                    e.target.name === 'harga_satuan[]' ||
+                    e.target.name === 'volume[]'
+                ) {
+                    hitungTotal();
+                }
             });
+
+            // hitung awal (jika ada data lama)
+            window.addEventListener('DOMContentLoaded', hitungTotal);
+
+
+
+
+            // window.addEventListener('DOMContentLoaded', (event) => {
+            //     const inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
+            //     inputsHargaSatuan.forEach(input => {
+            //         if (!input.getAttribute('nilai-sebelumnya')) {
+            //             input.setAttribute('nilai-sebelumnya', 0);
+            //         }
+            //     });
+            // });
+            // var total = 0;
+
+            // function formatNumber(input) {
+            //     var tr = input.parentNode.parentNode;
+            //     var volume = tr.querySelector('input[name="volume[]"]').value;
+            //     var angka = input.value.replace(/[^0-9]/g, '');
+            //     var formattedNumber = (angka * volume).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            //     tr.querySelector('td[name="format_number"]').textContent = formattedNumber;
+
+            //     // Hitung nilai sebelumnya sebelum diubah
+            //     var nilaiSebelumnya = input.value * volume; // Nilai input * volume
+            //     input.setAttribute('nilai-sebelumnya', nilaiSebelumnya);
+
+            //     updateTotal(formattedNumber, input);
+            // }
+
+            // function updateTotal(formattedNumber, input) {
+            //     var tr = input.parentNode.parentNode;
+            //     var nilaiSebelumnya = input.getAttribute('nilai-sebelumnya');
+
+            //     console.log("Nilai Sebelumnya:", nilaiSebelumnya); // Debugging
+
+            //     if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
+            //         total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
+            //     }
+
+            //     total += parseInt(formattedNumber.replace(/\./g, ''));
+
+            //     document.getElementById('total').textContent = total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            //     document.getElementById('total_input').value = total;
+            // }
+
+            // var inputsHargaSatuan = document.querySelectorAll('input[name="harga_satuan[]"]');
+            // inputsHargaSatuan.forEach(function(input) {
+            //     input.addEventListener('focus', function() {
+            //         var tr = this.parentNode.parentNode;
+            //         var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
+            //         formattedNumber = formattedNumber ? formattedNumber : '0';
+
+            //         var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
+            //         var nilaiSebelumnya = this.value * volume; // Hitung nilai sebelumnya
+
+            //         if (nilaiSebelumnya !== null && nilaiSebelumnya !== undefined && nilaiSebelumnya !== "") {
+            //             total -= parseInt(nilaiSebelumnya.toString().replace(/\./g, ''));
+            //         }
+
+            //         document.getElementById('total').textContent = total.toString().replace(
+            //             /\B(?=(\d{3})+(?!\d))/g, ".");
+            //         document.getElementById('total_input').value = total;
+            //     });
+
+            //     input.addEventListener('blur', function() {
+            //         var tr = this.parentNode.parentNode;
+            //         var formattedNumber = tr.querySelector('td[name="format_number"]').textContent;
+            //         formattedNumber = formattedNumber ? formattedNumber : '0';
+
+            //         var volume = tr.querySelector('input[name="volume[]"]').value; // Ambil volume
+            //         var nilaiSaatIni = this.value * volume; // Hitung nilai saat ini
+            //         this.setAttribute('nilai-sebelumnya', nilaiSaatIni); // Update nilai sebelumnya
+
+            //         total += parseInt(formattedNumber.replace(/\./g, ''));
+            //         document.getElementById('total').textContent = total.toString().replace(
+            //             /\B(?=(\d{3})+(?!\d))/g, ".");
+            //         document.getElementById('total_input').value = total;
+            //     });
+            // });
             document.getElementById('penyedia').addEventListener('change', function() {
                 var selectedOption = this.options[this.selectedIndex];
                 var selectedText = selectedOption.text;
