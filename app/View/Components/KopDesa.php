@@ -13,7 +13,8 @@ class KopDesa extends Component
      */
     public function __construct()
     {
-        //
+        //shi[aa[ih]]
+        avlag
     }
 
     /**
