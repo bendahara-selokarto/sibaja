@@ -33,7 +33,7 @@ class CheckDefaultKode
            'Gombong',
            'Randu',
            'Siguci',
-           'Pretekan',
+           'Pretek',
            'Selokarto',
            'Gemuh',
            'Gumawang',
