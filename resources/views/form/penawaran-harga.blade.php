@@ -126,49 +126,48 @@
     @pushOnce('scripts')
         <script>
             function formatRupiah(angka) {
-                return angka.toLocaleString('id-ID', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-            }
+            return Math.round(angka).toLocaleString('id-ID');
+        }
 
-            function hitungTotal() {
-                let total = 0;
+        function hitungTotal() {
+            let total = 0;
 
-                document.querySelectorAll('tr').forEach(tr => {
-                    const volumeInput = tr.querySelector('input[name="volume[]"]');
-                    const hargaInput  = tr.querySelector('input[name="harga_satuan[]"]');
-                    const cellTotal   = tr.querySelector('td[name="format_number"]');
+            document.querySelectorAll('tr').forEach(tr => {
+                const volumeInput = tr.querySelector('input[name="volume[]"]');
+                const hargaInput  = tr.querySelector('input[name="harga_satuan[]"]');
+                const cellTotal   = tr.querySelector('td[name="format_number"]');
 
-                    if (!volumeInput || !hargaInput || !cellTotal) return;
+                if (!volumeInput || !hargaInput || !cellTotal) return;
 
-                    const volume = parseFloat(volumeInput.value) || 0;
-                    const harga  = parseInt(hargaInput.value.replace(/\D/g, '')) || 0;
+                const volume = parseFloat(volumeInput.value) || 0;
+                const harga  = parseInt(
+                    hargaInput.value.replace(/\D/g, '')
+                ) || 0;
 
-                    const subtotal = volume * harga;
-                    cellTotal.textContent = formatRupiah(subtotal);
+                const subtotal = volume * harga;
 
-                    total += subtotal;
-                });
-
-                document.getElementById('total').textContent = formatRupiah(total);
-                document.getElementById('total_input').value = total;
-            }
-
-            // trigger setiap ada perubahan harga / volume
-            document.addEventListener('input', function (e) {
-                if (
-                    e.target.name === 'harga_satuan[]' ||
-                    e.target.name === 'volume[]'
-                ) {
-                    hitungTotal();
-                }
+                cellTotal.textContent = formatRupiah(subtotal);
+                total += subtotal;
             });
 
-            // hitung awal (jika ada data lama)
-            window.addEventListener('DOMContentLoaded', hitungTotal);
+            document.getElementById('total').textContent = formatRupiah(total);
+            document.getElementById('total_input').value = Math.round(total);
+        }
 
+        // trigger perubahan
+        document.addEventListener('input', function (e) {
+            if (
+                e.target.name === 'harga_satuan[]' ||
+                e.target.name === 'volume[]'
+            ) {
+                hitungTotal();
+            }
+        });
 
+        // hitung awal
+        window.addEventListener('DOMContentLoaded', hitungTotal);
+
+           
 
 
             // window.addEventListener('DOMContentLoaded', (event) => {
