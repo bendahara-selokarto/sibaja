@@ -97,7 +97,7 @@
                                                 <input type="hidden" name="satuan[]" value="{{ $k['satuan'] }}">
                                             </td>
                                             <td class="px-4 py-2 text-right">
-                                                <input type="number" min="0" step="any" value="{{old('harga_satuan[]', isset($k['harga_satuan']) ? $k['harga_satuan'] : '')}}" name="harga_satuan[]" class="w-40 rounded-md border-gray-300 text-right" onblur="formatNumber(this)">
+                                                <input required type="number" min="0" step="any" value="{{old('harga_satuan[]', isset($k['harga_satuan']) ? $k['harga_satuan'] : '')}}" name="harga_satuan[]" class="w-40 rounded-md border-gray-300 text-right" onblur="formatNumber(this)">
                                             </td>
                                             <td class="px-4 py-2 text-right" name="format_number"></td>
                                         </tr>
