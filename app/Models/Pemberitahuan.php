@@ -74,11 +74,11 @@ class Pemberitahuan extends Model
             }
 
             // Auto parse tgl_pemberitahuan dan set tgl_batas_akhir_penawaran
-            if ($model->tgl_surat_pemberitahuan) {
-                $parsed = Carbon::parse($model->tgl_pemberitahuan);
-                $model->tgl_surat_pemberitahuan = $parsed->format('Y-m-d');
-                $model->tgl_batas_akhir_penawaran = $parsed->addDays(3)->format('Y-m-d');
-            }
+            // if ($model->tgl_surat_pemberitahuan) {
+            //     $parsed = Carbon::parse($model->tgl_pemberitahuan);
+            //     $model->tgl_surat_pemberitahuan = $parsed->format('Y-m-d');
+            //     $model->tgl_batas_akhir_penawaran = $parsed->addDays(3)->format('Y-m-d');
+            // }
         });
     }
 
