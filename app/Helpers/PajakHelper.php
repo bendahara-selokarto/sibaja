@@ -9,7 +9,7 @@ class PajakHelper
      */
     public static function hitung(float $jumlahTotal, float $ppn, float $pph): array
     {
-        $factor = 1 + $ppn + $pph;
+        $factor = 1 + $ppn;
         $dpp = $jumlahTotal / $factor;
 
         $ppn_x = $dpp * $ppn;
