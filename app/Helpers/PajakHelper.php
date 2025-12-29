@@ -16,10 +16,10 @@ class PajakHelper
         $pph_x = $dpp * $pph;
 
         return [
-            'dpp'   => $dpp,
+            'dpp'   => $jumlahTotal - $ppn_x - $pph_x,
             'ppn'   => $ppn_x,
             'pph'   => $pph_x,
-            'total' => $dpp + $ppn_x + $pph_x,
+            'total' => $dpp + $ppn_x,
         ];
     }
 }
