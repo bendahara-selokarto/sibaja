@@ -260,14 +260,21 @@ class PenawaranHargaController extends Controller
             $jumlah_1 = $penawaranPemenang->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
 
             
-            $item = $penawaranPemenang;      
-            
-            $denom = 1 / ($kegiatan->ppn + $kegiatan->pph_22 + 1);
+            $item = $penawaranPemenang;
 
-            $item->transform(function ($item) use ($denom) {
-                // ubah harga_satuan saja
-                $item['harga_satuan'] = $item['harga_satuan'] * $denom;
-                $item['jumlah'] = $item['jumlah'] * $denom;
+            $item->transform(function ($item) use ($kegiatan) {
+
+                $item['harga_satuan'] = PajakHelper::bersihSetelahPpnDanPph22(
+                    $item['harga_satuan'],
+                    $kegiatan->ppn,
+                    $kegiatan->pph_22
+                );
+
+                $item['jumlah'] = PajakHelper::bersihSetelahPpnDanPph22(
+                    $item['jumlah'],
+                    $kegiatan->ppn,
+                    $kegiatan->pph_22
+                );
 
                 return $item;
             });
@@ -276,22 +283,31 @@ class PenawaranHargaController extends Controller
             
             $item_2 = $penawaranPembanding;
 
-            $item_2->transform(function ($item) use ($denom) {
-                // ubah harga_satuan saja
-                $item['harga_satuan'] = $item['harga_satuan'] * $denom;
-                $item['jumlah'] = $item['jumlah'] * $denom;
+            $item_2->transform(function ($item) use ($kegiatan) {
+
+                $item['harga_satuan'] = PajakHelper::bersihSetelahPpnDanPph22(
+                    $item['harga_satuan'],
+                    $kegiatan->ppn,
+                    $kegiatan->pph_22
+                );
+
+                $item['jumlah'] = PajakHelper::bersihSetelahPpnDanPph22(
+                    $item['jumlah'],
+                    $kegiatan->ppn,
+                    $kegiatan->pph_22
+                );
 
                 return $item;
             });
 
             // ✅ pakai helper
-            $pajak_1 = PajakHelper::hitung(
+            $pajak_1 = PajakHelper::hitungSiskeudes(
                 $jumlah_1, 
                 $kegiatan->ppn,
                 $kegiatan->pph_22
             );
 
-            $pajak_2 = PajakHelper::hitung(
+            $pajak_2 = PajakHelper::hitungSiskeudes(
                 $jumlah_2, 
                 $kegiatan->ppn,
                 $kegiatan->pph_22
@@ -307,8 +323,8 @@ class PenawaranHargaController extends Controller
                 'jumlah_2'          => $pajak_2['dpp'],
                 'ppn_1'             => $pajak_1['ppn'],
                 'ppn_2'             => $pajak_2['ppn'],
-                'pph_22_1'          => $pajak_1['pph'],
-                'pph_22_2'          => $pajak_2['pph'],
+                'pph_22_1'          => $pajak_1['pph22'],
+                'pph_22_2'          => $pajak_2['pph22'],
                 'jumlah_total_1'    => $pajak_1['total'],
                 'jumlah_total_2'    => $pajak_2['total'],    
                 'pemberitahuan' => $pemberitahuan,

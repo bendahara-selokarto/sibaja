@@ -48,4 +48,36 @@ class PajakHelper
             'total' => $dpp + ($dpp * $ppn), // total kontrak
         ];
     }
+    public static function hitungSiskeudes(
+        float $totalBruto,
+        float $ppn,
+        float $pph22
+    ): array {
+        $faktorPajak = 1 + $ppn + $pph22; // 1.14
+        $faktorSiskeudes = 1 + $ppn; // 1.11
+
+        $dpp = (1 / $faktorSiskeudes) * $totalBruto; // DPP Siskeudes
+
+        $ppnSiskeudes =  $dpp * $ppn; // PPN Siskeudes
+
+        $pph22Siskeudes = $dpp * $pph22; // PPh22 Siskeudes
+
+        $jumlahBersih = $dpp - $pph22Siskeudes;
+        
+        return [
+            'faktorPajak' => $faktorPajak,
+            'dpp'   => $dpp - $pph22Siskeudes,
+            'ppn'   => $ppnSiskeudes,
+            'pph22' => $pph22Siskeudes,
+            'total' => $dpp + $ppnSiskeudes,
+        ];
+    }
+        public static function bersihSetelahPpnDanPph22(
+        float $nilai,
+        float $ppn,
+        float $pph22
+    ): float {
+        $dasar = $nilai / (1 + $ppn);
+        return $dasar - ($dasar * $pph22);
+    }
 }
