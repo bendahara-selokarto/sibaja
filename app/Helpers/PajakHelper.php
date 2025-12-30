@@ -22,4 +22,30 @@ class PajakHelper
             'total' => $dpp + $ppn_x,
         ];
     }
+
+    public static function dpp(float $nilaiBruto, float $ppn): float
+    {
+        return $nilaiBruto / (1 + $ppn);
+    }
+
+    /**
+     * Hitung pajak dari nilai bruto (sudah termasuk PPN)
+     */
+    public static function hitungDariBruto(
+        float $totalBruto,
+        float $ppn,
+        float $pph22
+    ): array {
+        $denom = 1 + $ppn;
+
+        $dpp = $totalBruto / $denom;
+
+        return [
+            'denom' => $denom,
+            'dpp'   => $dpp,
+            'ppn'   => $dpp * $ppn,
+            'pph22' => $dpp * $pph22, // POTONGAN
+            'total' => $dpp + ($dpp * $ppn), // total kontrak
+        ];
+    }
 }

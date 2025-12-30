@@ -41,4 +41,49 @@ class PajakHelperTest extends TestCase
         );
     }
 
+    /** @test */
+    public function hitung_dari_bruto_dengan_ppn_11_persen()
+    {
+        $totalBruto = 111_000_000;
+        $ppn = 0.11;
+        $pph22 = 0.015;
+
+        $hasil = PajakHelper::hitungDariBruto(
+            $totalBruto,
+            $ppn,
+            $pph22
+        );
+
+        $this->assertEquals(1.11, $hasil['denom']);
+        $this->assertEquals(100_000_000, round($hasil['dpp']));
+        $this->assertEquals(11_000_000, round($hasil['ppn']));
+        $this->assertEquals(1_500_000, round($hasil['pph22']));
+        $this->assertEquals(111_000_000, round($hasil['total']));
+    }
+    /** @test */
+    public function pph_tidak_masuk_ke_denom()
+    {
+        $hasil = PajakHelper::hitungDariBruto(
+            100_000_000,
+            0.11,
+            0.02
+        );
+
+        $this->assertNotEquals(
+            1 + 0.11 + 0.02,
+            $hasil['denom']
+        );
+    }
+
+    /** @test */
+    public function helper_dpp_menghasilkan_nilai_benar()
+    {
+        $dpp = PajakHelper::dpp(111_000_000, 0.11);
+
+        $this->assertEquals(
+            100_000_000,
+            round($dpp)
+        );
+    }
+
 }
