@@ -219,66 +219,47 @@ class NegosiasiHargaController extends Controller
 
         $ppn = $kegiatan->ppn;
         $pph_22 = $kegiatan->pph_22;
-        $denom = 1 + $ppn;
+        
 
-        $items = $pemberitahuan->belanjas->map(function ($item, $k) 
-            use ($hargaPenawaran, $hargaNegosiasi, $ppn) {
+    /*
+    |--------------------------------------------------------------------------
+    | ITEM BELANJA (SUDAH DPP)
+    |--------------------------------------------------------------------------
+    */
+    $items = $pemberitahuan->belanjas->map(function ($item, $k)
+        use ($hargaPenawaran, $hargaNegosiasi, $ppn, $pph_22) {
 
-            $hargaPenawaranBersih = PajakHelper::dpp(
-                $hargaPenawaran[$k]->harga_satuan,
-                $ppn
-            );
+        $hargaPenawaranBersih = PajakHelper::hitungSiskeudes(
+            $hargaPenawaran[$k]->harga_satuan,
+            $ppn,
+            $pph_22
 
-            $hargaNegosiasiBersih = PajakHelper::dpp(
-                $hargaNegosiasi[$k]->harga_satuan,
-                $ppn
-            );
+        );
 
-            return [
-                'uraian' => $item->uraian,
-                'volume' => $item->volume,
-                'satuan' => $item->satuan,
+        $hargaNegosiasiBersih = PajakHelper::hitungSiskeudes(
+            $hargaNegosiasi[$k]->harga_satuan,
+            $ppn,
+            $pph_22
+        );
 
-                // harga satuan sebelum pajak
-                'harga_penawaran' => $hargaPenawaranBersih,
-                'harga_negosiasi' => $hargaNegosiasiBersih,
+        return [
+            'uraian' => $item->uraian,
+            'volume' => $item->volume,
+            'satuan' => $item->satuan,
 
-                // jumlah sebelum pajak
-                'jumlah_penawaran' => $item->volume * $hargaPenawaranBersih,
-                'jumlah_negosiasi' => $item->volume * $hargaNegosiasiBersih,
-            ];
-        });
+            'harga_penawaran' => $hargaPenawaranBersih['bersih'],
+            'harga_negosiasi' => $hargaNegosiasiBersih['bersih'],
 
-        /*
-|--------------------------------------------------------------------------
-| ITEM BELANJA (SUDAH DPP)
-|--------------------------------------------------------------------------
-*/
-$items = $pemberitahuan->belanjas->map(function ($item, $k)
-    use ($hargaPenawaran, $hargaNegosiasi, $ppn) {
+            'jumlah_penawaran' => $item->volume * $hargaPenawaranBersih['bersih'],
+            'jumlah_negosiasi' => $item->volume * $hargaNegosiasiBersih['bersih'],
 
-    $hargaPenawaranDpp = PajakHelper::dpp(
-        $hargaPenawaran[$k]->harga_satuan,
-        $ppn
-    );
+            'ppn_penawaran' => $hargaPenawaranBersih['ppn'],
+            'ppn_negosiasi' => $hargaNegosiasiBersih['ppn'],
 
-    $hargaNegosiasiDpp = PajakHelper::dpp(
-        $hargaNegosiasi[$k]->harga_satuan,
-        $ppn
-    );
-
-    return [
-        'uraian' => $item->uraian,
-        'volume' => $item->volume,
-        'satuan' => $item->satuan,
-
-        'harga_penawaran' => $hargaPenawaranDpp,
-        'harga_negosiasi' => $hargaNegosiasiDpp,
-
-        'jumlah_penawaran' => $item->volume * $hargaPenawaranDpp,
-        'jumlah_negosiasi' => $item->volume * $hargaNegosiasiDpp,
-    ];
-});
+            'pph22_penawaran' => $hargaPenawaranBersih['pph22'],
+            'pph22_negosiasi' => $hargaNegosiasiBersih['pph22'],
+        ];
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -288,45 +269,22 @@ $items = $pemberitahuan->belanjas->map(function ($item, $k)
     $penawaranHarga->tgl_penawaran = Carbon::parse(
         $penawaranHarga->tgl_penawaran
     );
-
-    // total bruto (DPP + PPN)
-    $totalPenawaranBruto =
-        $items->sum('jumlah_penawaran') * (1 + $ppn);
-
-    $pajakPenawaran = PajakHelper::hitungDariBruto(
-        $totalPenawaranBruto,
-        $ppn,
-        $pph_22
-    );
-
-    $penawaranHarga->harga_sebelum_pajak = $pajakPenawaran['dpp'];
-    $penawaranHarga->ppn = $pajakPenawaran['ppn'];
-    $penawaranHarga->pph_22 = $pajakPenawaran['pph22'];
-    $penawaranHarga->harga_total = $pajakPenawaran['total'];
+    
+    $penawaranHarga->harga_sebelum_pajak = $items->sum('jumlah_penawaran');
+    $penawaranHarga->ppn = $items->sum('ppn_penawaran');
+    $penawaranHarga->pph_22 = $items->sum('pph22_penawaran');
+    $penawaranHarga->harga_total = $items->sum('jumlah_penawaran') + $items->sum('ppn_penawaran') + $items->sum('pph22_penawaran');
 
     /*
     |--------------------------------------------------------------------------
     | NEGOSIASI HARGA
     |--------------------------------------------------------------------------
-    */
-    $totalNegosiasiBruto =
-        $items->sum('jumlah_negosiasi') * (1 + $ppn);
+    */      
 
-    $pajakNegosiasi = PajakHelper::hitungDariBruto(
-        $totalNegosiasiBruto,
-        $ppn,
-        $pph_22
-    );
-
-    $negosiasiHarga->harga_sebelum_pajak = $pajakNegosiasi['dpp'];
-    $negosiasiHarga->ppn = $pajakNegosiasi['ppn'];
-    $negosiasiHarga->pph_22 = $pajakNegosiasi['pph22'];
-
-    $negosiasiHarga->harga_total = round(
-        $pajakNegosiasi['total'],
-        -2,
-        PHP_ROUND_HALF_DOWN
-    );
+    $negosiasiHarga->harga_sebelum_pajak = $items->sum('jumlah_negosiasi');
+    $negosiasiHarga->ppn = $items->sum('ppn_negosiasi');
+    $negosiasiHarga->pph_22 = $items->sum('pph22_negosiasi');
+    $negosiasiHarga->harga_total = $items->sum('jumlah_negosiasi') + $items->sum('ppn_negosiasi') + $items->sum('pph22_negosiasi');
 
     /*
     |--------------------------------------------------------------------------
