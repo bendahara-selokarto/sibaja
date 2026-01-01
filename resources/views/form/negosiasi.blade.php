@@ -63,6 +63,7 @@
                                                     <th class="w-1/5 px-2 py-1">Vol/Sat</th>
                                                     <th class="w-1/5 px-2 py-1">Harga Penawaran</th>
                                                     <th class="w-1/5 px-2 py-1">Harga Negosiasi</th>
+                                                    <th>Aksi</th>
                                                 </tr>
                                             </thead>
 
@@ -71,13 +72,20 @@
                                                 <tr class="odd:bg-gray-50 even:bg-white"> 
                                                     <td class="px-2 py-1">{{ $item['uraian'] }}</td>
                                                     <td class="px-2 py-1">{{ $item['volume'] }} {{ $item['satuan'] }}</td>
-                                                    <td class="px-2 py-1 text-right">{{ number_format($item['harga_penawaran'], 0, ',', '.') }}</td>
+                                                    {{-- <td class="px-2 py-1 text-right">{{ number_format($item['harga_penawaran'], 0, ',', '.') }}</td> --}}
+                                                    <td class="text-end"><span class="harga-penawaran" data-value="{{ $item['harga_penawaran']}}">{{ number_format($item['harga_penawaran'], 0, ',', '.') }}</span></td>
                                                     <td class="px-2 py-1">
                                                         <input type="number" name="harga_satuan_negosiasi[]" required
                                                             value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? $item['harga_negosiasi'] : '') }}"
-                                                            class="w-full border border-gray-300 rounded px-2 py-1"
+                                                            class="w-full border border-gray-300 rounded px-2 py-1 harga-negosiasi"
                                                         >
                                                     </td>
+                                                    <td class="text-center">
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-outline-primary btn-set-harga" title="Samakan dengan harga penawaran">
+                                                        Set
+                                                    </button>
+                                                </td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -99,6 +107,26 @@
     </div>  
 {{-- javascript --}}
 @pushOnce('scripts')
+<script>
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('btn-set-harga')) {
+        const row = e.target.closest('tr');
+
+        const hargaPenawaran = row.querySelector('.harga-penawaran')
+                                  .dataset.value;
+
+        const inputNegosiasi = row.querySelector('.harga-negosiasi');
+
+        inputNegosiasi.value = hargaPenawaran;
+        inputNegosiasi.dispatchEvent(new Event('input')); // kalau ada listener lain
+
+        e.target.disabled = true;
+        e.target.innerText = '✓';
+
+    }
+});
+</script>
+
 <script>
     const hargaNegosiasi = document.getElementById('harga_negosiasi');
     const formatCurency = document.getElementById('format_curency');

@@ -128,7 +128,7 @@
    newInputGroup.className = 'input-group';  
    newInputGroup.innerHTML = `  
        <x-text-input class="mt-1" type="text" name="uraian[]" required autofocus autocomplete="uraian" />
-       <x-text-input class="mt-1" type="number" min="0" step="any" name="volume[]" required  autocomplete="Vol" />
+       <x-text-input class="mt-1 text-right" type="number" min="0" step="any" name="volume[]" required  autocomplete="Vol" />
        <x-text-input class="mt-1" type="text" name="satuan[]" required  autocomplete="Satuan" />                  
        <button type="button" onclick="removeInput(this)"><x-bladewind::icon class="text-red-500" name="minus-circle"/></button> | <button type="button" onclick="addInput()"><x-bladewind::icon name="plus-circle" class="text-blue-500	"/></button>  
    `;  
