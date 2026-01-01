@@ -82,24 +82,26 @@
                                 <td colspan="2">
                                     @if ($kegiatan->pemberitahuan  )
                                         <div class="mt-4">
-                                               @foreach ($penyedia as $penyediaItem)                                 
-                                                    <form action="{{ route('penawaran.create', [$kegiatan['id'] , $penyediaItem->id]) }}" method="post" class="inline">
-                                                        @csrf
-                                                        @method('POST')
-                                                        <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
+                                               @foreach ($penyedia as $penyediaItem)
+                                                    <a href="{{ route('penawaran.create', [$kegiatan->id, $penyediaItem->id]) }}">
+                                                        <x-bladewind::button
+                                                            size="tiny"
+                                                            icon="document-plus"
+                                                            color="green">
                                                             Penawaran : {{ $penyediaItem->nama_penyedia }}
                                                         </x-bladewind::button>
-                                                    </form> 
+                                                    </a>
                                                 @endforeach
-                                               @foreach ($penyediaAda as $penyediaItem)                                 
-                                                    <form action="{{ route('penawaran.edit', [$kegiatan['id'] , $penyediaItem->id]) }}" method="post" class="inline">
-                                                        @csrf
-                                                        @method('POST')
-                                                        <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="yellow">
+                                                @foreach ($penyediaAda as $penyediaItem)
+                                                    <a href="{{ route('penawaran.edit', [$kegiatan->id, $penyediaItem->id]) }}">
+                                                        <x-bladewind::button
+                                                            size="tiny"
+                                                            icon="document-plus"
+                                                            color="yellow">
                                                             Ubah : {{ $penyediaItem->nama_penyedia }}
                                                         </x-bladewind::button>
-                                                    </form> 
-                                                @endforeach
+                                                    </a>
+                                                @endforeach                                               
                                                 @if(!empty($btn['penawaran-create']) && $btn['penawaran-create'])
                                                 <form 
                                                 id="delete-form-{{ $kegiatan->id }}-penawaran"
@@ -137,23 +139,24 @@
                                 <td colspan="2">
                                         <div class="mt-4">
                                             @if(!empty($btn['negosiasi-create']))
-                                                <form action="{{ route('negosiasi.create', $kegiatan['id']) }}" method="post" class="inline">
-                                                    @csrf
-                                                    @method('POST')
+                                                {{-- <form action="{{ route('negosiasi.create', $kegiatan['id']) }}" method="post" class="inline"> --}}
+                                                    <a href="{{ route('negosiasi.create', $kegiatan['id']) }}">
+                                                    {{-- @csrf
+                                                    @method('POST') --}}
                                                     <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
                                                         Buat
                                                     </x-bladewind::button>
-                                                </form>
+                                                </a>
                                             @endif
                                             @if(!empty($btn['negosiasi-render']))
-                                                <form action="{{ route('negosiasi.edit', $kegiatan['id']) }}" method="post" class="inline">
-                                                    @csrf
-                                                    @method('POST')
+                                                {{-- <form action="{{ route('negosiasi.edit', $kegiatan['id']) }}" method="post" class="inline"> --}}
+                                                    {{-- @csrf
+                                                    @method('POST') --}}
+                                                    <a href="{{ route('negosiasi.edit', $kegiatan['id']) }}">
                                                     <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">
                                                         Ubah
                                                     </x-bladewind::button>
-                                                </form>
-
+                                                </a>
                                                 <form 
                                                 id="delete-form-{{ $kegiatan->id }}-negosiasi"
                                                 action="{{ route('negosiasi.destroy', $kegiatan['id']) }}" method="post" class="inline">
@@ -187,22 +190,24 @@
                                 <td colspan="2">
                                     <div class="mt-4">
                                         @if(!empty($btn['pembayaran-create']))
-                                        <form action="{{ route('pembayaran.create', $kegiatan['id']) }}" method="post" class="inline">
-                                            @csrf
-                                            @method('POST')
+                                        {{-- <form action="{{ route('pembayaran.create', $kegiatan['id']) }}" method="post" class="inline"> --}}
+                                            {{-- @csrf --}}
+                                            {{-- @method('POST') --}}
+                                            <a href="{{ route('pembayaran.create', $kegiatan['id']) }}">
                                             <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
                                                 Buat
                                             </x-bladewind::button>
-                                        </form>
+                                        </a>
                                         @endif
                                         @if(!empty($btn['pembayaran-render']))
-                                                <form action="{{ route('pembayaran.edit', $kegiatan['id']) }}" method="post" class="inline">
+                                                {{-- <form action="{{ route('pembayaran.edit', $kegiatan['id']) }}" method="post" class="inline">
                                                     @csrf
-                                                    @method('POST')
+                                                    @method('POST') --}}
+                                                    <a href="{{ route('pembayaran.edit', $kegiatan['id']) }}">
                                                     <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">
                                                         Ubah
                                                     </x-bladewind::button>
-                                                </form>
+                                                </a>
                                                 <form 
                                                 id="delete-form-{{ $kegiatan->id }}-pembayaran"
                                                 action="{{ route('pembayaran.destroy', $kegiatan['id']) }}" method="post" class="inline">

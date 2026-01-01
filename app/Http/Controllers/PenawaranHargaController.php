@@ -63,7 +63,18 @@ class PenawaranHargaController extends Controller
      */
     public function store(Request $request)
     {
-     
+    
+        $validated = $request->validate([
+        'pemberitahuan_id' => 'required|exists:pemberitahuans,id',
+        'penyedia' => 'required|exists:penyedias,id',
+        'tgl_surat_penawaran' => 'required|date',
+        'no_penawaran' => 'required|string|max:255',
+        'harga_satuan' => 'required|array',
+        'harga_satuan.*' => 'required|numeric|min:0',
+    ]);
+
+
+    
     $harga_satuan = $request->harga_satuan;
     
     $harga_satuan_array = [];

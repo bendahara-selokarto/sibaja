@@ -55,23 +55,23 @@ Route::middleware('auth')->group(function () {
     Route::delete('pemberitahuan/destroy/{id}', [PemberitahuanController::class , 'destroy'])->name('pemberitahuan.destroy');
     
     Route::get('penawaran-harga', [PenawaranHargaController::class , 'index'])->name('penawaran');
-    Route::post('penawaran-harga/create/{id}/{id2}', [PenawaranHargaController::class , 'create'])->name('penawaran.create');
+    Route::get('penawaran-harga/create/{id}/{id2}', [PenawaranHargaController::class , 'create'])->name('penawaran.create');
     Route::post('penawaran-harga/store', [PenawaranHargaController::class , 'store'])->name('penawaran.store');
-    Route::post('penawaran-harga/edit/{id}/{id2}', [PenawaranHargaController::class , 'edit'])->name('penawaran.edit');
+    Route::get('penawaran-harga/edit/{id}/{id2}', [PenawaranHargaController::class , 'edit'])->name('penawaran.edit');
     Route::patch('penawaran-harga/update/{id}', [PenawaranHargaController::class , 'update'])->name('penawaran.update');
     Route::get('penawaran-harga/render/{id}', [PenawaranHargaController::class , 'render'])->name('penawaran.render');
     Route::delete('penawaran-harga/destroy/{id}', [PenawaranHargaController::class , 'destroy'])->name('penawaran.destroy');
     
-    Route::post('negosiasi/create/{id}', [NegosiasiHargaController::class , 'create'])->name('negosiasi.create');
+    Route::get('negosiasi/create/{id}', [NegosiasiHargaController::class , 'create'])->name('negosiasi.create');
     Route::post('negosiasi/store', [NegosiasiHargaController::class , 'store'])->name('negosiasi.store');
-    Route::post('negosiasi/edit/{id}', [NegosiasiHargaController::class , 'edit'])->name('negosiasi.edit');
+    Route::get('negosiasi/edit/{id}', [NegosiasiHargaController::class , 'edit'])->name('negosiasi.edit');
     Route::patch('negosiasi/update/{id}', [NegosiasiHargaController::class , 'update'])->name('negosiasi.update');
     Route::get('negosiasi/render/{id}', [NegosiasiHargaController::class , 'renderPDF'])->name('negosiasi.render');
     Route::delete('negosiasi/destroy/{id}', [NegosiasiHargaController::class , 'destroy'])->name('negosiasi.destroy');
-    
-    Route::post('pembayaran/create/{id}' , [PembayaranController::class , 'create'])->name('pembayaran.create');
+
+    Route::get('pembayaran/create/{id}' , [PembayaranController::class , 'create'])->name('pembayaran.create');
     Route::post('pembayaran/store' , [PembayaranController::class , 'store'])->name('pembayaran.store');
-    Route::post('pembayaran/edit/{id}', [PembayaranController::class , 'edit'])->name('pembayaran.edit');
+    Route::get('pembayaran/edit/{id}', [PembayaranController::class , 'edit'])->name('pembayaran.edit');
     Route::patch('pembayaran/update/{id}', [PembayaranController::class , 'update'])->name('pembayaran.update');
     Route::get('pembayaran/render/{id}' , [PembayaranController::class , 'render'])->name('pembayaran.render');
     Route::delete('pembayaran/destroy/{id}', [PembayaranController::class , 'destroy'])->name('pembayaran.destroy');

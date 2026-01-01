@@ -149,30 +149,34 @@ class NegosiasiHargaController extends Controller
     public function update(Request $request, $kegiatan_id)
     {
         
-        $kegiatan = Kegiatan::with('pemberitahuan','penawaran' , 'negosiasiHarga')->find($request->kegiatan_id);
+        $validatedData = $request->validate([
+            'kegiatan_id' => 'required',
+            'tgl_negosiasi' => 'required|date',
+            'tgl_persetujuan' => 'required|date',
+            'tgl_akhir_perjanjian' => 'required|date',
+            'harga_satuan_negosiasi' => 'required|array',
+            'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
+        ]);
+
+        $kegiatan = Kegiatan::with('pemberitahuan','penawaran' , 'negosiasiHarga')->find($validatedData['kegiatan_id']);
 
         $pemberitahuan = $kegiatan->pemberitahuan;
        
         $tgl = Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan);
 
-        $negosiasi = NegosiasiHarga::where('kegiatan_id', $request->kegiatan_id)->first();
+        $negosiasi = NegosiasiHarga::where('kegiatan_id', $validatedData['kegiatan_id'])->first();
 
         
 
-        $validatedData = $request->validate([
-            'tgl_negosiasi' => 'required|date',
-            'tgl_persetujuan' => 'required|date',
-            'tgl_akhir_perjanjian' => 'required|date',
-        ]);
 
         $negosiasi->update([
-            'kegiatan_id' => $request->kegiatan_id,
+            'kegiatan_id' => $validatedData['kegiatan_id'],
             'tgl_persetujuan' => Carbon::parse($validatedData['tgl_persetujuan']),
             'tgl_negosiasi' => Carbon::parse($validatedData['tgl_negosiasi']),
             'tgl_akhir_perjanjian' => Carbon::parse($validatedData['tgl_akhir_perjanjian'])
         ]);
 
-        $harga_satuan_array =$request->harga_satuan_negosiasi; 
+        $harga_satuan_array = $validatedData['harga_satuan_negosiasi'];
 
         $hargaLama = $negosiasi->hargaNegosiasi()->orderBy('id')->get();
 

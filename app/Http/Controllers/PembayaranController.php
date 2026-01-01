@@ -27,13 +27,28 @@ class PembayaranController extends Controller
     
     public function store(Request $request)
     {
+        $validated = $request->validate(
+            [
+                'kegiatan_id' => 'required', 'exists:kegiatans,id',
+                'tgl_pembayaran_cms' => 'required|date',
+                'tgl_invoice' => 'required|date',
+            ],
+            [
+                'kegiatan_id.required' => 'Kegiatan wajib dipilih.',
+                'kegiatan_id.exists' => 'Kegiatan tidak ditemukan.',
+                'tgl_pembayaran_cms.required' => 'Tanggal pembayaran wajib diisi.',
+                'tgl_invoice.required' => 'Tanggal invoice wajib diisi.',
+            ]
+        );
+
+
         $pembayaran = new Pembayaran([
-            'kegiatan_id' => $request->kegiatan_id,
-            'tgl_pembayaran_cms' => $request->tgl_pembayaran_cms,
-            'tgl_invoice' => $request->tgl_invoice,
+            'kegiatan_id' => $validated['kegiatan_id'],
+            'tgl_pembayaran_cms' => $validated['tgl_pembayaran_cms'],
+            'tgl_invoice' => $validated['tgl_invoice'],
         ]);
         $pembayaran->save();
-        $kegiatan_id = $request->kegiatan_id;
+        $kegiatan_id = $validated['kegiatan_id'];
        
         return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
 
@@ -57,6 +72,19 @@ class PembayaranController extends Controller
     
     public function update(Request $request, $id)
     {
+        $validated = $request->validate(
+            [
+                'tgl_pembayaran_cms' => 'required|date',
+                'tgl_invoice' => 'required|date',
+            ],
+            [
+                'tgl_pembayaran_cms.required' => 'Tanggal pembayaran wajib diisi.',
+                'tgl_invoice.required' => 'Tanggal invoice wajib diisi.',
+            ]
+        );
+        
+        
+        
         $pembayaran = Pembayaran::find($id);
 
         $pembayaran->tgl_pembayaran_cms = $request->tgl_pembayaran_cms;
