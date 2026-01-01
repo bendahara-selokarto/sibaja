@@ -34,21 +34,17 @@
                                 </td>
                                 <td class="mb-4">
                                     @if (!$kegiatan->pemberitahuan)
-                                        <form action="{{ route('pemberitahuan.create', $kegiatan['id']) }}" method="post" class="inline">
-                                            @csrf
-                                            @method('POST')
+                                            <a href="{{ route('pemberitahuan.create', $kegiatan['id']) }}">
                                             <x-bladewind::button size='tiny' icon="document-plus" can_submit="true" color="green">
                                                 Buat
                                             </x-bladewind::button>
-                                        </form>
+                                        </a>
                                     @else
-                                        <form action="{{ route('pemberitahuan.edit', $pemberitahuan->id) }}" method="post" class="inline">
-                                            @csrf
-                                            @method('POST')
+                                            <a href="{{ route('pemberitahuan.edit', $pemberitahuan->id) }}">
                                             <x-bladewind::button size='tiny' icon="pencil-square" can_submit="true" color="yellow">
                                                 Ubah
                                             </x-bladewind::button>
-                                        </form>
+                                        </a>
 
                                         <form 
                                         id="delete-form-{{ $kegiatan->id }}-pemberitahuan"

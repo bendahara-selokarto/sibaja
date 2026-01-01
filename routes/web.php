@@ -47,9 +47,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/penyedia/{penyedia}', [PenyediaController::class, 'detachPenyedia'])->name('penyedia.detach');
     
     Route::get('menu/pemberitahuan', [PemberitahuanController::class , 'index'])->name('menu.pemberitahuan');
-    Route::post('pemberitahuan/create/{id}', [PemberitahuanController::class , 'create'])->name('pemberitahuan.create');
+    Route::get('pemberitahuan/create/{id}', [PemberitahuanController::class , 'create'])->name('pemberitahuan.create');
     Route::post('pemberitahuan/store', [PemberitahuanController::class , 'store'])->name('pemberitahuan.store');
-    Route::post('pemberitahuan/edit/{id}', [PemberitahuanController::class , 'edit'])->name('pemberitahuan.edit');
+    Route::get('pemberitahuan/edit/{id}', [PemberitahuanController::class , 'edit'])->name('pemberitahuan.edit');
     Route::patch('pemberitahuan/update/{id}', [PemberitahuanController::class , 'update'])->name('pemberitahuan.update');
     Route::get('pemberitahuan/render/{id}', [PemberitahuanController::class , 'render'])->name('pemberitahuan.render');
     Route::delete('pemberitahuan/destroy/{id}', [PemberitahuanController::class , 'destroy'])->name('pemberitahuan.destroy');
