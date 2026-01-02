@@ -257,11 +257,14 @@ class NegosiasiHargaController extends Controller
             'jumlah_penawaran' => $item->volume * $hargaPenawaranBersih['bersih'],
             'jumlah_negosiasi' => $item->volume * $hargaNegosiasiBersih['bersih'],
 
-            'ppn_penawaran' => $hargaPenawaranBersih['ppn'],
-            'ppn_negosiasi' => $hargaNegosiasiBersih['ppn'],
+            'ppn_penawaran' => $item->volume *$hargaPenawaranBersih['ppn'],
+            'ppn_negosiasi' => $item->volume * $hargaNegosiasiBersih['ppn'],
 
-            'pph22_penawaran' => $hargaPenawaranBersih['pph22'],
-            'pph22_negosiasi' => $hargaNegosiasiBersih['pph22'],
+            'pph22_penawaran' => $item->volume * $hargaPenawaranBersih['pph22'],
+            'pph22_negosiasi' => $item->volume * $hargaNegosiasiBersih['pph22'],
+
+            'total_penawaran' => $item->volume * ($hargaPenawaranBersih['bersih'] + $hargaPenawaranBersih['ppn'] + $hargaPenawaranBersih['pph22']),
+            'total_negosiasi' => $item->volume * ($hargaNegosiasiBersih['bersih'] + $hargaNegosiasiBersih['ppn'] + $hargaNegosiasiBersih['pph22']),
         ];
     });
 
@@ -277,7 +280,7 @@ class NegosiasiHargaController extends Controller
     $penawaranHarga->harga_sebelum_pajak = $items->sum('jumlah_penawaran');
     $penawaranHarga->ppn = $items->sum('ppn_penawaran');
     $penawaranHarga->pph_22 = $items->sum('pph22_penawaran');
-    $penawaranHarga->harga_total = round($items->sum('jumlah_penawaran') + $items->sum('ppn_penawaran') + $items->sum('pph22_penawaran'), 0, PHP_ROUND_HALF_UP);
+    $penawaranHarga->harga_total = round($items->sum('total_penawaran'), 0, PHP_ROUND_HALF_UP);
 
     /*
     |--------------------------------------------------------------------------
@@ -288,7 +291,7 @@ class NegosiasiHargaController extends Controller
     $negosiasiHarga->harga_sebelum_pajak = $items->sum('jumlah_negosiasi');
     $negosiasiHarga->ppn = $items->sum('ppn_negosiasi');
     $negosiasiHarga->pph_22 = $items->sum('pph22_negosiasi');
-    $negosiasiHarga->harga_total = round($items->sum('jumlah_negosiasi') + $items->sum('ppn_negosiasi') + $items->sum('pph22_negosiasi'), 0, PHP_ROUND_HALF_UP);
+    $negosiasiHarga->harga_total = round($items->sum('total_negosiasi'), 0, PHP_ROUND_HALF_UP);
 
     /*
     |--------------------------------------------------------------------------
