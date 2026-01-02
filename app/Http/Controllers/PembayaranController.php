@@ -8,6 +8,7 @@ use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Helpers\PajakHelper;
 
 class PembayaranController extends Controller
 {
@@ -118,18 +119,30 @@ class PembayaranController extends Controller
         $negosiasiHarga  = $kegiatan->negosiasiHarga ;
         $negosiasiHarga->load('hargaNegosiasi');
         $hargaNegosiasi = $negosiasiHarga->hargaNegosiasi;
+        
+        $ppn = $kegiatan->ppn;
+        
+        $pph22 = $kegiatan->pph_22;
 
-        $items = $pemberitahuan->belanjas->map(function($item,$k) 
-        use ( $hargaPenawaran , $hargaNegosiasi )       
+        $item = $pemberitahuan->belanjas->map(function($item,$k) 
+        use ( $hargaNegosiasi, $ppn, $pph22)       
         {
+
+            $hargaNegosiasiBersih = PajakHelper::hitungSiskeudes(
+                $hargaNegosiasi[$k]->harga_satuan,
+                $ppn,
+                $pph22
+            );
+
             return [
                 'uraian' => $item->uraian,
                 'volume' => $item->volume,
-                'satuan' => $item->satuan,
-                'harga_penawaran' => $hargaPenawaran[$k]->harga_satuan,
-                'harga_negosiasi' => $hargaNegosiasi[$k]->harga_satuan,
-                'jumlah_penawaran' => $item->volume * $hargaPenawaran[$k]->harga_satuan,
-                'jumlah_negosiasi' => $item->volume * $hargaNegosiasi[$k]->harga_satuan,
+                'satuan' => $item->satuan,               
+                'harga_negosiasi' =>  $hargaNegosiasiBersih['bersih'],          
+                'jumlah_negosiasi' => $item->volume * $hargaNegosiasiBersih['bersih'], 
+                'ppn_negosiasi' => $item->volume * $hargaNegosiasiBersih['ppn'],
+                'pph22_negosiasi' => $item->volume * $hargaNegosiasiBersih['pph22'],
+                'total_negosiasi' => $item->volume * ($hargaNegosiasiBersih['bersih'] + $hargaNegosiasiBersih['ppn'] + $hargaNegosiasiBersih['pph22']),
             ];
         });
        
@@ -140,33 +153,12 @@ class PembayaranController extends Controller
         $tgl_invoice =  Carbon::parse($kegiatan->pembayaran->tgl_invoice);
         
         $tgl =  Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms);
-
-        $ppn = $kegiatan->ppn;
-        
-        $pph22 = $kegiatan->pph_22;
-
-        $denom = 1 + $ppn + $pph22;
-
-        $item = $items;
-        $total = $item->sum('jumlah_negosiasi');
-
-        $item->transform(function ($item, $key)  use ($denom) {
-            $item['harga_penawaran'] = $item['harga_penawaran'] / $denom;
-            $item['harga_negosiasi'] = $item['harga_negosiasi'] / $denom;
-            $item['jumlah_penawaran'] = $item['jumlah_penawaran'] / $denom;
-            $item['jumlah_negosiasi'] = $item['jumlah_negosiasi'] / $denom;
-            return $item;
-        });      
-        
-        $negosiasiHarga->ppn = $total * ( $ppn / $denom );
-
-        $negosiasiHarga->pph_22 = $total * ($pph22 / $denom);
-        
-        $negosiasiHarga->jumlah = $total / $denom;
+        $negosiasiHarga->ppn = $item->sum('ppn_negosiasi');
+        $negosiasiHarga->pph_22 = $item->sum('pph22_negosiasi');
+        $negosiasiHarga->jumlah = $item->sum('jumlah_negosiasi');
         $negosiasiHarga->pajak  = $negosiasiHarga->ppn + $negosiasiHarga->pph_22;
-        $negosiasiHarga->total  = $total;
+        $negosiasiHarga->total  = round($item->sum('total_negosiasi'), 0, PHP_ROUND_HALF_UP);
 
-        
         $pemberitahuan = $kegiatan->pemberitahuan;
         
         $kegiatan->nomor = $kegiatan->pemberitahuan->no_pbj;
