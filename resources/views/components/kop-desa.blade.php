@@ -5,7 +5,7 @@
             <td style="text-align: center; width:auto">
                 <h3 style="text-align: center; margin: 2pt;">PEMERINTAH KABUPATEN BATANG</h3>
                 <h3 style="text-align: center; margin: 2pt;">KANTOR DESA {{ strToUpper( Auth::user()->desa )}}</h3>
-                <h4 style="text-align: center; margin: 2pt;">KECAMATAN PEALUNGAN</h4>
+                <h4 style="text-align: center; margin: 2pt;">KECAMATAN PECALUNGAN</h4>
                 <p  style="text-align: center; margin: 2pt;">{{ Auth::user()->alamat_kantor }}</p>
             </td>
         </tr>       
