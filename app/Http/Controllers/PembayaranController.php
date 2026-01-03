@@ -6,6 +6,7 @@ use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use App\Http\Requests\PembayaranRequest;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\PajakHelper;
@@ -58,27 +59,16 @@ class PembayaranController extends Controller
         return view ('form.pembayaran', compact('pembayaran', 'kegiatan'));
     }
 
-    
-    public function update(Request $request, $id)
+
+    public function update(PembayaranRequest $request, $id)
     {
-        $validated = $request->validate(
-            [
-                'tgl_pembayaran_cms' => 'required|date',
-                'tgl_invoice' => 'required|date',
-            ],
-            [
-                'tgl_pembayaran_cms.required' => 'Tanggal pembayaran wajib diisi.',
-                'tgl_invoice.required' => 'Tanggal invoice wajib diisi.',
-            ]
-        );
-        
-        
+        $validated = $request->validated();
         
         $pembayaran = Pembayaran::find($id);
 
-        $pembayaran->tgl_pembayaran_cms = $request->tgl_pembayaran_cms;
+        $pembayaran->tgl_pembayaran_cms = $validated['tgl_pembayaran_cms'];
 
-        $pembayaran->tgl_invoice = $request->tgl_invoice;
+        $pembayaran->tgl_invoice = $validated['tgl_invoice'];
 
         $pembayaran->save();
         $kegiatan_id = $pembayaran->kegiatan_id;
