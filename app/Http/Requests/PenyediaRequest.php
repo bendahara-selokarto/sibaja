@@ -43,4 +43,38 @@ class PenyediaRequest extends FormRequest
             
         ];
     }
+    public function messages(): array
+    {
+        return [
+            'required' => 'Field :attribute wajib diisi.',
+            'string' => 'Field :attribute harus berupa teks.',
+            'max' => 'Field :attribute maksimal :max karakter.',
+            'image' => 'Field :attribute harus berupa gambar.',
+            'mimes' => 'Field :attribute harus berupa file dengan format: :values.',
+            'file' => 'Field :attribute harus berupa file.',
+        ];
+    }
+    public function attributes(): array
+    {
+        return [
+            'nama_penyedia' => 'Nama Penyedia',
+            'alamat_penyedia' => 'Alamat Penyedia',
+            'nama_pemilik' => 'Nama Pemilik',
+            'alamat_pemilik' => 'Alamat Pemilik',
+            'nomor_hp' => 'Nomor HP',
+            'nomor_identitas' => 'Nomor Identitas',
+            'nomor_npwp' => 'Nomor NPWP',
+            'no_siup' => 'Nomor SIUP',
+            'jabatan_pemilik' => 'Jabatan Pemilik',
+            'penerbit_siup' => 'Penerbit SIUP',
+            'rekening' => 'Rekening',
+            'bank' => 'Bank',
+            'atas_nama' => 'Atas Nama',
+            'logo_penyedia' => 'Logo Penyedia',
+            'kop_surat' => 'Kop Surat',
+            'data_dukung' => 'Data Dukung',
+            'kabupaten' => 'Kabupaten',
+        ];
+    }
+    
 }
