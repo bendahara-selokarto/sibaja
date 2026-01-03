@@ -25,22 +25,10 @@ class PembayaranController extends Controller
         return view ('form.pembayaran', compact('kegiatan'));
     }
 
-    
-    public function store(Request $request)
+
+    public function store(PembayaranRequest $request)
     {
-        $validated = $request->validate(
-            [
-                'kegiatan_id' => 'required', 'exists:kegiatans,id',
-                'tgl_pembayaran_cms' => 'required|date',
-                'tgl_invoice' => 'required|date',
-            ],
-            [
-                'kegiatan_id.required' => 'Kegiatan wajib dipilih.',
-                'kegiatan_id.exists' => 'Kegiatan tidak ditemukan.',
-                'tgl_pembayaran_cms.required' => 'Tanggal pembayaran wajib diisi.',
-                'tgl_invoice.required' => 'Tanggal invoice wajib diisi.',
-            ]
-        );
+        $validated = $request->validated();
 
 
         $pembayaran = new Pembayaran([
