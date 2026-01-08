@@ -16,6 +16,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Helpers\PajakHelper;
+use Illuminate\Support\Facades\DB;
+
 
 
 class PenawaranHargaController extends Controller
@@ -36,8 +38,9 @@ class PenawaranHargaController extends Controller
      */
     public function create($kegiatanId, $penyediaId)
     {
-        
         $kegiatan = Kegiatan::with('pemberitahuan')->find($kegiatanId);
+        
+        $statusPemenang = $kegiatan->statusPemenang();
         
         $penyedia = Penyedia::find($penyediaId);
               
@@ -54,7 +57,8 @@ class PenawaranHargaController extends Controller
             'kegiatan' => $kegiatan,
             'pemberitahuan' => $pemberitahuan,
             'penyedia' => $penyedia,
-            'belanja' => $belanja
+            'belanja' => $belanja,
+            'statusPemenang' => $statusPemenang,
         ]);
     }
 
@@ -138,7 +142,6 @@ class PenawaranHargaController extends Controller
 
         
         $harga_satuan = $harga_penawaran->pluck('harga_satuan')->values();
-        
         $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) use ($harga_satuan) {
             return [
                 'uraian' => $item['uraian'],
@@ -155,7 +158,7 @@ class PenawaranHargaController extends Controller
             'penyedia' => $penyedia,
             'belanja' => $belanja,
             'penawaran' => $penawaran,
-            'isEdit' => true
+            'isEdit' => true,
         ]); 
         
     }
@@ -165,9 +168,13 @@ class PenawaranHargaController extends Controller
      */
     public function update(Request $request, string $pemberitahuanId)
     {
-       $penawaran = Penawaran::where('penyedia_id', $request->penyedia)
+        $penawaran = Penawaran::where('penyedia_id', $request->penyedia)
         ->where('pemberitahuan_id', $request->pemberitahuan_id)
         ->firstOrFail();
+        $penawaran2 = Penawaran::whereNot('penyedia_id', $request->penyedia)
+            ->where('pemberitahuan_id', $request->pemberitahuan_id)
+            ->first();
+
 
         $harga_satuan_array = $request->harga_satuan;
 
@@ -182,19 +189,39 @@ class PenawaranHargaController extends Controller
         $kegiatan_id = $pemberitahuan->kegiatan->id;
         
         $is_winner = (bool) $request->pemenang;
-        
-        $penawaran->update([
-            'kegiatan_id' => $kegiatan_id,
-            'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
-            'no_penawaran' => $request->no_penawaran,
-            'is_winner' => $is_winner,
-        ]);
-        
-        foreach ($hargaLama as $index => $row) {
-            $row->update([
-                'harga_satuan' => $harga_satuan_array[$index],
+        $is_not_winner = (bool) $request->pemenang ? false : true;
+
+
+
+        DB::transaction(function () use (
+            $penawaran,
+            $penawaran2,
+            $hargaLama,
+            $harga_satuan_array,
+            $kegiatan_id,
+            $request,
+            $is_winner,
+            $is_not_winner,
+        ) {
+            $penawaran->update([
+                'kegiatan_id'   => $kegiatan_id,
+                'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
+                'no_penawaran'  => $request->no_penawaran,
+                'is_winner'     => $is_winner,
             ]);
-        };
+
+            $penawaran2->update([
+                'is_winner' => $is_not_winner,
+            ]);
+
+            foreach ($hargaLama as $index => $row) {
+                $row->update([
+                    'harga_satuan' => $harga_satuan_array[$index],
+                ]);
+            };
+
+        });
+                
 
         flash()->success('Penawaran berhasil diupdate.');
 

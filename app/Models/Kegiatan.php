@@ -10,10 +10,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Kegiatan extends Model
 {
     use HasUuids;
+
+    public function statusPemenang(): int
+    {
+        $penawaran = $this->penawaran()->first();
+
+        if (!$penawaran) {
+            return 0;
+        }
+
+        if ($penawaran && !$penawaran->is_winner) {
+            return 2;
+        }
+
+        return 1;
+    }
+
     public function penyedia(): BelongsToMany
     {
         return $this->belongsToMany(Penyedia::class, 'kegiatan_penyedia');
     }
+
 
 
     public function pemberitahuan()

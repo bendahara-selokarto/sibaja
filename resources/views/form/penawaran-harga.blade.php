@@ -27,15 +27,62 @@
                             <input type="hidden" name="penyedia" value="{{ $penyedia->id }}" readonly>
                             <x-input-error class="mt-2" :messages="$errors->get('penyedia')" />
                         </div>
-                        <div>                           
-                            <label for="checkbox" class="inline-flex items-center">
-                                <input type="checkbox" id="checkbox" name="pemenang" value="true"
-                                    class="form-checkbox"
-                                    {{ isset($penawaran) && $penawaran->is_winner ? 'checked' : '' }}>
-                                <span class="ml-2">Tetapkan sebagai Pemenang</span>
-                            </label>                            
+                        <div>
+                        @if(isset($isEdit))
+                        <label class="inline-flex items-center">
+                            <input type="radio"
+                                name="pemenang"
+                                value="1"
+                                class="form-radio"
+                                {{ ($penawaran->is_winner ? 'checked' : '') }}>
+                            <span class="ml-2">Pemenang</span>
+                        </label>
+                        <label class="inline-flex items-center ml-4">
+                            <input type="radio"
+                                name="pemenang"
+                                value="0"
+                                class="form-radio"
+                                {{ isset($penawaran) && $penawaran->is_winner ? '' : 'checked' }}>
+                            <span class="ml-2">Pembanding</span>
+                        </label>                            
+                        @else
+                            @if(!isset($statusPemenang) || $statusPemenang == 0)
+                        <label class="inline-flex items-center">
+                            <input type="radio"
+                                name="pemenang"
+                                value="1"
+                                class="form-radio"
+                                {{ $statusPemenang == 0 ? 'checked' : '' }}>
+                                <span class="ml-2">Pemenang</span>
+                            </label>
+                            <label class="inline-flex items-center ml-4">
+                                <input type="radio"
+                                name="pemenang"
+                                value="0"
+                                class="form-radio">
+                            <span class="ml-2">Pembanding</span>
+                            </label>
+                            @elseif($statusPemenang == 1)
+                            <label class="inline-flex items-center ml-4">
+                                <input type="radio"
+                                name="pemenang"
+                                value="0"
+                                class="form-radio"
+                                checked>
+                            <span class="ml-2">Pembanding</span>
+                            </label>
+                            @else
+                            <label class="inline-flex items-center">
+                            <input type="radio"
+                                name="pemenang"
+                                value="1"
+                                class="form-radio"
+                                checked>
+                                <span class="ml-2">Pemenang</span>
+                            </label>
+                            @endif
                         </div>
-
+                        @endif
                         <br>
                         <div>
                             <input type="hidden" name="pemberitahuan_id" value="{{ $pemberitahuan->id }}">
