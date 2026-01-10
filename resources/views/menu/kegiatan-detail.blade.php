@@ -92,7 +92,7 @@
                                                     <a href="{{ route('penawaran.edit', [$kegiatan->id, $penyediaItem->id]) }}">
                                                         <x-bladewind::button
                                                             size="tiny"
-                                                            icon="document-plus"
+                                                            icon="pencil-square"
                                                             color="yellow">
                                                             Ubah : {{ $penyediaItem->nama_penyedia }}
                                                         </x-bladewind::button>
