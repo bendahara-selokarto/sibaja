@@ -65,15 +65,15 @@
         <table style="width: 100%; margin-top: 2rem; font-size: 12pt; text-align: center;">
             <tr>
                 <td style="width: 50%;">
-                    Kepala Desa Selokarto<br>Selaku<br>Pemegang Kekuasaan Pengelolaan<br>Keuangan Desa<br> <br><br><br>
+                    Kepala Desa {{ Auth::user()->desa ?? '-' }}<br>Selaku<br>Pemegang Kekuasaan Pengelolaan<br>Keuangan Desa<br> <br><br><br>
                     <u>{{ Auth::user()->kepala_desa ?? '-' }}</u>
-                    <br>Pihak Kedua
+                    <br>Pihak Pertama
                     
                 </td>
                 <td style="width: 50%;">
                     Pelaksana Kegiatan Anggaran<br><br><br><br><br><br><br>
                     <u>{{ $kegiatan->pka ?? '-' }}</u>
-                    <br>Pihak Pertama
+                    <br>Pihak Kedua
                 </td>
             </tr>
         </table>
