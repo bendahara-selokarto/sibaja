@@ -35,15 +35,18 @@ class KegiatanController extends Controller
 
     public function create()
     {
-        $penyedia = new Penyedia();
-
-        if($penyedia->count() == 0){
-            session()->flash('error', 'Belum ada penyedia');
-            return redirect()->route('menu.penyedia');
+        if (!Penyedia::cukupUntukKegiatan(Auth::user()->kode_desa)) {
+            return redirect()
+                ->route('menu.penyedia')
+                ->with(
+                    'error',
+                    Penyedia::pesanError(Auth::user()->kode_desa)
+                );
         }
 
-        $kegiatan = new Kegiatan();
-        return view('form.kegiatan', compact('kegiatan'));
+        return view('form.kegiatan', [
+            'kegiatan' => new Kegiatan()
+        ]);
     }
 
     /**

@@ -11,6 +11,32 @@ class Penyedia extends Model
 {
     use HasUuids;
 
+    public static function cukupUntukKegiatan(string $kodeDesa): bool
+    {
+        // Tidak ada penyedia sama sekali
+        if (self::count() === 0) {
+            return false;
+        }
+
+        // Minimal 2 penyedia per desa
+        return self::where('kode_desa', $kodeDesa)->count() >= 2;
+    }
+
+    /**
+     * Pesan error yang sesuai
+     */
+    public static function pesanError(string $kodeDesa): string
+    {
+        if (self::count() === 0) {
+            return 'minimal 2 penyedia terinput sebelum input kegiatan';
+        }
+
+        return self::where('kode_desa', $kodeDesa)->count() < 2
+            ? 'minimal 2 penyedia terinput sebelum input kegiatan'
+            : '';
+    }
+
+
     public function kegiatan(): BelongsToMany
     {
         return $this->belongsToMany(Kegiatan::class, 'kegiatan_penyedia');
