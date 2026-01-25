@@ -87,10 +87,10 @@ onerror="this.src='{{ asset('') }}'"
             </tr>
             <tr>
                 <td colspan="4" style="border: 1px solid black; text-align:right; background-color: rgb(216,216,216)">Dibulatkan</td>
-                <td style="border: 1px solid black; text-align:right; background-color: rgb(216,216,216)">{{ number_format(round($jumlah_total_2 ,-2), 0, ',', '.') }}</td>
+                <td style="border: 1px solid black; text-align:right; background-color: rgb(216,216,216)">{{ number_format(round($jumlah_total_2 , 0), 0, ',', '.') }}</td>
             </tr>
           </table>
-          <strong><p>Terbilang : {{ Terbilang::make(round($jumlah_total_2, -2)) }} rupiah</p></strong>
+          <strong><p>Terbilang : {{ Terbilang::make(round($jumlah_total_2, 0)) }} rupiah</p></strong>
           <br><br><br>
           <table style="width: 100%">
             <tr>

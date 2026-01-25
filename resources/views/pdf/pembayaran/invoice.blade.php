@@ -82,12 +82,12 @@
            
             <td style="text-indent: 300px" colspan="5">Dibulatkan</td>
             <td style="text-align: right">
-                {{ number_format(round($kegiatan->negosiasiHarga->total, -2  ), 0, ',', '.') }}
+                {{ number_format(round($kegiatan->negosiasiHarga->total, 0), 0, ',', '.') }}
             </td>   
         </tr>
     </tbody>
 </table><br>
-Terbilang : {{Terbilang::make(round($negosiasiHarga->total, -2))}} rupiah
+Terbilang : {{Terbilang::make(round($negosiasiHarga->total, 0))}} rupiah
 <br><br>
 <table>
     <tr>

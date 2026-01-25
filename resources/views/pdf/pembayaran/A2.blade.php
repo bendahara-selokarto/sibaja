@@ -58,8 +58,8 @@
                     <td style="vertical-align: top; padding: 5px;">Uang Sejumlah</td>
                     <td style="vertical-align: top; width: 4pt; padding: 5px;">:</td>
                     <td style="vertical-align: top; padding: 5px;">
-                        <strong>Rp. {{formatNumber(round($negosiasiHarga->total, -2))}},-</strong><br>
-                        <em>{{Terbilang::make(round($negosiasiHarga->total, -2))}} rupiah</em>
+                        <strong>Rp. {{formatNumber(round($negosiasiHarga->total, 0))}},-</strong><br>
+                        <em>{{Terbilang::make(round($negosiasiHarga->total, 0))}} rupiah</em>
                     </td>
                 </tr>
                 <tr>

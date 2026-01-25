@@ -110,7 +110,7 @@
 
 <p style="text-align: center">Pasal 6</p>
 <p style="text-align: center">SANKSI</p>
-<p style="text-align: justify">Apabila pekerjaan melebihi batas waktu yang disepakati maka PIHAK KEDUA harus membayar denda sebesar 10% dari nilai pekerjaan dengan nominal pengadaan material dari jumlah total yang akan dikirim sebesar Rp. {{ number_format(round(($data['negosiasiHarga']->jumlah_total * 0.1), -2), 0, ',', '.') }},- ( {{ Terbilang::make(round(($data['negosiasiHarga']->jumlah_total * 0.1), -2) )}} rupiah ).</p>
+<p style="text-align: justify">Apabila pekerjaan melebihi batas waktu yang disepakati maka PIHAK KEDUA harus membayar denda sebesar 10% dari nilai pekerjaan dengan nominal pengadaan material dari jumlah total yang akan dikirim sebesar Rp. {{ number_format(round(($data['negosiasiHarga']->jumlah_total * 0.1), 0), 0, ',', '.') }},- ( {{ Terbilang::make(round(($data['negosiasiHarga']->jumlah_total * 0.1), 0) )}} rupiah ).</p>
 
 <p style="text-align: center">Pasal 7</p>
 <p style="text-align: center">KETENTUAN PENUTUP</p>

@@ -94,12 +94,12 @@
             <tr>
                 <td>Uang sebanyak</td>
                 <td style="width: 10px">: </td>
-                <td><strong>Rp. {{ number_format(round($kegiatan->negosiasiHarga->total, -2), 0, ',', '.') }},-</strong></td>
+                <td><strong>Rp. {{ number_format(round($kegiatan->negosiasiHarga->total, 0), 0, ',', '.') }},-</strong></td>
             </tr>
             <tr>
                 <td>Terbilang</td>
                 <td>: </td>
-                <td><i>( {{ ucwords(Terbilang::make(round($kegiatan->negosiasiHarga->total, -2)) )}} Rupiah. )</i></td>
+                <td><i>( {{ ucwords(Terbilang::make(round($kegiatan->negosiasiHarga->total, 0)) )}} Rupiah. )</i></td>
             </tr>
             <tr>
                 <td>Untuk Keperluan</td>

@@ -16,7 +16,7 @@
         <tr>
             <td>3. Anggaran</td>
             <td>:</td>
-            <td>Rp. {{ number_format(round($data['negosiasiHarga']->harga_total, -2),0 ,"," ,".") }},- </td>
+            <td>Rp. {{ number_format(round($data['negosiasiHarga']->harga_total, 0),0 ,"," ,".") }},- </td>
         </tr>       
     </table>
     <br><br>

@@ -140,7 +140,7 @@
         </tr>
         <tr>
           <td >NILAI PEKERJAAN</td>
-            <td >: Rp. {{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }},-</td>
+            <td >: Rp. {{ number_format(round($data['negosiasiHarga']->harga_total, 0), 0, ',', '.') }},-</td>
         </tr>
       </tbody>
       </table>
@@ -182,18 +182,18 @@
         </tr>
         <tr>
           <td style="text-align: right" colspan="4">Dibulatkan</td>
-            <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, -2), 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, 0), 0, ',', '.') }}</td>
         </tr>
         @if(count($v) > 8)
         <tr style="height: 200px">
-          <td style="height: 200px; text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, -2))) }} Rupiah )</td>
+          <td style="height: 200px; text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, 0))) }} Rupiah )</td>
         </tr>
       </tbody>
       </table>
       <div style="page-break-before: always;"></div>
       @else
       <tr>
-        <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, -2))) }} Rupiah )</td>
+        <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, 0))) }} Rupiah )</td>
       </tr>
     </tbody>
     </table>
