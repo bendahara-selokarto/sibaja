@@ -9,36 +9,33 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('pemberitahuan_penyedia', function (Blueprint $table) {
-            $table->uuid('pemberitahuan_id');
-            $table->uuid('penyedia_id');
-            $table->timestamps();
+        if (!Schema::hasTable('pemberitahuan_penyedia')) {
+            Schema::create('pemberitahuan_penyedia', function (Blueprint $table) {
+                $table->uuid('pemberitahuan_id');
+                $table->uuid('penyedia_id');
+                $table->timestamps();
 
-            $table->unique(['pemberitahuan_id', 'penyedia_id']);
-            $table->foreign('pemberitahuan_id')->references('id')->on('pemberitahuans')->cascadeOnDelete();
-            $table->foreign('penyedia_id')->references('id')->on('penyedias')->cascadeOnDelete();
-        });
+                $table->unique(['pemberitahuan_id', 'penyedia_id']);
+                $table->foreign('pemberitahuan_id')->references('id')->on('pemberitahuans')->cascadeOnDelete();
+                $table->foreign('penyedia_id')->references('id')->on('penyedias')->cascadeOnDelete();
+            });
+        }
 
         $now = now();
-        $rows = [];
 
         foreach (DB::table('pemberitahuans')->select('id', 'penyedia')->get() as $pemberitahuan) {
             foreach (normalize_legacy_pemberitahuan_penyedia($pemberitahuan->penyedia) as $penyediaId) {
-                $rows[] = [
-                    'pemberitahuan_id' => $pemberitahuan->id,
-                    'penyedia_id' => $penyediaId,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ];
+                DB::table('pemberitahuan_penyedia')->updateOrInsert(
+                    [
+                        'pemberitahuan_id' => $pemberitahuan->id,
+                        'penyedia_id' => $penyediaId,
+                    ],
+                    [
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]
+                );
             }
-        }
-
-        if (!empty($rows)) {
-            DB::table('pemberitahuan_penyedia')->upsert(
-                $rows,
-                ['pemberitahuan_id', 'penyedia_id'],
-                ['updated_at']
-            );
         }
     }
 

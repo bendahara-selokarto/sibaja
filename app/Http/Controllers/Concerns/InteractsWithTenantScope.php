@@ -8,6 +8,7 @@ use App\Models\Pemberitahuan;
 use App\Models\Penawaran;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
 
 trait InteractsWithTenantScope
@@ -25,7 +26,7 @@ trait InteractsWithTenantScope
         $user = $this->currentTenantUser();
 
         return Kegiatan::query()
-            ->with($with)
+            ->with($this->sanitizeOptionalRelations($with))
             ->where('kode_desa', $user->kode_desa)
             ->where('tahun_anggaran', $user->tahun_anggaran);
     }
@@ -40,7 +41,7 @@ trait InteractsWithTenantScope
         $user = $this->currentTenantUser();
 
         return Pemberitahuan::query()
-            ->with($with)
+            ->with($this->sanitizeOptionalRelations($with))
             ->where('kode_desa', $user->kode_desa)
             ->whereHas('kegiatan', function (Builder $query) use ($user) {
                 $query
@@ -59,7 +60,7 @@ trait InteractsWithTenantScope
         $user = $this->currentTenantUser();
 
         return Penawaran::query()
-            ->with($with)
+            ->with($this->sanitizeOptionalRelations($with))
             ->whereHas('kegiatan', function (Builder $query) use ($user) {
                 $query
                     ->where('kode_desa', $user->kode_desa)
@@ -72,7 +73,7 @@ trait InteractsWithTenantScope
         $user = $this->currentTenantUser();
 
         return Pembayaran::query()
-            ->with($with)
+            ->with($this->sanitizeOptionalRelations($with))
             ->whereHas('kegiatan', function (Builder $query) use ($user) {
                 $query
                     ->where('kode_desa', $user->kode_desa)
@@ -83,5 +84,17 @@ trait InteractsWithTenantScope
     protected function findTenantPembayaran(string $id, array $with = []): ?Pembayaran
     {
         return $this->scopedPembayaranQuery($with)->find($id);
+    }
+
+    protected function sanitizeOptionalRelations(array $with): array
+    {
+        if (Schema::hasTable('pemberitahuan_penyedia')) {
+            return $with;
+        }
+
+        return array_values(array_filter(
+            $with,
+            static fn (string $relation) => !str_contains($relation, 'penyedias')
+        ));
     }
 }

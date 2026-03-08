@@ -10,6 +10,7 @@ use App\Models\Penawaran;
 use App\Models\Penyedia;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -153,6 +154,34 @@ class KegiatanTest extends TestCase
         $response->assertSee('Penawaran : CV Satu');
         $response->assertSee('Penawaran : CV Dua');
         $response->assertDontSee('delete-form-' . $kegiatan->id . '-penawaran');
+    }
+
+    public function test_kegiatan_detail_uses_legacy_penyedia_data_when_pivot_table_is_missing(): void
+    {
+        $user = $this->makeUser();
+        $this->actingAs($user);
+
+        $kegiatan = $this->makeKegiatan();
+        $penyediaA = $this->makePenyedia($user, 'CV Satu');
+        $penyediaB = $this->makePenyedia($user, 'CV Dua');
+
+        $pemberitahuan = Pemberitahuan::create([
+            'kegiatan_id' => $kegiatan->id,
+            'pekerjaan' => $kegiatan->kegiatan,
+            'rekening_apbdes' => $kegiatan->rekening_apbdes,
+            'tgl_surat_pemberitahuan' => '2026-02-01 00:00:00',
+            'tgl_batas_akhir_penawaran' => '2026-02-04 00:00:00',
+            'no_pbj' => 101,
+            'penyedia' => [$penyediaA->id, $penyediaB->id],
+        ]);
+
+        Schema::drop('pemberitahuan_penyedia');
+
+        $response = $this->get(route('kegiatan.show', $kegiatan->id));
+
+        $response->assertOk();
+        $response->assertSee('Penawaran : CV Satu');
+        $response->assertSee('Penawaran : CV Dua');
     }
 
     public function test_kegiatan_detail_shows_delete_penawaran_button_after_penawaran_exists(): void
