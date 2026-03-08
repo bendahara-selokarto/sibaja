@@ -35,7 +35,7 @@
                                 <li>{{ $i['nomor_identitas'] }}</li>
                                 <li>{{ $i['nomor_npwp'] }}</li>                                
                             </ol></td>
-                            <td>{{$i['createdBy']->desa}}</td>
+                            <td>{{ optional($i['createdBy'])->desa }}</td>
                             <td>
                                 <form action="{{ route('penyedia.attach', $i['id']) }}" method="post">
                                     @csrf
@@ -49,7 +49,7 @@
                         </tr>
                         @empty
                             <tr>
-                                <td colspan="4">Tidak ada data penyedia.</td>
+                                <td colspan="5">Tidak ada data penyedia.</td>
                             </tr>
                         @endforelse
                     </x-bladewind::table>

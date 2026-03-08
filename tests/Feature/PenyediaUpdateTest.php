@@ -203,6 +203,56 @@ class PenyediaUpdateTest extends TestCase
         ]);
     }
 
+    public function test_bank_penyedia_page_renders_foreign_penyedia_and_attach_button(): void
+    {
+        $owner = User::factory()->create([
+            'desa' => 'Selokarto',
+            'kecamatan' => 'Blado',
+            'website' => fake()->unique()->domainName(),
+            'kode_desa' => fake()->unique()->numerify('##########'),
+            'tahun_anggaran' => 2026,
+        ]);
+
+        $otherUser = User::factory()->create([
+            'desa' => 'Bandung',
+            'kecamatan' => 'Blado',
+            'website' => fake()->unique()->domainName(),
+            'kode_desa' => fake()->unique()->numerify('##########'),
+            'tahun_anggaran' => 2026,
+        ]);
+
+        $this->actingAs($owner);
+
+        $penyedia = Penyedia::create([
+            'created_by' => $owner->id,
+            'nama_penyedia' => 'CV Bank',
+            'alamat_penyedia' => 'Alamat Bank',
+            'nama_pemilik' => 'Pemilik Bank',
+            'alamat_pemilik' => 'Alamat Pemilik Bank',
+            'nomor_hp' => '08123456789',
+            'nomor_identitas' => '1234567890123456',
+            'nomor_npwp' => '09.123.456.7-890.000',
+            'nomor_izin_usaha' => 'SIUP-001',
+            'jabata_pemilik' => 'Direktur',
+            'instansi_pemberi_izin_usaha' => 'DPMPTSP',
+            'rekening' => '1234567890',
+            'bank' => 'BPD',
+            'atas_nama' => 'CV Bank',
+            'logo_penyedia' => 'logo/existing-logo.png',
+            'data_dukung' => 'data_dukung/existing-data.pdf',
+            'kop_surat' => 'kop_surat/existing-kop.png',
+            'kabupaten' => 'Batang',
+        ]);
+
+        $response = $this
+            ->actingAs($otherUser)
+            ->get(route('submenu.penyedia'));
+
+        $response->assertOk();
+        $response->assertSee('CV Bank');
+        $response->assertSee(route('penyedia.attach', $penyedia->id), false);
+    }
+
     public function test_update_replacing_media_deletes_old_files_and_persists_new_paths(): void
     {
         Storage::fake('public');
