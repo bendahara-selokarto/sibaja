@@ -18,7 +18,7 @@ class TenantAccessControlTest extends TestCase
 
     public function test_menu_kegiatan_requires_explicit_panel_access(): void
     {
-        $user = $this->makeUser(aksesDesaPanel: false);
+        $user = $this->makeUser(desa: 'Desa Baru', aksesDesaPanel: false);
 
         $response = $this->actingAs($user)->get(route('menu.kegiatan'));
 
@@ -27,7 +27,7 @@ class TenantAccessControlTest extends TestCase
 
     public function test_direct_procurement_route_requires_explicit_panel_access(): void
     {
-        $user = $this->makeUser(aksesDesaPanel: false);
+        $user = $this->makeUser(desa: 'Desa Baru', aksesDesaPanel: false);
 
         $response = $this->actingAs($user)->get(route('kegiatan.create'));
 
@@ -37,6 +37,15 @@ class TenantAccessControlTest extends TestCase
     public function test_menu_kegiatan_allows_explicitly_entitled_user(): void
     {
         $user = $this->makeUser();
+
+        $response = $this->actingAs($user)->get(route('menu.kegiatan'));
+
+        $response->assertOk();
+    }
+
+    public function test_menu_kegiatan_allows_legacy_allowlisted_desa_without_flag(): void
+    {
+        $user = $this->makeUser(aksesDesaPanel: false);
 
         $response = $this->actingAs($user)->get(route('menu.kegiatan'));
 
