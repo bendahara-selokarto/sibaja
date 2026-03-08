@@ -44,7 +44,7 @@
                             </ol></td>
                             <td>Desa {{ $i['createdBy'] ? $i['createdBy']->desa : '' }}</td>
                             <td>
-                                @if($i['createdBy'] && $i['createdBy']->desa === Auth::user()->desa)
+                                @if((int) $i['created_by'] === (int) Auth::id())
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-2">                                   
                                 <form id="delete-form-{{ $i->id }}" 
                                     action="{{ route('penyedia.destroy', $i->id) }}" 

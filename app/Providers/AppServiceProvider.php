@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Console\Commands\AuditPemberitahuanPenyediaSyncCommand;
+use App\Contracts\PenyediaRepositoryInterface;
+use App\Repositories\PenyediaRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +14,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(
+            PenyediaRepositoryInterface::class,
+            PenyediaRepository::class
+        );
     }
 
     /**
@@ -19,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                AuditPemberitahuanPenyediaSyncCommand::class,
+            ]);
+        }
     }
 }
