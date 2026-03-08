@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\InteractsWithTenantScope;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use Illuminate\Http\Request;
@@ -14,13 +15,15 @@ use Illuminate\Support\Facades\DB;
 
 class PemberitahuanController extends Controller
 {
+    use InteractsWithTenantScope;
+
     
     public function create($id)
     {
-        // $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
         $user = Auth::user();
         $penyedia = $user->penyedias()->get();     
-        $kegiatan = Kegiatan::find($id);
+        $kegiatan = $this->findTenantKegiatan($id);
+        abort_if($kegiatan === null, 404);
         $nomor = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->count() + 1;
 
         // $nomor = str_pad($nomor, 3, '0', STR_PAD_LEFT);
@@ -61,6 +64,9 @@ class PemberitahuanController extends Controller
 
                  
        
+        $kegiatan = $this->findTenantKegiatan((string) $request->input('kegiatan_id'));
+        abort_if($kegiatan === null, 404);
+
         $uraian = $request->input('uraian');  
         $volume = $request->input('volume');  
         $satuan = $request->input('satuan');
@@ -84,6 +90,7 @@ class PemberitahuanController extends Controller
 
         $data['pekerjaan'] = $pekerjaan;
 
+        $data['kegiatan_id'] = $kegiatan->id;
         $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
 
         $data['tgl_batas_akhir_penawaran'] = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
@@ -101,19 +108,15 @@ class PemberitahuanController extends Controller
      
     public function edit(string $id)
     {
-        $pemberitahuan = Pemberitahuan::with('belanjas', 'penyedias')->find($id);
-        if (!$pemberitahuan) {
-            noty()->error('Pemberitahuan tidak ditemukan.');
-            return redirect()->back();
-        }
+        $pemberitahuan = $this->findTenantPemberitahuan($id, ['belanjas', 'penyedias']);
+        abort_if($pemberitahuan === null, 404);
+
         $penyediaTerpilih = $pemberitahuan->selectedPenyediaIds();
-        $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
+        $penyedia = Auth::user()->penyedias()->select('penyedias.nama_penyedia', 'penyedias.id')->get();
         
-        $kegiatan = Kegiatan::find($pemberitahuan->kegiatan_id);
-        if (!$kegiatan) {
-            noty()->error('Kegiatan tidak ditemukan.');
-            return redirect()->back();
-        }
+        $kegiatan = $this->findTenantKegiatan((string) $pemberitahuan->kegiatan_id);
+        abort_if($kegiatan === null, 404);
+
         $belanja = $pemberitahuan->belanjas;
         
         return view('form.pemberitahuan', [
@@ -146,7 +149,11 @@ public function update(Request $request, string $id)
         'satuan.*' => 'nullable|string|max:100',
     ]);
 
-    $pemberitahuan = Pemberitahuan::findOrFail($id);
+    $pemberitahuan = $this->findTenantPemberitahuan($id);
+    abort_if($pemberitahuan === null, 404);
+
+    $kegiatan = $this->findTenantKegiatan((string) $request->input('kegiatan_id'));
+    abort_if($kegiatan === null || (string) $pemberitahuan->kegiatan_id !== (string) $kegiatan->id, 404);
 
     $uraian = $request->input('uraian');
     $volume = $request->input('volume');
@@ -170,6 +177,7 @@ public function update(Request $request, string $id)
     ]);
 
     $data['pekerjaan'] = $pekerjaan;
+    $data['kegiatan_id'] = $kegiatan->id;
     $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
     $data['tgl_batas_akhir_penawaran'] = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
 
@@ -189,7 +197,10 @@ public function update(Request $request, string $id)
      */
     public function destroy(string $id)
     {
-        $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->first();
+        $kegiatan = $this->findTenantKegiatan($id);
+        abort_if($kegiatan === null, 404);
+
+        $pemberitahuan = $this->scopedPemberitahuanQuery()->where('kegiatan_id', $kegiatan->id)->first();
         if ($pemberitahuan) {
             $pemberitahuan->delete();
             noty()->success('Pemberitahuan berhasil dihapus.');
@@ -201,18 +212,14 @@ public function update(Request $request, string $id)
 
     public function render(string $id)
         {
-           
-            $pemberitahuan = Pemberitahuan::with('belanjas', 'penyedias')->where('kegiatan_id', $id)->first();
-            if (!$pemberitahuan) {
-                noty()->error('Pemberitahuan tidak ditemukan.');
-                return redirect()->back();
-            }
-           
-            $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
-            if (!$kegiatan) {
-                noty()->error('Kegiatan tidak ditemukan.');
-                return redirect()->back();
-            }         
+            $kegiatan = $this->findTenantKegiatan($id, ['pemberitahuan']);
+            abort_if($kegiatan === null, 404);
+
+            $pemberitahuan = $this->scopedPemberitahuanQuery(['belanjas', 'penyedias'])
+                ->where('kegiatan_id', $kegiatan->id)
+                ->first();
+            abort_if($pemberitahuan === null, 404);
+
             $belanja = $pemberitahuan->belanjas;
             // dd($belanja);
 

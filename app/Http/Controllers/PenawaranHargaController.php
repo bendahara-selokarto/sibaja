@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\InteractsWithTenantScope;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use Illuminate\Http\Request;
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\DB;
 
 class PenawaranHargaController extends Controller
 {
+    use InteractsWithTenantScope;
+
     /**
      * Display a listing of the resource.
      */
@@ -40,7 +43,11 @@ class PenawaranHargaController extends Controller
      */
     public function create($kegiatanId, $penyediaId)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan.penyedias', 'pemberitahuan.belanjas')->find($kegiatanId);
+        $kegiatan = $this->findTenantKegiatan($kegiatanId, [
+            'pemberitahuan.penyedias',
+            'pemberitahuan.belanjas',
+        ]);
+        abort_if($kegiatan === null, 404);
         
         $statusPemenang = $kegiatan->statusPemenang();
 
@@ -89,7 +96,12 @@ class PenawaranHargaController extends Controller
 
 
     
-    $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran' , 'belanjas')->find($request->pemberitahuan_id);
+    $pemberitahuan = $this->findTenantPemberitahuan((string) $request->pemberitahuan_id, [
+        'kegiatan',
+        'penawaran',
+        'belanjas',
+    ]);
+    abort_if($pemberitahuan === null, 404);
 
     validator(
         ['penyedia' => (string) $request->penyedia],
@@ -139,11 +151,12 @@ class PenawaranHargaController extends Controller
      */
     public function edit(string $kegiatanId, string $penyediaId)
     {
-       $kegiatan = Kegiatan::with(
+       $kegiatan = $this->findTenantKegiatan($kegiatanId, [
            'pemberitahuan.penyedias',
            'pemberitahuan.penawaran.hargaPenawaran',
            'pemberitahuan.belanjas'
-       )->find($kegiatanId);
+       ]);
+        abort_if($kegiatan === null, 404);
 
         $pemberitahuan = $kegiatan->pemberitahuan;
         $penyedia = $pemberitahuan
@@ -191,7 +204,8 @@ class PenawaranHargaController extends Controller
      */
     public function update(Request $request, string $pemberitahuanId)
     {
-        $pemberitahuan = Pemberitahuan::with('kegiatan')->findOrFail($request->pemberitahuan_id);
+        $pemberitahuan = $this->findTenantPemberitahuan((string) $request->pemberitahuan_id, ['kegiatan']);
+        abort_if($pemberitahuan === null, 404);
 
         validator(
             ['penyedia' => (string) $request->penyedia],
@@ -199,10 +213,10 @@ class PenawaranHargaController extends Controller
             ['penyedia.in' => 'Penyedia tidak terdaftar pada pemberitahuan ini.']
         )->validate();
 
-        $penawaran = Penawaran::where('penyedia_id', $request->penyedia)
+        $penawaran = $this->scopedPenawaranQuery()->where('penyedia_id', $request->penyedia)
         ->where('pemberitahuan_id', $request->pemberitahuan_id)
         ->firstOrFail();
-        $penawaran2 = Penawaran::whereNot('penyedia_id', $request->penyedia)
+        $penawaran2 = $this->scopedPenawaranQuery()->whereNot('penyedia_id', $request->penyedia)
             ->where('pemberitahuan_id', $request->pemberitahuan_id)
             ->first();
 
@@ -262,7 +276,12 @@ class PenawaranHargaController extends Controller
      */
     public function destroy(string $id)
     {
-        $penawaran = Penawaran::where('kegiatan_id', $id)->get();
+        $kegiatan = $this->findTenantKegiatan($id);
+        abort_if($kegiatan === null, 404);
+
+        $penawaran = $this->scopedPenawaranQuery()
+            ->where('kegiatan_id', $kegiatan->id)
+            ->get();
        
         $penawaran->each->delete();
 
@@ -272,11 +291,12 @@ class PenawaranHargaController extends Controller
     }
     public function render(string $id)
     {
-            $kegiatan = Kegiatan::with(
+            $kegiatan = $this->findTenantKegiatan($id, [
                 'pemberitahuan.belanjas',
                 'penawaran.hargaPenawaran',
                 'penawaran.penyedia'
-            )->find($id);
+            ]);
+            abort_if($kegiatan === null, 404);
                                        
             $pemberitahuanId = $kegiatan->pemberitahuan->id;
             $pemberitahuan = $kegiatan->pemberitahuan;

@@ -26,23 +26,8 @@ class CheckDefaultKode
         if (Auth::check() && Auth::user()->kode_desa == null) {
             return redirect()->route('profile.edit')->with('error', 'Silakan isi profil desa terlebih dahulu!');
         }
-        // Daftar pengguna yang diijinkan
-        $allowedUsers = [
-           'Pecalungan',
-           'Bandung',
-           'Gombong',
-           'Randu',
-           'Siguci',
-           'Pretek',
-           'Selokarto',
-           'Gemuh',
-           'Gumawang',
-           'Keniten'
-            // Tambahkan email pengguna lain yang diijinkan di sini
-        ];
-
-        if (Auth::check() && !in_array(Auth::user()->desa, $allowedUsers)) {
-            return redirect()->route('profile.edit')->with('error', 'desa ' . Auth::user()->desa .' tdak terdaftar, dapatkan lisensi untuk mengakses aplikasi ini. Silakan hubungi admin untuk informasi lebih lanjut.');
+        if (Auth::check() && !Auth::user()->canAccessDesaPanel()) {
+            return redirect()->route('profile.edit')->with('error', 'Akses panel desa belum aktif untuk akun ini. Silakan hubungi admin untuk informasi lebih lanjut.');
         }
 
         return $next($request);

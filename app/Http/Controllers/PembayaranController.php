@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\InteractsWithTenantScope;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use App\Models\Pembayaran;
@@ -14,6 +15,7 @@ use App\Support\Money;
 
 class PembayaranController extends Controller
 {
+    use InteractsWithTenantScope;
     
     public function index()
     {
@@ -23,7 +25,9 @@ class PembayaranController extends Controller
     
     public function create($id)
     {   
-        $kegiatan = Kegiatan::with('negosiasiHarga')->find($id);        
+        $kegiatan = $this->findTenantKegiatan($id, ['negosiasiHarga']);
+        abort_if($kegiatan === null, 404);
+
         return view ('form.pembayaran', compact('kegiatan'));
     }
 
@@ -31,15 +35,17 @@ class PembayaranController extends Controller
     public function store(PembayaranRequest $request)
     {
         $validated = $request->validated();
+        $kegiatan = $this->findTenantKegiatan((string) $validated['kegiatan_id']);
+        abort_if($kegiatan === null, 404);
 
 
         $pembayaran = new Pembayaran([
-            'kegiatan_id' => $validated['kegiatan_id'],
+            'kegiatan_id' => $kegiatan->id,
             'tgl_pembayaran_cms' => $validated['tgl_pembayaran_cms'],
             'tgl_invoice' => $validated['tgl_invoice'],
         ]);
         $pembayaran->save();
-        $kegiatan_id = $validated['kegiatan_id'];
+        $kegiatan_id = $kegiatan->id;
        
         return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
 
@@ -54,7 +60,9 @@ class PembayaranController extends Controller
     
     public function edit($id)
     {
-        $kegiatan = Kegiatan::with('negosiasiHarga', 'pembayaran')->find($id);     
+        $kegiatan = $this->findTenantKegiatan($id, ['negosiasiHarga', 'pembayaran']);
+        abort_if($kegiatan === null, 404);
+
         $pembayaran = $kegiatan->pembayaran;  
         
         return view ('form.pembayaran', compact('pembayaran', 'kegiatan'));
@@ -65,7 +73,8 @@ class PembayaranController extends Controller
     {
         $validated = $request->validated();
         
-        $pembayaran = Pembayaran::find($id);
+        $pembayaran = $this->findTenantPembayaran((string) $id);
+        abort_if($pembayaran === null, 404);
 
         $pembayaran->tgl_pembayaran_cms = $validated['tgl_pembayaran_cms'];
 
@@ -80,7 +89,12 @@ class PembayaranController extends Controller
    
     public function destroy($kegiatan_id)
     {
-        $pembayaran = Pembayaran::where('kegiatan_id', $kegiatan_id)->first();
+        $kegiatan = $this->findTenantKegiatan($kegiatan_id);
+        abort_if($kegiatan === null, 404);
+
+        $pembayaran = $this->scopedPembayaranQuery()
+            ->where('kegiatan_id', $kegiatan->id)
+            ->first();
         if ($pembayaran) {
             $pembayaran->delete();
             return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id])->with('success', 'Pembayaran berhasil dihapus.');
@@ -89,13 +103,14 @@ class PembayaranController extends Controller
     }
 
     public function render($id){
-        $kegiatan = Kegiatan::with(
+        $kegiatan = $this->findTenantKegiatan($id, [
             'negosiasiHarga',
-            'pemberitahuan',
+            'pemberitahuan.belanjas',
             'penawaran.hargaPenawaran',
             'penawaran.penyedia',
             'pembayaran'
-        )->find($id);
+        ]);
+        abort_if($kegiatan === null, 404);
         $pemberitahuan = $kegiatan->pemberitahuan;
         $pemberitahuan->load('belanjas');
         $penawaranHarga = $kegiatan->penawaran->firstWhere('is_winner' , true);

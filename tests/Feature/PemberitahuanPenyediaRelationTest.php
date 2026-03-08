@@ -185,14 +185,46 @@ class PemberitahuanPenyediaRelationTest extends TestCase
         ]);
     }
 
-    private function makeUser(): User
+    public function test_edit_pemberitahuan_lists_attached_bank_penyedia_from_user_relation(): void
+    {
+        $user = $this->makeUser();
+        $this->actingAs($user);
+
+        $kegiatan = $this->makeKegiatan();
+        $ownedPenyedia = $this->makePenyedia($user, 'CV Milik Desa');
+
+        $bankOwner = $this->makeUser('Bandung');
+        $bankPenyedia = $this->makePenyedia($bankOwner, 'CV Bank Penyedia');
+
+        $user->penyedias()->syncWithoutDetaching([$ownedPenyedia->id, $bankPenyedia->id]);
+
+        $pemberitahuan = Pemberitahuan::create([
+            'kegiatan_id' => $kegiatan->id,
+            'pekerjaan' => $kegiatan->kegiatan,
+            'rekening_apbdes' => $kegiatan->rekening_apbdes,
+            'tgl_surat_pemberitahuan' => '2026-03-01 00:00:00',
+            'tgl_batas_akhir_penawaran' => '2026-03-04 00:00:00',
+            'no_pbj' => 1,
+            'penyedia' => [],
+        ]);
+        $pemberitahuan->syncSelectedPenyedias([$ownedPenyedia->id, $bankPenyedia->id]);
+
+        $response = $this->get(route('pemberitahuan.edit', $pemberitahuan->id));
+
+        $response->assertOk();
+        $response->assertSee('CV Milik Desa');
+        $response->assertSee('CV Bank Penyedia');
+    }
+
+    private function makeUser(string $desa = 'Selokarto'): User
     {
         return User::factory()->create([
-            'desa' => 'Selokarto',
+            'desa' => $desa,
             'kecamatan' => 'Blado',
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
     }
 

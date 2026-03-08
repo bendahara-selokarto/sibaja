@@ -52,8 +52,14 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'akses_desa_panel' => 'boolean',
             'password' => 'hashed',
         ];
+    }
+
+    public function canAccessDesaPanel(): bool
+    {
+        return $this->role === 'super-admin' || (bool) $this->akses_desa_panel;
     }
 
 

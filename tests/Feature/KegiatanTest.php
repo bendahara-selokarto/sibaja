@@ -257,6 +257,7 @@ class KegiatanTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
     }
 

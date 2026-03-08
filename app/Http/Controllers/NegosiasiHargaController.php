@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\InteractsWithTenantScope;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use Illuminate\Http\Request;
@@ -20,6 +21,8 @@ use App\Support\Money;
 
 class NegosiasiHargaController extends Controller
 {
+    use InteractsWithTenantScope;
+
     public function index()
     {
        
@@ -27,7 +30,12 @@ class NegosiasiHargaController extends Controller
   
     public function create($id)
     {
-        $kegiatan = Kegiatan::with('negosiasiHarga' , 'penawaran', 'pemberitahuan')->find($id);
+        $kegiatan = $this->findTenantKegiatan($id, [
+            'negosiasiHarga',
+            'penawaran.hargaPenawaran',
+            'pemberitahuan.belanjas',
+        ]);
+        abort_if($kegiatan === null, 404);
 
         
         $penawaran = $kegiatan->penawaran()
@@ -43,7 +51,7 @@ class NegosiasiHargaController extends Controller
 
         $tgl_surat_pemberitahuan = $kegiatan->pemberitahuan->tgl_surat_pemberitahuan;
 
-        $belanja = Belanja::where('pemberitahuan_id' , $pemberitahuanId )->get();
+        $belanja = $kegiatan->pemberitahuan?->belanjas?->sortBy('id')->values() ?? collect();
 
         
 
@@ -65,7 +73,8 @@ class NegosiasiHargaController extends Controller
     public function store(Request $request)
     {
         
-        $kegiatan = Kegiatan::with('penawaran', 'pemberitahuan')->find($request->kegiatan_id);
+        $kegiatan = $this->findTenantKegiatan((string) $request->kegiatan_id, ['penawaran', 'pemberitahuan']);
+        abort_if($kegiatan === null, 404);
 
         $validatedData = $request->validate([
             'kegiatan_id' => 'required',
@@ -111,7 +120,12 @@ class NegosiasiHargaController extends Controller
 
     public function edit($kegiatan_id)
     { 
-        $kegiatan = Kegiatan::with('pemberitahuan','negosiasiHarga' , 'penawaran.hargaPenawaran')->find($kegiatan_id);
+        $kegiatan = $this->findTenantKegiatan($kegiatan_id, [
+            'pemberitahuan.belanjas',
+            'negosiasiHarga.hargaNegosiasi',
+            'penawaran.hargaPenawaran',
+        ]);
+        abort_if($kegiatan === null, 404);
 
         $pemberitahuan = $kegiatan->pemberitahuan;
         $pemberitahuan->load('belanjas');
@@ -152,13 +166,20 @@ class NegosiasiHargaController extends Controller
             'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
         ]);
 
-        $kegiatan = Kegiatan::with('pemberitahuan','penawaran' , 'negosiasiHarga')->find($validatedData['kegiatan_id']);
+        $kegiatan = $this->findTenantKegiatan((string) $validatedData['kegiatan_id'], [
+            'pemberitahuan',
+            'penawaran',
+            'negosiasiHarga',
+        ]);
+        abort_if($kegiatan === null, 404);
 
         $pemberitahuan = $kegiatan->pemberitahuan;
        
         $tgl = Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan);
 
-        $negosiasi = NegosiasiHarga::where('kegiatan_id', $validatedData['kegiatan_id'])->first();
+        $negosiasi = NegosiasiHarga::where('kegiatan_id', $validatedData['kegiatan_id'])
+            ->where('kode_desa', Auth::user()->kode_desa)
+            ->firstOrFail();
 
         
 
@@ -187,7 +208,12 @@ class NegosiasiHargaController extends Controller
 
     public function destroy($kegiatan_id)
     {
-        $negosiasi = NegosiasiHarga::where('kegiatan_id', $kegiatan_id)->get();
+        $kegiatan = $this->findTenantKegiatan($kegiatan_id);
+        abort_if($kegiatan === null, 404);
+
+        $negosiasi = NegosiasiHarga::where('kegiatan_id', $kegiatan->id)
+            ->where('kode_desa', Auth::user()->kode_desa)
+            ->get();
         if (!$negosiasi) {
             return redirect()->back()->with('error', 'Negosiasi tidak ditemukan');
         }
@@ -200,10 +226,13 @@ class NegosiasiHargaController extends Controller
         
         $nomor_surat =  '/' .Auth::user()->kode_desa . '/' . Auth::user()->tahun_anggaran ;
          
-        $kegiatan = Kegiatan::with('penawaran.hargaPenawaran', 'penawaran.penyedia')
-                                ->with('pemberitahuan')
-                                ->with('negosiasiHarga')
-                                ->find( $id);
+        $kegiatan = $this->findTenantKegiatan($id, [
+            'penawaran.hargaPenawaran',
+            'penawaran.penyedia',
+            'pemberitahuan.belanjas',
+            'negosiasiHarga.hargaNegosiasi',
+        ]);
+        abort_if($kegiatan === null, 404);
        
         $pemberitahuan = $kegiatan->pemberitahuan;
         $pemberitahuan->tgl_batas_akhir_penawaran = Carbon::parse(

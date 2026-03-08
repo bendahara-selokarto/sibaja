@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\InteractsWithTenantScope;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use Illuminate\View\View;
@@ -15,6 +16,8 @@ use function PHPUnit\Framework\isEmpty;
 
 class KegiatanController extends Controller
 {
+    use InteractsWithTenantScope;
+
     /**
      * Menampilkan menu Penyedia
      */
@@ -69,12 +72,15 @@ class KegiatanController extends Controller
     */
     public function show(string $id)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan', 'negosiasiHarga', 'pembayaran')->find($id);
+        $kegiatan = $this->findTenantKegiatan($id, [
+            'pemberitahuan.penawaran',
+            'pemberitahuan.belanjas',
+            'pemberitahuan.penyedias',
+            'negosiasiHarga',
+            'pembayaran',
+        ]);
 
-        if (!$kegiatan) {
-            flash()->error('kegiatan tidak ditemukan');
-            return redirect()->route('menu.kegiatan');
-        }
+        abort_if($kegiatan === null, 404);
         
         $btn = [];
         
@@ -82,7 +88,7 @@ class KegiatanController extends Controller
         
             $pemberitahuanId = $kegiatan->pemberitahuan->id;
 
-            $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran', 'belanjas', 'penyedias')->find($pemberitahuanId);
+            $pemberitahuan = $kegiatan->pemberitahuan;
 
             $penyedias = $pemberitahuan->selectedPenyediaIds();
 
@@ -124,11 +130,9 @@ class KegiatanController extends Controller
     */
     public function edit(string $id)
     {
-        $kegiatan = Kegiatan::find($id);
-        if (!$kegiatan) {
-            flash()->error('kegiatan tidak ditemukan');
-            return redirect()->route('menu.kegiatan');
-        }
+        $kegiatan = $this->findTenantKegiatan($id);
+        abort_if($kegiatan === null, 404);
+
         return view('form.kegiatan', compact('kegiatan'));
     }
     
@@ -138,7 +142,9 @@ class KegiatanController extends Controller
     public function update(KegiatanRequest $request, string $id)
     {
         try {
-            $kegiatan = Kegiatan::findOrFail($id);
+            $kegiatan = $this->findTenantKegiatan($id);
+            abort_if($kegiatan === null, 404);
+
             $kegiatan->update($request->validated());
 
             noty()->success('Data kegiatan berhasil diperbarui');
@@ -154,11 +160,8 @@ class KegiatanController extends Controller
      */
     public function destroy(string $id)
     {
-        $kegiatan = Kegiatan::find($id);
-        if (!$kegiatan) {
-            flash()->error('kegiatan tidak ditemukan');
-            return redirect()->route('menu.kegiatan');
-        }
+        $kegiatan = $this->findTenantKegiatan($id);
+        abort_if($kegiatan === null, 404);
 
         if ($kegiatan->pemberitahuan) {
             flash()->error('kegiatan sudah memiliki pemberitahuan');
@@ -172,16 +175,12 @@ class KegiatanController extends Controller
     }
 
     public function rekap(string $id){
-        $kegiatan = Kegiatan::with(
+        $kegiatan = $this->findTenantKegiatan($id, [
             'pemberitahuan.penawaran.penyedia',
             'negosiasiHarga',
-            'pembayaran'
-        )->find($id);
-
-        if (!$kegiatan) {
-            flash()->error('kegiatan tidak ditemukan');
-            return redirect()->route('menu.kegiatan');
-        }
+            'pembayaran',
+        ]);
+        abort_if($kegiatan === null, 404);
 
         $pemberitahuan = $kegiatan->pemberitahuan;
 

@@ -21,6 +21,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $this->actingAs($user);
@@ -82,6 +83,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $otherUser = User::factory()->create([
@@ -90,6 +92,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $this->actingAs($owner);
@@ -152,6 +155,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $otherUser = User::factory()->create([
@@ -160,6 +164,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $this->actingAs($owner);
@@ -211,6 +216,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $otherUser = User::factory()->create([
@@ -219,6 +225,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $this->actingAs($owner);
@@ -263,6 +270,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $this->actingAs($user);
@@ -341,6 +349,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $this->actingAs($user);
@@ -394,6 +403,7 @@ class PenyediaUpdateTest extends TestCase
             'website' => fake()->unique()->domainName(),
             'kode_desa' => fake()->unique()->numerify('##########'),
             'tahun_anggaran' => 2026,
+            'akses_desa_panel' => true,
         ]);
 
         $this->actingAs($user);
