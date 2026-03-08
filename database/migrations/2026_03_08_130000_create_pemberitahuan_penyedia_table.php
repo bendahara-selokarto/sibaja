@@ -24,7 +24,7 @@ return new class extends Migration
         $now = now();
 
         foreach (DB::table('pemberitahuans')->select('id', 'penyedia')->get() as $pemberitahuan) {
-            foreach (normalize_legacy_pemberitahuan_penyedia($pemberitahuan->penyedia) as $penyediaId) {
+            foreach ($this->normalizeLegacyPemberitahuanPenyedia($pemberitahuan->penyedia) as $penyediaId) {
                 DB::table('pemberitahuan_penyedia')->updateOrInsert(
                     [
                         'pemberitahuan_id' => $pemberitahuan->id,
@@ -43,10 +43,8 @@ return new class extends Migration
     {
         Schema::dropIfExists('pemberitahuan_penyedia');
     }
-};
 
-if (!function_exists('normalize_legacy_pemberitahuan_penyedia')) {
-    function normalize_legacy_pemberitahuan_penyedia(mixed $value): array
+    private function normalizeLegacyPemberitahuanPenyedia(mixed $value): array
     {
         if (is_string($value)) {
             $decoded = json_decode($value, true);
@@ -62,4 +60,4 @@ if (!function_exists('normalize_legacy_pemberitahuan_penyedia')) {
             $value
         ))));
     }
-}
+};
