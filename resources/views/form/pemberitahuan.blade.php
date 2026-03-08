@@ -54,7 +54,7 @@
                                     class="mt-1 inline block w-1/4 sm:w-1/3 lg:w-1/4" 
                                     required 
                                     autocomplete="tgl_pemberitahuan" 
-                                    value="{{ old('tgl_pemberitahuan', isset($pemberitahuan->tgl_surat_pemberitahuan) ? \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') : '') }}" /> 
+                                    value="{{ old('tgl_pemberitahuan', isset($pemberitahuan->tgl_surat_pemberitahuan) ? $pemberitahuan->tgl_surat_pemberitahuan->format('Y-m-d') : '') }}" />
                                     <span id="hari-pemberitahuan"></span>
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_pemberitahuan')" />
                                 </div> <span id="tgl_pemberitahuan"></span>                               
@@ -66,7 +66,7 @@
                                 class="mr-4 mb-2  inline-block"
                                 value="{{ $p['id'] }}"
                                 label="{{ $p['nama_penyedia'] }}" 
-                                :checked="in_array($p['id'], old('penyedia', $penyediaTerpilih ?? []))"
+                                :checked="in_array((string) $p['id'], array_map('strval', old('penyedia', $penyediaTerpilih ?? [])), true)"
                                 />            
                                 @endforeach
                                 <div id="penyedia-error" class="text-sm mt-1 text-red-500">

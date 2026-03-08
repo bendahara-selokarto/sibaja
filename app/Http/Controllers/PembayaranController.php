@@ -88,11 +88,16 @@ class PembayaranController extends Controller
     }
 
     public function render($id){
-        $kegiatan = Kegiatan::with('negosiasiHarga', 'pemberitahuan', 'penawaran', 'pembayaran' )->find($id);
+        $kegiatan = Kegiatan::with(
+            'negosiasiHarga',
+            'pemberitahuan',
+            'penawaran.hargaPenawaran',
+            'penawaran.penyedia',
+            'pembayaran'
+        )->find($id);
         $pemberitahuan = $kegiatan->pemberitahuan;
         $pemberitahuan->load('belanjas');
-        $penawaranHarga = $kegiatan->penawaran()->firstWhere('is_winner' , true);
-        $penawaranHarga->load('hargaPenawaran');
+        $penawaranHarga = $kegiatan->penawaran->firstWhere('is_winner' , true);
         $hargaPenawaran = $penawaranHarga->hargaPenawaran;
         $negosiasiHarga  = $kegiatan->negosiasiHarga ;
         $negosiasiHarga->load('hargaNegosiasi');
@@ -124,13 +129,11 @@ class PembayaranController extends Controller
             ];
         });
        
-        $penyediaId = $kegiatan->penawaran()->firstWhere('is_winner' , true)->penyedia_id;
-        
-        $penyedia = Penyedia::find($penyediaId);
+        $penyedia = $penawaranHarga->penyedia;
 
-        $tgl_invoice =  Carbon::parse($kegiatan->pembayaran->tgl_invoice);
+        $tgl_invoice = $kegiatan->pembayaran->tgl_invoice->copy();
         
-        $tgl =  Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms);
+        $tgl = $kegiatan->pembayaran->tgl_pembayaran_cms->copy();
         $negosiasiHarga->ppn = $item->sum('ppn_negosiasi');
         $negosiasiHarga->pph_22 = $item->sum('pph22_negosiasi');
         $negosiasiHarga->jumlah = $item->sum('jumlah_negosiasi');

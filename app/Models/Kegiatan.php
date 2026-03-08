@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Kegiatan extends Model
@@ -13,17 +14,11 @@ class Kegiatan extends Model
 
     public function statusPemenang(): int
     {
-        $penawaran = $this->penawaran()->first();
-
-        if (!$penawaran) {
+        if (!$this->penawaran()->exists()) {
             return 0;
         }
 
-        if ($penawaran && !$penawaran->is_winner) {
-            return 2;
-        }
-
-        return 1;
+        return $this->penawaran()->where('is_winner', true)->exists() ? 1 : 2;
     }
 
     public function penyedia(): BelongsToMany
@@ -37,9 +32,9 @@ class Kegiatan extends Model
     {
         return $this->hasOne(Pemberitahuan::class, 'kegiatan_id');
     }
-    public function penawaran()
+    public function penawaran(): HasMany
     {
-        return $this->hasOne(Penawaran::class, 'kegiatan_id');
+        return $this->hasMany(Penawaran::class, 'kegiatan_id');
     }
     public function negosiasiHarga()
     {

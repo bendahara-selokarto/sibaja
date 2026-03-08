@@ -10,6 +10,11 @@ class Pembayaran extends Model
     use HasUuids;
     protected $table = 'pembayarans';
     protected $guarded = [];
+    protected $casts = [
+        'tgl_invoice' => 'date',
+        'tgl_pembayaran_cms' => 'date',
+    ];
+
     public function kegiatan(){
         return $this->belongsTo(Kegiatan::class);
     }

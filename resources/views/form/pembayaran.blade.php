@@ -24,11 +24,11 @@
                                 <x-text-input id="id" name="kegiatan_id" type="hidden" value="{{ $kegiatan->id }}" />
                                 @php
                                     $negMin = optional($kegiatan->negosiasiHarga)->tgl_akhir_perjanjian
-                                        ? \Carbon\Carbon::parse($kegiatan->negosiasiHarga->tgl_akhir_perjanjian)->format('Y-m-d')
+                                        ? $kegiatan->negosiasiHarga->tgl_akhir_perjanjian->format('Y-m-d')
                                         : '';
                                     $maxTahun = Auth::user()->tahun_anggaran . '-12-31';
-                                    $valInvoice = old('tgl_invoice', (isset($pembayaran) && $pembayaran->tgl_invoice) ? \Carbon\Carbon::parse($pembayaran->tgl_invoice)->format('Y-m-d') : '');
-                                    $valPembCms = old('tgl_pembayaran_cms', (isset($pembayaran) && $pembayaran->tgl_pembayaran_cms) ? \Carbon\Carbon::parse($pembayaran->tgl_pembayaran_cms)->format('Y-m-d') : '');
+                                    $valInvoice = old('tgl_invoice', (isset($pembayaran) && $pembayaran->tgl_invoice) ? $pembayaran->tgl_invoice->format('Y-m-d') : '');
+                                    $valPembCms = old('tgl_pembayaran_cms', (isset($pembayaran) && $pembayaran->tgl_pembayaran_cms) ? $pembayaran->tgl_pembayaran_cms->format('Y-m-d') : '');
                                 @endphp
                                 <div>
                                     <x-input-label for="tgl_invoice" :value="__('Tanggal Invoice')" />

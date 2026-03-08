@@ -116,7 +116,7 @@
         
         
         <div style="width: 300px; margin-left: auto; margin-right: 10px; text-align: right; ">
-            {{ ucwords(Auth::user()->desa) .", " .Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}
+            {{ ucwords(Auth::user()->desa) .", " .$kegiatan->pembayaran->tgl_pembayaran_cms->isoFormat('D MMMM Y') }}
         </div>
         <div style="width: 300px; text-align: center; margin-left: auto;">
             <p style="line-height: 2; ">

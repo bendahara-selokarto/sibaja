@@ -24,9 +24,9 @@
         <td style="text-align: right">Yth;</td>
         
         <td style="vertical-align: top; padding: 0px" rowspan="2">
-                @foreach ($pemberitahuan['penyedia'] as $p)
+                @foreach ($pemberitahuan->selectedPenyedias() as $penyedia)
                 {{ $loop->iteration}}. 
-                {{ App\Models\Penyedia::find($p)->nama_penyedia }} <br>
+                {{ $penyedia->nama_penyedia }} <br>
                 @endforeach
         </td>
     </tr>

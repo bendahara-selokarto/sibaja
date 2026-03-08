@@ -98,7 +98,7 @@
                                                         </x-bladewind::button>
                                                     </a>
                                                 @endforeach                                               
-                                                @if(!empty($btn['penawaran-create']) && $btn['penawaran-create'])
+                                                @if(!empty($btn['penawaran-delete']) && $btn['penawaran-delete'])
                                                 <form 
                                                 id="delete-form-{{ $kegiatan->id }}-penawaran"
                                                 action="{{ route('penawaran.destroy', $kegiatan['id']) }}" method="post" class="inline">

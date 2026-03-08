@@ -17,7 +17,7 @@
             onerror="this.src='{{ asset('') }}'" 
             >
      @endif
-        <p style="text-align: right">{{ $penyedia->kabupaten }}, {{  Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_invoice)->isoFormat('D MMMM Y') }}</p>
+        <p style="text-align: right">{{ $penyedia->kabupaten }}, {{ $kegiatan->pembayaran->tgl_invoice->isoFormat('D MMMM Y') }}</p>
     
     <table style="line-height: 1;" >
         <tr>
@@ -111,4 +111,3 @@ Terbilang : {{Terbilang::make(round($negosiasiHarga->total, 0))}} rupiah
 </div>
 </body>
 </html>
-

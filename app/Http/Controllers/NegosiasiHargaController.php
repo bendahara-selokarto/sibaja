@@ -64,7 +64,7 @@ class NegosiasiHargaController extends Controller
     public function store(Request $request)
     {
         
-        $kegiatan = Kegiatan::with('penawaran')->find($request->kegiatan_id);
+        $kegiatan = Kegiatan::with('penawaran', 'pemberitahuan')->find($request->kegiatan_id);
 
         $validatedData = $request->validate([
             'kegiatan_id' => 'required',
@@ -81,7 +81,7 @@ class NegosiasiHargaController extends Controller
             'harga_satuan' => $item
         ];})->toArray();
         
-        $pemberitahuan = $kegiatan->pemberitahuan->first();
+        $pemberitahuan = $kegiatan->pemberitahuan;
         if (!$pemberitahuan) {
             return redirect()->back()->with('error', 'Pemberitahuan not found');
         }
@@ -110,12 +110,11 @@ class NegosiasiHargaController extends Controller
 
     public function edit($kegiatan_id)
     { 
-        $kegiatan = Kegiatan::with('pemberitahuan','negosiasiHarga' , 'penawaran')->find($kegiatan_id);
+        $kegiatan = Kegiatan::with('pemberitahuan','negosiasiHarga' , 'penawaran.hargaPenawaran')->find($kegiatan_id);
 
         $pemberitahuan = $kegiatan->pemberitahuan;
         $pemberitahuan->load('belanjas');
-        $penawaranHarga = $kegiatan->penawaran()->firstWhere('is_winner' , true);
-        $penawaranHarga->load('hargaPenawaran');
+        $penawaranHarga = $kegiatan->penawaran->firstWhere('is_winner' , true);
         $hargaPenawaran = $penawaranHarga->hargaPenawaran;
         $negosiasi  = $kegiatan->negosiasiHarga ;
         $negosiasi->load('hargaNegosiasi');
@@ -136,12 +135,6 @@ class NegosiasiHargaController extends Controller
         });
 
         $kegiatan->tgl = Carbon::parse($penawaranHarga->tgl_penawaran)->format('Y-m-d');
-
-        $negosiasi->tgl_negosiasi = Carbon::parse($negosiasi->tgl_negosiasi)->format('Y-m-d');
-
-        $negosiasi->tgl_persetujuan = Carbon::parse($negosiasi->tgl_persetujuan)->format('Y-m-d');
-
-        $negosiasi->tgl_akhir_perjanjian = Carbon::parse($negosiasi->tgl_akhir_perjanjian)->format('Y-m-d');
 
        return view('form.negosiasi', compact('kegiatan', 'items' , 'negosiasi'));
     }
@@ -206,16 +199,18 @@ class NegosiasiHargaController extends Controller
         
         $nomor_surat =  '/' .Auth::user()->kode_desa . '/' . Auth::user()->tahun_anggaran ;
          
-        $kegiatan = Kegiatan::with('penawaran')
+        $kegiatan = Kegiatan::with('penawaran.hargaPenawaran', 'penawaran.penyedia')
                                 ->with('pemberitahuan')
                                 ->with('negosiasiHarga')
                                 ->find( $id);
        
         $pemberitahuan = $kegiatan->pemberitahuan;
+        $pemberitahuan->tgl_batas_akhir_penawaran = Carbon::parse(
+            $pemberitahuan->tgl_batas_akhir_penawaran
+        );
          
         $pemberitahuan->load('belanjas');
-        $penawaranHarga = $kegiatan->penawaran()->firstWhere('is_winner' , true);
-        $penawaranHarga->load('hargaPenawaran');
+        $penawaranHarga = $kegiatan->penawaran->firstWhere('is_winner' , true);
         $hargaPenawaran = $penawaranHarga->hargaPenawaran;
         $negosiasiHarga  = $kegiatan->negosiasiHarga ;
         $negosiasiHarga->load('hargaNegosiasi');
@@ -273,9 +268,7 @@ class NegosiasiHargaController extends Controller
     | PENAWARAN HARGA
     |--------------------------------------------------------------------------
     */
-    $penawaranHarga->tgl_penawaran = Carbon::parse(
-        $penawaranHarga->tgl_penawaran
-    );
+    $penawaranHarga->tgl_penawaran = Carbon::parse($penawaranHarga->tgl_penawaran);
     
     $penawaranHarga->harga_sebelum_pajak = $items->sum('jumlah_penawaran');
     $penawaranHarga->ppn = $items->sum('ppn_penawaran');
@@ -298,20 +291,10 @@ class NegosiasiHargaController extends Controller
     | TANGGAL & HARI KERJA (BUKAN PAJAK)
     |--------------------------------------------------------------------------
     */
-    $negosiasiHarga->tgl_negosiasi = Carbon::parse(
-        $negosiasiHarga->tgl_negosiasi
-    );
-
-    $negosiasiHarga->tgl_persetujuan = Carbon::parse(
-        $negosiasiHarga->tgl_persetujuan
-    );
-
-    $negosiasiHarga->tgl_perjanjian =
-        $negosiasiHarga->tgl_persetujuan;
-
-    $negosiasiHarga->tgl_akhir_perjanjian = Carbon::parse(
-        $negosiasiHarga->tgl_akhir_perjanjian
-    );
+    $negosiasiHarga->tgl_negosiasi = $negosiasiHarga->tgl_negosiasi->copy();
+    $negosiasiHarga->tgl_persetujuan = $negosiasiHarga->tgl_persetujuan->copy();
+    $negosiasiHarga->tgl_perjanjian = $negosiasiHarga->tgl_persetujuan->copy();
+    $negosiasiHarga->tgl_akhir_perjanjian = $negosiasiHarga->tgl_akhir_perjanjian->copy();
 
     $negosiasiHarga->jumlah_hari_kerja =
         $negosiasiHarga->tgl_akhir_perjanjian
@@ -325,7 +308,7 @@ class NegosiasiHargaController extends Controller
         $pemberitahuan->no_ba_negosiasi = $pemberitahuan->no_pbj . '/BA-NEGO' . $nomor_surat;
         $pemberitahuan->no_perjanjian = $pemberitahuan->no_pbj . '/PERJ' . $nomor_surat;
 
-        $penyedia = Penyedia::find($penawaranHarga->penyedia_id);
+        $penyedia = $penawaranHarga->penyedia;
         $data = [
             'kegiatan' => $kegiatan,
             'penyedia' => $penyedia,

@@ -76,7 +76,7 @@
                         <tr>
                             <td style="text-indent: 2mm"></td>
                             <td style="width: 5mm"></td>                           
-                            <td style="text-align:center; text-indent: 2cm">{{ ucwords(Auth::user()->desa) .", ". Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}</td>
+                            <td style="text-align:center; text-indent: 2cm">{{ ucwords(Auth::user()->desa) .", ". $kegiatan->pembayaran->tgl_pembayaran_cms->isoFormat('D MMMM Y') }}</td>
                             <td style=""></td>
                         </tr>                       
                         <tr>
@@ -104,14 +104,3 @@
     </div>
 </body>
 </html>
-<<<<<<< HEAD
-@include('pdf.pembayaran.new-invoice')
-=======
-@include('pdf.pembayaran.invoice')
-@include('pdf.kuitansi')
-
-
-{{-- Uncomment the following line if you want to add a page break after the kwitansi --}}
-{{-- <div style="page-break-after: always;"></div> --}}
->>>>>>> farida
-

@@ -86,7 +86,7 @@
         </tr>
         <tr>
           <td style="border-left: 1px solid black" >Tanggal</td>
-          <td >: {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_perjanjian)->isoFormat('D MMMM Y') }}</td>
+          <td >: {{ $data['negosiasiHarga']->tgl_perjanjian->isoFormat('D MMMM Y') }}</td>
         </tr>
         <tr>
           <td style="border-top: 1px solid black"></td>
@@ -95,13 +95,13 @@
         <tr>
           <td style="text-align: center">PEKERJAAN</td>
           <td style="border-left: 1px solid black" >Nomor</td>
-          <td >: {{ $data['kegiatan']->penawaran->no_penawaran }}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
+          <td >: {{ $data['penawaranHarga']->no_penawaran }}/SPH/{{ Auth::user()->tahun_anggaran }}</td>
         </tr>
         <tr>
           <td style="text-align: center">{{ $data['kegiatan']->kegiatan }}</td>
           <td style="border-left: 1px solid black" >Tanggal</td>
         
-          <td >: {{ Illuminate\Support\Carbon::parse($data['kegiatan']->penawaran->tgl_penawaran)->isoFormat('D MMMM Y')  }}</td>
+          <td >: {{ $data['penawaranHarga']->tgl_penawaran->isoFormat('D MMMM Y')  }}</td>
         </tr>
         <tr>
           <td style="text-align: center">KODE REKENING BELANJA</td>
@@ -115,7 +115,7 @@
         <tr>
           <td></td>
           <td style="border-left: 1px solid black" >Tanggal</td>
-          <td>: {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_negosiasi)->isoFormat('D MMMM Y')  }}</td>
+          <td>: {{ $data['negosiasiHarga']->tgl_negosiasi->isoFormat('D MMMM Y')  }}</td>
         </tr>    
       </thead>
       </table>
@@ -132,7 +132,7 @@
         </tr>
         <tr>
           <td >TANGGAL</td>
-          <td >: {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_perjanjian)->isoFormat('D MMMM Y')  }}</td>
+          <td >: {{ $data['negosiasiHarga']->tgl_perjanjian->isoFormat('D MMMM Y')  }}</td>
         </tr>
         <tr>
           <td >WAKTU PELAKSANAAN</td>

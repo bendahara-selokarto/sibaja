@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class NegosiasiHarga extends Model
@@ -26,6 +25,11 @@ class NegosiasiHarga extends Model
     protected $guarded =[];
     protected $attributes = [
         'kode_desa' => null,
+    ];
+    protected $casts = [
+        'tgl_negosiasi' => 'date',
+        'tgl_persetujuan' => 'date',
+        'tgl_akhir_perjanjian' => 'date',
     ];
 
     public static function boot()
@@ -63,26 +67,4 @@ class NegosiasiHarga extends Model
     {
         return Carbon::parse($this->tgl_akhir_perjanjian)->diffInDays(Carbon::parse($this->tgl_persetujuan)) * -1;
     }
-
-    protected function tglNegosiasi(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('Y-m-d')
-        );
-    }
-
-    protected function tglPersetujuan(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('Y-m-d')
-        );
-    }
-
-    protected function tglAkhirPerjanjian(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => Carbon::parse($value)->format('Y-m-d')
-        );
-    }
-
 }

@@ -31,7 +31,7 @@
                                         min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
                                         class="mt-1 block"
                                         required
-                                        value="{{ old('tgl_negosiasi', isset($negosiasi) ? $negosiasi->tgl_negosiasi : '') }}"
+                                        value="{{ old('tgl_negosiasi', isset($negosiasi) ? optional($negosiasi->tgl_negosiasi)->format('Y-m-d') : '') }}"
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_negosiasi')" />
                                     <br>
@@ -41,7 +41,7 @@
                                         class="mt-1 block"
                                         min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
                                         required
-                                        value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
+                                        value="{{ old('tgl_persetujuan', isset($negosiasi) ? optional($negosiasi->tgl_persetujuan)->format('Y-m-d') : $kegiatan->tgl) }}"
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
                                     <br>
@@ -51,7 +51,7 @@
                                     min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
                                     class="mt-1 block"
                                     required
-                                    value="{{ old('tgl_akhir_perjanjian', isset($negosiasi) ? $negosiasi->tgl_akhir_perjanjian : '') }}"
+                                    value="{{ old('tgl_akhir_perjanjian', isset($negosiasi) ? optional($negosiasi->tgl_akhir_perjanjian)->format('Y-m-d') : '') }}"
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
                                     <br>

@@ -12,6 +12,7 @@ use App\Models\Belanja;
 use App\Models\HargaPenawaran;
 use App\Models\Penawaran;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -38,13 +39,21 @@ class PenawaranHargaController extends Controller
      */
     public function create($kegiatanId, $penyediaId)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan')->find($kegiatanId);
+        $kegiatan = Kegiatan::with('pemberitahuan.penyedias', 'pemberitahuan.belanjas')->find($kegiatanId);
         
         $statusPemenang = $kegiatan->statusPemenang();
-        
-        $penyedia = Penyedia::find($penyediaId);
-              
+
         $pemberitahuan = $kegiatan->pemberitahuan;
+        $penyedia = $pemberitahuan
+            ? $pemberitahuan->selectedPenyedias()->firstWhere('id', (string) $penyediaId)
+            : null;
+
+        if (!$pemberitahuan || !$penyedia) {
+            return redirect()
+                ->route('kegiatan.show', ['id' => $kegiatanId])
+                ->with('error', 'Penyedia tidak terdaftar pada pemberitahuan ini.');
+        }
+
         $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) {
             return [
                 'uraian' => $item['uraian'],
@@ -68,7 +77,7 @@ class PenawaranHargaController extends Controller
     public function store(Request $request)
     {
     
-        $validated = $request->validate([
+        $request->validate([
         'pemberitahuan_id' => 'required|exists:pemberitahuans,id',
         'penyedia' => 'required|exists:penyedias,id',
         'tgl_surat_penawaran' => 'required|date',
@@ -79,6 +88,14 @@ class PenawaranHargaController extends Controller
 
 
     
+    $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran' , 'belanjas')->find($request->pemberitahuan_id);
+
+    validator(
+        ['penyedia' => (string) $request->penyedia],
+        ['penyedia' => ['required', Rule::in($pemberitahuan->selectedPenyediaIds())]],
+        ['penyedia.in' => 'Penyedia tidak terdaftar pada pemberitahuan ini.']
+    )->validate();
+
     $harga_satuan = $request->harga_satuan;
     
     $harga_satuan_array = [];
@@ -87,11 +104,6 @@ class PenawaranHargaController extends Controller
             'harga_satuan' => $item
         ];
     }
-
-    
-    $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran' , 'belanjas')->find($request->pemberitahuan_id);
-   
-    $penyedias = $pemberitahuan->penyedia;
 
     $kegiatan_id = $pemberitahuan->kegiatan->id;
     
@@ -126,19 +138,31 @@ class PenawaranHargaController extends Controller
      */
     public function edit(string $kegiatanId, string $penyediaId)
     {
-       $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($kegiatanId);
+       $kegiatan = Kegiatan::with(
+           'pemberitahuan.penyedias',
+           'pemberitahuan.penawaran.hargaPenawaran',
+           'pemberitahuan.belanjas'
+       )->find($kegiatanId);
 
-        $penyedia = Penyedia::find($penyediaId);
-              
         $pemberitahuan = $kegiatan->pemberitahuan;
+        $penyedia = $pemberitahuan
+            ? $pemberitahuan->selectedPenyedias()->firstWhere('id', (string) $penyediaId)
+            : null;
 
-        $pemberitahuan->load('penawaran');
+        if (!$pemberitahuan || !$penyedia) {
+            return redirect()
+                ->route('kegiatan.show', ['id' => $kegiatanId])
+                ->with('error', 'Penyedia tidak terdaftar pada pemberitahuan ini.');
+        }
 
         $penawaran = $pemberitahuan->penawaran->firstWhere('penyedia_id', $penyediaId);
+        if (!$penawaran) {
+            return redirect()
+                ->route('kegiatan.show', ['id' => $kegiatanId])
+                ->with('error', 'Penawaran untuk penyedia ini tidak ditemukan.');
+        }
 
-        $penawaran->load('hargaPenawaran');
-
-        $harga_penawaran = $penawaran->hargaPenawaran()->orderBy('id', 'ASC')->get();
+        $harga_penawaran = $penawaran->hargaPenawaran->sortBy('id')->values();
 
         
         $harga_satuan = $harga_penawaran->pluck('harga_satuan')->values();
@@ -150,8 +174,6 @@ class PenawaranHargaController extends Controller
                 'harga_satuan' => $harga_satuan->get($key),
             ];
         });
-        $penawaran->tgl_penawaran = Carbon::parse($penawaran->tgl_penawaran)->format('Y-m-d');
-
         return view('form.penawaran-harga', [
             'kegiatan' => $kegiatan,
             'pemberitahuan' => $pemberitahuan,
@@ -168,6 +190,14 @@ class PenawaranHargaController extends Controller
      */
     public function update(Request $request, string $pemberitahuanId)
     {
+        $pemberitahuan = Pemberitahuan::with('kegiatan')->findOrFail($request->pemberitahuan_id);
+
+        validator(
+            ['penyedia' => (string) $request->penyedia],
+            ['penyedia' => ['required', Rule::in($pemberitahuan->selectedPenyediaIds())]],
+            ['penyedia.in' => 'Penyedia tidak terdaftar pada pemberitahuan ini.']
+        )->validate();
+
         $penawaran = Penawaran::where('penyedia_id', $request->penyedia)
         ->where('pemberitahuan_id', $request->pemberitahuan_id)
         ->firstOrFail();
@@ -183,8 +213,6 @@ class PenawaranHargaController extends Controller
         if ($hargaLama->count() !== count($harga_satuan_array)) {
             throw new \Exception("Jumlah item harga tidak sesuai dengan data belanja!");
         };
-        
-        $pemberitahuan = Pemberitahuan::with('kegiatan')->findOrFail($request->pemberitahuan_id);
         
         $kegiatan_id = $pemberitahuan->kegiatan->id;
         
@@ -243,22 +271,23 @@ class PenawaranHargaController extends Controller
     }
     public function render(string $id)
     {
-        
-            $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($id);
+            $kegiatan = Kegiatan::with(
+                'pemberitahuan.belanjas',
+                'penawaran.hargaPenawaran',
+                'penawaran.penyedia'
+            )->find($id);
                                        
             $pemberitahuanId = $kegiatan->pemberitahuan->id;
-            $pemberitahuan = Pemberitahuan::with('belanjas')->find($pemberitahuanId);
-            $belanja = $pemberitahuan->belanjas()->orderBy('id')->get();
+            $pemberitahuan = $kegiatan->pemberitahuan;
+            $belanja = $pemberitahuan->belanjas->sortBy('id')->values();
 
-            $penawaran = $pemberitahuan->penawaran()->orderBy('id')->get();
+            $penawaran = $kegiatan->penawaran->sortBy('id')->values();
             $penawarPemenang = collect($penawaran)->firstWhere('is_winner', true);
             if(!isset($penawarPemenang)){
                 return back()->with('error', 'belum ada pemenang di set');
             }
 
-            $pemenangId = $penawarPemenang->id;
-
-            $pemenang = Penawaran::with('hargaPenawaran')->orderBy('id', 'asc')->find($pemenangId);
+            $pemenang = $penawarPemenang;
             $penawaranPemenang = $pemenang->hargaPenawaran->map(function ($harga, $i) use ($belanja){
                 return [
                     'uraian'       => $belanja[$i]->uraian ?? null,
@@ -275,9 +304,7 @@ class PenawaranHargaController extends Controller
                 return back()->with('error', 'pemenang tidak boleh lebih dari 1');
             }
 
-            $pembandingId = $penawarPembanding->id;
-
-            $pembanding = Penawaran::with('hargaPenawaran')->find($pembandingId);
+            $pembanding = $penawarPembanding;
             $penawaranPembanding = $pembanding->hargaPenawaran->map(function ($harga, $i) use ($belanja){
                 return [
                     'uraian'       => $belanja[$i]->uraian ?? null,
@@ -290,8 +317,8 @@ class PenawaranHargaController extends Controller
 
 
             
-            $penyedia1 = Penyedia::find($pemenang->penyedia_id);
-            $penyedia2 = Penyedia::find($pembanding->penyedia_id);
+            $penyedia1 = $pemenang->penyedia;
+            $penyedia2 = $pembanding->penyedia;
             
             $pemberitahuan = $kegiatan->pemberitahuan; 
             

@@ -7,8 +7,10 @@ use App\Models\Penyedia;
 use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PemberitahuanController extends Controller
 {
@@ -39,11 +41,17 @@ class PemberitahuanController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $request->validate([
+        $request->validate([
             'rekening_apbdes' => 'required|string|max:255',
             'kegiatan_id' => 'required|exists:kegiatans,id',
             'penyedia'   => 'required|array|size:2',
-            'penyedia.*' => 'required|distinct|exists:penyedias,id',
+            'penyedia.*' => [
+                'required',
+                'distinct',
+                Rule::exists('daftar_penyedia', 'penyedia_id')->where(
+                    fn ($query) => $query->where('user_id', Auth::id())
+                ),
+            ],
             'no_pbj' => 'required|string|max:255',
             'tgl_pemberitahuan' => 'required|date',
             'uraian.*' => 'required|string|max:255',
@@ -79,13 +87,13 @@ class PemberitahuanController extends Controller
         $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
 
         $data['tgl_batas_akhir_penawaran'] = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
-        
-        $saveSpem = Pemberitahuan::create($data);
 
-        $saveSpem->belanjas()->createMany($belanja->toArray());
-        
-        $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
-        
+        DB::transaction(function () use ($data, $belanja, $request) {
+            $saveSpem = Pemberitahuan::create($data);
+            $saveSpem->syncSelectedPenyedias($request->input('penyedia', []));
+            $saveSpem->belanjas()->createMany($belanja->toArray());
+        });
+
         return redirect()->route('kegiatan.show' , $request->kegiatan_id);
         
         
@@ -93,12 +101,12 @@ class PemberitahuanController extends Controller
      
     public function edit(string $id)
     {
-        $pemberitahuan = Pemberitahuan::with('belanjas')->find($id);
+        $pemberitahuan = Pemberitahuan::with('belanjas', 'penyedias')->find($id);
         if (!$pemberitahuan) {
             noty()->error('Pemberitahuan tidak ditemukan.');
             return redirect()->back();
         }
-        $penyediaTerpilih = $pemberitahuan->penyedia;
+        $penyediaTerpilih = $pemberitahuan->selectedPenyediaIds();
         $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
         
         $kegiatan = Kegiatan::find($pemberitahuan->kegiatan_id);
@@ -120,15 +128,32 @@ class PemberitahuanController extends Controller
      */
 public function update(Request $request, string $id)
 {
+    $request->validate([
+        'rekening_apbdes' => 'required|string|max:255',
+        'kegiatan_id' => 'required|exists:kegiatans,id',
+        'penyedia'   => 'required|array|size:2',
+        'penyedia.*' => [
+            'required',
+            'distinct',
+            Rule::exists('daftar_penyedia', 'penyedia_id')->where(
+                fn ($query) => $query->where('user_id', Auth::id())
+            ),
+        ],
+        'no_pbj' => 'required|string|max:255',
+        'tgl_pemberitahuan' => 'required|date',
+        'uraian.*' => 'required|string|max:255',
+        'volume.*' => 'nullable|numeric',
+        'satuan.*' => 'nullable|string|max:100',
+    ]);
+
     $pemberitahuan = Pemberitahuan::findOrFail($id);
 
-    $uraian = $request->input('uraian');  
-    $volume = $request->input('volume');  
+    $uraian = $request->input('uraian');
+    $volume = $request->input('volume');
     $satuan = $request->input('satuan');
-    
+
     $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
         return [
-            // 'nomor' => $key + 1,
             'uraian' => $item,
             'volume' => $volume[$key] ?? null,
             'satuan' => $satuan[$key] ?? null,
@@ -146,22 +171,16 @@ public function update(Request $request, string $id)
 
     $data['pekerjaan'] = $pekerjaan;
     $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
-
     $data['tgl_batas_akhir_penawaran'] = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
 
-    $pemberitahuan->update($data);
-    
-    $pemberitahuan->belanjas()->delete(); // hapus semua relasi lama
-    
-    $pemberitahuan->belanjas()->createMany($belanja->toArray()); // insert ulang
+    DB::transaction(function () use ($pemberitahuan, $data, $request, $belanja) {
+        $pemberitahuan->update($data);
+        $pemberitahuan->syncSelectedPenyedias($request->input('penyedia', []));
+        $pemberitahuan->belanjas()->delete();
+        $pemberitahuan->belanjas()->createMany($belanja->toArray());
+    });
 
-
-    // (opsional) ambil ulang data untuk ditampilkan
-    $pemberitahuan = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
-
-    $kegiatan_id = $request->input('kegiatan_id');
-
-    return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id ])->with('pemberitahuan', $pemberitahuan);
+    return redirect()->route('kegiatan.show' , ['id' => $request->input('kegiatan_id')]);
 }
 
 
@@ -183,7 +202,7 @@ public function update(Request $request, string $id)
     public function render(string $id)
         {
            
-            $pemberitahuan = Pemberitahuan::with('belanjas')->where('kegiatan_id', $id)->first();
+            $pemberitahuan = Pemberitahuan::with('belanjas', 'penyedias')->where('kegiatan_id', $id)->first();
             if (!$pemberitahuan) {
                 noty()->error('Pemberitahuan tidak ditemukan.');
                 return redirect()->back();
