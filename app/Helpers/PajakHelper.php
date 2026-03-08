@@ -2,36 +2,37 @@
 
 namespace App\Helpers;
 
+use App\Support\Money;
+
 class PajakHelper
 {
-
-
     public static function hitungSiskeudes(
-        float $totalBruto,
-        float $ppn,
-        float $pph22
+        int|float|string $totalBruto,
+        int|float|string $ppn,
+        int|float|string $pph22
     ): array {
-        $faktor = 1 + $ppn;
+        $totalBrutoRupiah = Money::rupiah($totalBruto);
+        $ppnBasisPoints = Money::percentToBasisPoints($ppn);
+        $pph22BasisPoints = Money::percentToBasisPoints($pph22);
+        $divisor = 10000 + $ppnBasisPoints;
 
-        $dpp = (1 / $faktor) * $totalBruto; 
-
-        $ppn =  $dpp * $ppn; 
-
-        $pph22 = $dpp * $pph22; 
+        $dpp = Money::divideByBasisPoints($totalBrutoRupiah, $divisor);
+        $ppnNominal = Money::multiplyBasisPoints($dpp, $ppnBasisPoints);
+        $pph22Nominal = Money::multiplyBasisPoints($dpp, $pph22BasisPoints);
         
         return [
-            'bersih'=> $dpp - $pph22,
-            'ppn'   => $ppn,
-            'pph22' => $pph22,
-            'total' => $dpp + $ppn,        
+            'bersih'=> $dpp - $pph22Nominal,
+            'ppn'   => $ppnNominal,
+            'pph22' => $pph22Nominal,
+            'total' => $dpp + $ppnNominal,
         ];
     }
-        public static function bersihSetelahPpnDanPph22(
-        float $nilai,
-        float $ppn,
-        float $pph22
-    ): float {
-        $dpp = $nilai / (1 + $ppn);
-        return $dpp - ($dpp * $pph22);
+
+    public static function bersihSetelahPpnDanPph22(
+        int|float|string $nilai,
+        int|float|string $ppn,
+        int|float|string $pph22
+    ): int {
+        return self::hitungSiskeudes($nilai, $ppn, $pph22)['bersih'];
     }
 }

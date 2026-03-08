@@ -10,6 +10,7 @@ use App\Http\Requests\PembayaranRequest;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\PajakHelper;
+use App\Support\Money;
 
 class PembayaranController extends Controller
 {
@@ -122,10 +123,10 @@ class PembayaranController extends Controller
                 'volume' => $item->volume,
                 'satuan' => $item->satuan,               
                 'harga_negosiasi' =>  $hargaNegosiasiBersih['bersih'],          
-                'jumlah_negosiasi' => $item->volume * $hargaNegosiasiBersih['bersih'], 
-                'ppn_negosiasi' => $item->volume * $hargaNegosiasiBersih['ppn'],
-                'pph22_negosiasi' => $item->volume * $hargaNegosiasiBersih['pph22'],
-                'total_negosiasi' => $item->volume * ($hargaNegosiasiBersih['bersih'] + $hargaNegosiasiBersih['ppn'] + $hargaNegosiasiBersih['pph22']),
+                'jumlah_negosiasi' => Money::quantityTimesRupiah($item->volume, $hargaNegosiasiBersih['bersih']),
+                'ppn_negosiasi' => Money::quantityTimesRupiah($item->volume, $hargaNegosiasiBersih['ppn']),
+                'pph22_negosiasi' => Money::quantityTimesRupiah($item->volume, $hargaNegosiasiBersih['pph22']),
+                'total_negosiasi' => Money::quantityTimesRupiah($item->volume, $hargaNegosiasiBersih['total']),
             ];
         });
        
@@ -138,7 +139,7 @@ class PembayaranController extends Controller
         $negosiasiHarga->pph_22 = $item->sum('pph22_negosiasi');
         $negosiasiHarga->jumlah = $item->sum('jumlah_negosiasi');
         $negosiasiHarga->pajak  = $negosiasiHarga->ppn + $negosiasiHarga->pph_22;
-        $negosiasiHarga->total  = round($item->sum('total_negosiasi'), 0, PHP_ROUND_HALF_UP);
+        $negosiasiHarga->total  = (int) $item->sum('total_negosiasi');
 
         $pemberitahuan = $kegiatan->pemberitahuan;
         

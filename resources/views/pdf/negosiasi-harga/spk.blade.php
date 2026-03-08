@@ -140,7 +140,7 @@
         </tr>
         <tr>
           <td >NILAI PEKERJAAN</td>
-            <td >: Rp. {{ number_format(round($data['negosiasiHarga']->harga_total, 0), 0, ',', '.') }},-</td>
+            <td >: Rp. {{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }},-</td>
         </tr>
       </tbody>
       </table>
@@ -161,7 +161,7 @@
             <td >{{ $v['uraian'] }}</td>
             <td style="text-align: center">{{ $v['volume'] . ' '. $v['satuan']  }}</td>
             <td style="text-align: right"> {{ number_format($v['harga_negosiasi'], 0, ',', '.') }}</td>
-            <td style="text-align: right"> {{ number_format($v['volume'] * $v['harga_negosiasi'], 0, ',', '.') }}</td>
+            <td style="text-align: right"> {{ number_format($v['jumlah_negosiasi'], 0, ',', '.') }}</td>
         </tr>
         @endforeach
         <tr>
@@ -182,18 +182,18 @@
         </tr>
         <tr>
           <td style="text-align: right" colspan="4">Dibulatkan</td>
-            <td style="text-align: right">{{ number_format(round($data['negosiasiHarga']->harga_total, 0), 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }}</td>
         </tr>
         @if(count($v) > 8)
         <tr style="height: 200px">
-          <td style="height: 200px; text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, 0))) }} Rupiah )</td>
+          <td style="height: 200px; text-align: center" colspan="5">( {{ ucwords(Terbilang::make($data['negosiasiHarga']->harga_total)) }} Rupiah )</td>
         </tr>
       </tbody>
       </table>
       <div style="page-break-before: always;"></div>
       @else
       <tr>
-        <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make(round($data['negosiasiHarga']->harga_total, 0))) }} Rupiah )</td>
+        <td style="text-align: center" colspan="5">( {{ ucwords(Terbilang::make($data['negosiasiHarga']->harga_total)) }} Rupiah )</td>
       </tr>
     </tbody>
     </table>

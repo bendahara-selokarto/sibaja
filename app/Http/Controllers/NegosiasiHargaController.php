@@ -14,6 +14,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Helpers\PajakHelper;
+use App\Support\Money;
 
 
 
@@ -52,7 +53,7 @@ class NegosiasiHargaController extends Controller
                     'volume'       => $belanja[$i]->volume ?? null,
                     'satuan'       => $belanja[$i]->satuan ?? null,
                     'harga_penawaran' => $harga->harga_satuan ?? null,
-                    'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
+                    'jumlah'       => Money::quantityTimesRupiah($belanja[$i]->volume, $harga->harga_satuan),
                 ];
             });
               
@@ -78,7 +79,7 @@ class NegosiasiHargaController extends Controller
         $item_negosiasi =$request->harga_satuan_negosiasi; 
 
         $item_negosiasi_array = collect($item_negosiasi)->map(function ($item) { return [             
-            'harga_satuan' => $item
+            'harga_satuan' => Money::rupiah($item)
         ];})->toArray();
         
         $pemberitahuan = $kegiatan->pemberitahuan;
@@ -129,8 +130,8 @@ class NegosiasiHargaController extends Controller
                 'satuan' => $item->satuan,
                 'harga_penawaran' => $hargaPenawaran[$k]->harga_satuan,
                 'harga_negosiasi' => $hargaNegosiasi[$k]->harga_satuan,
-                'jumlah_penawaran' => $item->volume * $hargaPenawaran[$k]->harga_satuan,
-                'jumlah_negosiasi' => $item->volume * $hargaNegosiasi[$k]->harga_satuan,
+                'jumlah_penawaran' => Money::quantityTimesRupiah($item->volume, $hargaPenawaran[$k]->harga_satuan),
+                'jumlah_negosiasi' => Money::quantityTimesRupiah($item->volume, $hargaNegosiasi[$k]->harga_satuan),
             ];
         });
 
@@ -178,7 +179,7 @@ class NegosiasiHargaController extends Controller
         }
 
         foreach ($hargaLama as $index => $harga) {
-            $harga->update(['harga_satuan' => $harga_satuan_array[$index]]);
+            $harga->update(['harga_satuan' => Money::rupiah($harga_satuan_array[$index])]);
         }
 
         return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil memperbarui data');
@@ -249,17 +250,17 @@ class NegosiasiHargaController extends Controller
             'harga_penawaran' => $hargaPenawaranBersih['bersih'],
             'harga_negosiasi' => $hargaNegosiasiBersih['bersih'],
 
-            'jumlah_penawaran' => $item->volume * $hargaPenawaranBersih['bersih'],
-            'jumlah_negosiasi' => $item->volume * $hargaNegosiasiBersih['bersih'],
+            'jumlah_penawaran' => Money::quantityTimesRupiah($item->volume, $hargaPenawaranBersih['bersih']),
+            'jumlah_negosiasi' => Money::quantityTimesRupiah($item->volume, $hargaNegosiasiBersih['bersih']),
 
-            'ppn_penawaran' => $item->volume *$hargaPenawaranBersih['ppn'],
-            'ppn_negosiasi' => $item->volume * $hargaNegosiasiBersih['ppn'],
+            'ppn_penawaran' => Money::quantityTimesRupiah($item->volume, $hargaPenawaranBersih['ppn']),
+            'ppn_negosiasi' => Money::quantityTimesRupiah($item->volume, $hargaNegosiasiBersih['ppn']),
 
-            'pph22_penawaran' => $item->volume * $hargaPenawaranBersih['pph22'],
-            'pph22_negosiasi' => $item->volume * $hargaNegosiasiBersih['pph22'],
+            'pph22_penawaran' => Money::quantityTimesRupiah($item->volume, $hargaPenawaranBersih['pph22']),
+            'pph22_negosiasi' => Money::quantityTimesRupiah($item->volume, $hargaNegosiasiBersih['pph22']),
 
-            'total_penawaran' => $item->volume * ($hargaPenawaranBersih['bersih'] + $hargaPenawaranBersih['ppn'] + $hargaPenawaranBersih['pph22']),
-            'total_negosiasi' => $item->volume * ($hargaNegosiasiBersih['bersih'] + $hargaNegosiasiBersih['ppn'] + $hargaNegosiasiBersih['pph22']),
+            'total_penawaran' => Money::quantityTimesRupiah($item->volume, $hargaPenawaranBersih['total']),
+            'total_negosiasi' => Money::quantityTimesRupiah($item->volume, $hargaNegosiasiBersih['total']),
         ];
     });
 
@@ -273,7 +274,7 @@ class NegosiasiHargaController extends Controller
     $penawaranHarga->harga_sebelum_pajak = $items->sum('jumlah_penawaran');
     $penawaranHarga->ppn = $items->sum('ppn_penawaran');
     $penawaranHarga->pph_22 = $items->sum('pph22_penawaran');
-    $penawaranHarga->harga_total = round($items->sum('total_penawaran'), 0, PHP_ROUND_HALF_UP);
+    $penawaranHarga->harga_total = (int) $items->sum('total_penawaran');
 
     /*
     |--------------------------------------------------------------------------
@@ -284,7 +285,7 @@ class NegosiasiHargaController extends Controller
     $negosiasiHarga->harga_sebelum_pajak = $items->sum('jumlah_negosiasi');
     $negosiasiHarga->ppn = $items->sum('ppn_negosiasi');
     $negosiasiHarga->pph_22 = $items->sum('pph22_negosiasi');
-    $negosiasiHarga->harga_total = round($items->sum('total_negosiasi'), 0, PHP_ROUND_HALF_UP);
+    $negosiasiHarga->harga_total = (int) $items->sum('total_negosiasi');
 
     /*
     |--------------------------------------------------------------------------

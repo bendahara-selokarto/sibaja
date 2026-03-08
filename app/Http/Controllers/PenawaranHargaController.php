@@ -17,6 +17,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Helpers\PajakHelper;
+use App\Support\Money;
 use Illuminate\Support\Facades\DB;
 
 
@@ -101,7 +102,7 @@ class PenawaranHargaController extends Controller
     $harga_satuan_array = [];
     foreach ($harga_satuan as $item) {
         $harga_satuan_array[] = [
-            'harga_satuan' => $item
+            'harga_satuan' => Money::rupiah($item)
         ];
     }
 
@@ -244,7 +245,7 @@ class PenawaranHargaController extends Controller
 
             foreach ($hargaLama as $index => $row) {
                 $row->update([
-                    'harga_satuan' => $harga_satuan_array[$index],
+                    'harga_satuan' => Money::rupiah($harga_satuan_array[$index]),
                 ]);
             };
 
@@ -294,7 +295,7 @@ class PenawaranHargaController extends Controller
                     'volume'       => $belanja[$i]->volume ?? null,
                     'satuan'       => $belanja[$i]->satuan ?? null,
                     'harga_satuan' => $harga->harga_satuan ?? null,
-                    'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
+                    'jumlah'       => Money::quantityTimesRupiah($belanja[$i]->volume, $harga->harga_satuan),
                 ];
             });
 
@@ -311,7 +312,7 @@ class PenawaranHargaController extends Controller
                     'volume'       => $belanja[$i]->volume ?? null,
                     'satuan'       => $belanja[$i]->satuan ?? null,
                     'harga_satuan' => $harga->harga_satuan ?? null,
-                    'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
+                    'jumlah'       => Money::quantityTimesRupiah($belanja[$i]->volume, $harga->harga_satuan),
                 ];
             });
 
@@ -322,7 +323,9 @@ class PenawaranHargaController extends Controller
             
             $pemberitahuan = $kegiatan->pemberitahuan; 
             
-            $jumlah_1 = $penawaranPemenang->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
+            $jumlah_1 = $penawaranPemenang->sum(
+                fn ($i) => Money::quantityTimesRupiah($i['volume'], $i['harga_satuan'])
+            );
 
             
             $item = $penawaranPemenang;
@@ -344,7 +347,9 @@ class PenawaranHargaController extends Controller
                 return $item;
             });
             
-            $jumlah_2 = $penawaranPembanding->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
+            $jumlah_2 = $penawaranPembanding->sum(
+                fn ($i) => Money::quantityTimesRupiah($i['volume'], $i['harga_satuan'])
+            );
             
             $item_2 = $penawaranPembanding;
 

@@ -69,25 +69,25 @@
             <td style="text-align: right">{{ number_format($negosiasiHarga->jumlah, 0, ',', '.') }}</td>   </tr>
         <tr>            
             <td style="text-indent: 300px" colspan="5">PPN dan PPh Pasal 22</td>
-            <td style="text-align: right">{{ number_format(round($negosiasiHarga->pajak), 0, ',', '.') }}</td>
+            <td style="text-align: right">{{ number_format($negosiasiHarga->pajak, 0, ',', '.') }}</td>
         </tr>
         <tr>
            
             <td style="text-indent: 300px" colspan="5">Jumlah Total</td>
             <td style="text-align: right">
-                {{ number_format(round($negosiasiHarga->total), 0, ',', '.') }}
+                {{ number_format($negosiasiHarga->total, 0, ',', '.') }}
             </td>   
         </tr>
         <tr>
            
             <td style="text-indent: 300px" colspan="5">Dibulatkan</td>
             <td style="text-align: right">
-                {{ number_format(round($kegiatan->negosiasiHarga->total, 0), 0, ',', '.') }}
+                {{ number_format($kegiatan->negosiasiHarga->total, 0, ',', '.') }}
             </td>   
         </tr>
     </tbody>
 </table><br>
-Terbilang : {{Terbilang::make(round($negosiasiHarga->total, 0))}} rupiah
+Terbilang : {{ Terbilang::make($negosiasiHarga->total) }} rupiah
 <br><br>
 <table>
     <tr>

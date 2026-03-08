@@ -58,8 +58,8 @@
                     <td style="vertical-align: top; padding: 5px;">Uang Sejumlah</td>
                     <td style="vertical-align: top; width: 4pt; padding: 5px;">:</td>
                     <td style="vertical-align: top; padding: 5px;">
-                        <strong>Rp. {{formatNumber(round($negosiasiHarga->total, 0))}},-</strong><br>
-                        <em>{{Terbilang::make(round($negosiasiHarga->total, 0))}} rupiah</em>
+                        <strong>Rp. {{ formatNumber($negosiasiHarga->total) }},-</strong><br>
+                        <em>{{ Terbilang::make($negosiasiHarga->total) }} rupiah</em>
                     </td>
                 </tr>
                 <tr>
@@ -88,17 +88,17 @@
                 <tr>
                     <td>Jumlah Kotor</td>
                     <td>Rp. </td>
-                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->total))}},-</td>
+                    <td style="text-align: right">{{ formatNumber($negosiasiHarga->total) }},-</td>
                 </tr>
                 <tr>
                     <td>Potongan</td>
                     <td>Rp. </td>
-                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->pajak))}},-</td>
+                    <td style="text-align: right">{{ formatNumber($negosiasiHarga->pajak) }},-</td>
                 </tr>
                 <tr>
                     <td>Dibayarkan</td>
                     <td>Rp. </td>
-                    <td style="text-align: right">{{formatNumber(round($negosiasiHarga->jumlah))}},-</td>
+                    <td style="text-align: right">{{ formatNumber($negosiasiHarga->jumlah) }},-</td>
                 </tr>
             </table>
 

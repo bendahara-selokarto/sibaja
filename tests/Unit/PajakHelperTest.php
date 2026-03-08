@@ -22,11 +22,10 @@ class PajakHelperTest extends TestCase
 
         $this->assertIsArray($result);
 
-        $this->assertEquals(100000, round($result['total'] / 1.11, 0));
-        $this->assertEquals(11000, round($result['ppn'], 0));
-        $this->assertEquals(1500, round($result['pph22'], 0));
-        $this->assertEquals(98500, round($result['bersih'], 0));
-        $this->assertEquals(111000, round($result['total'], 0));
+        $this->assertSame(11000, $result['ppn']);
+        $this->assertSame(1500, $result['pph22']);
+        $this->assertSame(98500, $result['bersih']);
+        $this->assertSame(111000, $result['total']);
     }
 
     public function test_it_calculates_net_value_after_ppn_and_pph22(): void
@@ -41,8 +40,7 @@ class PajakHelperTest extends TestCase
             $pph22
         );
 
-        $this->assertEquals(98500, round($bersih, 0));
+        $this->assertSame(98500, $bersih);
     }
 }
-
 

@@ -76,7 +76,8 @@
                                                     <td class="text-end"><span class="harga-penawaran" data-value="{{ $item['harga_penawaran']}}">{{ number_format($item['harga_penawaran'], 0, ',', '.') }}</span></td>
                                                     <td class="px-2 py-1">
                                                         <input type="number" name="harga_satuan_negosiasi[]" required
-                                                            value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? $item['harga_negosiasi'] : '') }}"
+                                                            value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? round($item['harga_negosiasi'], 0, PHP_ROUND_HALF_UP) : '') }}"
+                                                            step="1"
                                                             class="w-full border border-gray-300 rounded px-2 py-1 harga-negosiasi"
                                                         >
                                                     </td>

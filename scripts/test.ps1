@@ -36,6 +36,11 @@ $baseArgs = @(
     '-dextension=php_sqlite3.dll'
 )
 
+$bcmathExtension = Join-Path $extensionDir 'php_bcmath.dll'
+if (Test-Path $bcmathExtension) {
+    $baseArgs += '-dextension=php_bcmath.dll'
+}
+
 $commandArgs = if ($Artisan) {
     @('artisan', 'test') + $Args
 } else {
