@@ -24,7 +24,7 @@ class PembayaranRequest extends FormRequest
         return [
             'kegiatan_id' => 'required|exists:kegiatans,id',
             'tgl_pembayaran_cms' => 'required|date',
-            'tgl_invoice' => 'required|date',
+            'tgl_invoice' => 'required|date|before_or_equal:tgl_pembayaran_cms',
         ];
     }
     public function messages()
@@ -36,6 +36,7 @@ class PembayaranRequest extends FormRequest
             'tgl_pembayaran_cms.date' => 'Tanggal Pembayaran CMS harus berupa tanggal yang valid.',
             'tgl_invoice.required' => 'Tanggal Invoice wajib diisi.',
             'tgl_invoice.date' => 'Tanggal Invoice harus berupa tanggal yang valid.',
+            'tgl_invoice.before_or_equal' => 'Tanggal Invoice tidak boleh melebihi tanggal Pembayaran CMS.',
         ];
     }
     public function attributes()

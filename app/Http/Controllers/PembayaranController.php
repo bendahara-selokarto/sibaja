@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\UseCases\Pembayaran\StorePembayaranInput;
+use App\UseCases\Pembayaran\StorePembayaranUseCase;
+use App\UseCases\Pembayaran\UpdatePembayaranInput;
+use App\UseCases\Pembayaran\UpdatePembayaranUseCase;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use App\Models\Pembayaran;
-use Illuminate\Http\Request;
 use App\Http\Requests\PembayaranRequest;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -27,20 +30,20 @@ class PembayaranController extends Controller
     }
 
 
-    public function store(PembayaranRequest $request)
+    public function store(
+        PembayaranRequest $request,
+        StorePembayaranUseCase $storePembayaranUseCase,
+    )
     {
         $validated = $request->validated();
 
-
-        $pembayaran = new Pembayaran([
-            'kegiatan_id' => $validated['kegiatan_id'],
-            'tgl_pembayaran_cms' => $validated['tgl_pembayaran_cms'],
-            'tgl_invoice' => $validated['tgl_invoice'],
-        ]);
-        $pembayaran->save();
-        $kegiatan_id = $validated['kegiatan_id'];
+        $pembayaran = $storePembayaranUseCase->execute(new StorePembayaranInput(
+            kegiatanId: $validated['kegiatan_id'],
+            tglPembayaranCms: $validated['tgl_pembayaran_cms'],
+            tglInvoice: $validated['tgl_invoice'],
+        ));
        
-        return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
+        return redirect()->route('kegiatan.show', ['id' => $pembayaran->kegiatan_id]);
 
     }
 
@@ -60,20 +63,21 @@ class PembayaranController extends Controller
     }
 
 
-    public function update(PembayaranRequest $request, $id)
+    public function update(
+        PembayaranRequest $request,
+        $id,
+        UpdatePembayaranUseCase $updatePembayaranUseCase,
+    )
     {
         $validated = $request->validated();
-        
-        $pembayaran = Pembayaran::find($id);
 
-        $pembayaran->tgl_pembayaran_cms = $validated['tgl_pembayaran_cms'];
+        $pembayaran = $updatePembayaranUseCase->execute(new UpdatePembayaranInput(
+            pembayaranId: $id,
+            tglPembayaranCms: $validated['tgl_pembayaran_cms'],
+            tglInvoice: $validated['tgl_invoice'],
+        ));
 
-        $pembayaran->tgl_invoice = $validated['tgl_invoice'];
-
-        $pembayaran->save();
-        $kegiatan_id = $pembayaran->kegiatan_id;
-
-        return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id])->with('success', 'Pembayaran berhasil diperbarui.');
+        return redirect()->route('kegiatan.show' , ['id' => $pembayaran->kegiatan_id])->with('success', 'Pembayaran berhasil diperbarui.');
     }
 
    
