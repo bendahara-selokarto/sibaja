@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PenawaranHargaRequest;
 use App\Models\Kegiatan;
-use App\Models\HargaPenawaran;
-use App\Models\Pemberitahuan;
 use App\Models\Penawaran;
 use App\Models\Penyedia;
+use DomainException;
 use App\UseCases\Penawaran\StorePenawaranInput;
 use App\UseCases\Penawaran\StorePenawaranUseCase;
 use App\UseCases\Penawaran\UpdatePenawaranInput;
 use App\UseCases\Penawaran\UpdatePenawaranUseCase;
+use App\UseCases\Penawaran\BuildPenawaranReportUseCase;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Helpers\PajakHelper;
 
 
 
@@ -170,139 +169,22 @@ class PenawaranHargaController extends Controller
         
         return redirect()->route('kegiatan.show', ['id' => $id]);
     }
-    public function render(string $id)
+    public function render(
+        string $id,
+        BuildPenawaranReportUseCase $buildPenawaranReportUseCase,
+    )
     {
-        
-            $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($id);
-                                       
-            $pemberitahuanId = $kegiatan->pemberitahuan->id;
-            $pemberitahuan = Pemberitahuan::with('belanjas')->find($pemberitahuanId);
-            $belanja = $pemberitahuan->belanjas()->orderBy('id')->get();
+        try {
+            $report = $buildPenawaranReportUseCase->execute($id);
+        } catch (DomainException $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-            $penawaran = $pemberitahuan->penawaran()->orderBy('id')->get();
-            $penawarPemenang = collect($penawaran)->firstWhere('is_winner', true);
-            if(!isset($penawarPemenang)){
-                return back()->with('error', 'belum ada pemenang di set');
-            }
+        $pdf = Pdf::loadView('pdf.penawaran-harga', $report->toViewData());
 
-            $pemenangId = $penawarPemenang->id;
+        $filename = '2. PENAWARAN HARGA - (' . $report->kegiatan->kegiatan . ')';
 
-            $pemenang = Penawaran::with('hargaPenawaran')->orderBy('id', 'asc')->find($pemenangId);
-            $penawaranPemenang = $pemenang->hargaPenawaran->map(function ($harga, $i) use ($belanja){
-                return [
-                    'uraian'       => $belanja[$i]->uraian ?? null,
-                    'volume'       => $belanja[$i]->volume ?? null,
-                    'satuan'       => $belanja[$i]->satuan ?? null,
-                    'harga_satuan' => $harga->harga_satuan ?? null,
-                    'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
-                ];
-            });
-
-            
-            $penawarPembanding = collect($penawaran)->firstWhere('is_winner', false);
-            if(!isset($penawarPembanding)){
-                return back()->with('error', 'pemenang tidak boleh lebih dari 1');
-            }
-
-            $pembandingId = $penawarPembanding->id;
-
-            $pembanding = Penawaran::with('hargaPenawaran')->find($pembandingId);
-            $penawaranPembanding = $pembanding->hargaPenawaran->map(function ($harga, $i) use ($belanja){
-                return [
-                    'uraian'       => $belanja[$i]->uraian ?? null,
-                    'volume'       => $belanja[$i]->volume ?? null,
-                    'satuan'       => $belanja[$i]->satuan ?? null,
-                    'harga_satuan' => $harga->harga_satuan ?? null,
-                    'jumlah'       => $belanja[$i]->volume  * $harga->harga_satuan ,
-                ];
-            });
-
-
-            
-            $penyedia1 = Penyedia::find($pemenang->penyedia_id);
-            $penyedia2 = Penyedia::find($pembanding->penyedia_id);
-            
-            $pemberitahuan = $kegiatan->pemberitahuan; 
-            
-            $jumlah_1 = $penawaranPemenang->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
-
-            
-            $item = $penawaranPemenang;
-
-            $item->transform(function ($item) use ($kegiatan) {
-
-                $item['harga_satuan'] = PajakHelper::bersihSetelahPpnDanPph22(
-                    $item['harga_satuan'],
-                    $kegiatan->ppn,
-                    $kegiatan->pph_22
-                );
-
-                $item['jumlah'] = PajakHelper::bersihSetelahPpnDanPph22(
-                    $item['jumlah'],
-                    $kegiatan->ppn,
-                    $kegiatan->pph_22
-                );
-
-                return $item;
-            });
-            
-            $jumlah_2 = $penawaranPembanding->sum(fn ($i) => $i['volume'] * $i['harga_satuan']);
-            
-            $item_2 = $penawaranPembanding;
-
-            $item_2->transform(function ($item) use ($kegiatan) {
-
-                $item['harga_satuan'] = PajakHelper::bersihSetelahPpnDanPph22(
-                    $item['harga_satuan'],
-                    $kegiatan->ppn,
-                    $kegiatan->pph_22
-                );
-
-                $item['jumlah'] = PajakHelper::bersihSetelahPpnDanPph22(
-                    $item['jumlah'],
-                    $kegiatan->ppn,
-                    $kegiatan->pph_22
-                );
-
-                return $item;
-            });
-
-            // ✅ pakai helper
-            $pajak_1 = PajakHelper::hitungSiskeudes(
-                $jumlah_1, 
-                $kegiatan->ppn,
-                $kegiatan->pph_22
-            );
-
-            $pajak_2 = PajakHelper::hitungSiskeudes(
-                $jumlah_2, 
-                $kegiatan->ppn,
-                $kegiatan->pph_22
-            );
-
-            $pdf = Pdf::loadView('pdf.penawaran-harga', [
-                'penawaran_1' => $pemenang,
-                'penawaran_2' => $pembanding,
-                'kegiatan' => $kegiatan,
-                'penyedia1' => $penyedia1,
-                'penyedia2' => $penyedia2,
-                'jumlah'            => $pajak_1['bersih'],
-                'jumlah_2'          => $pajak_2['bersih'],
-                'ppn_1'             => $pajak_1['ppn'],
-                'ppn_2'             => $pajak_2['ppn'],
-                'pph_22_1'          => $pajak_1['pph22'],
-                'pph_22_2'          => $pajak_2['pph22'],
-                'jumlah_total_1'    => $pajak_1['total'],
-                'jumlah_total_2'    => $pajak_2['total'],    
-                'pemberitahuan' => $pemberitahuan,
-                'item' => $item,
-                'item_2' => $item_2
-            ]);
-            // Replace invalid filename characters with underscore
-            $filename = '2. PENAWARAN HARGA - (' . $kegiatan->kegiatan . ')';
-            // $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
-
-            return $pdf->stream(sanitize_filename($filename) . '.pdf');
+        return $pdf->stream(sanitize_filename($filename) . '.pdf');
        
     }
 }

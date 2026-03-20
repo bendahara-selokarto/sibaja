@@ -15,6 +15,8 @@ use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\PajakHelper;
+use App\UseCases\Negosiasi\BuildNegosiasiReportUseCase;
+use DomainException;
 
 
 
@@ -158,142 +160,22 @@ class NegosiasiHargaController extends Controller
         return redirect()->back()->with('success', 'Negosiasi berhasil dihapus');
     }
 
-    public function renderPDF($id)
+    public function renderPDF(
+        $id,
+        BuildNegosiasiReportUseCase $buildNegosiasiReportUseCase,
+    )
     {
-        
-        $nomor_surat =  '/' .Auth::user()->kode_desa . '/' . Auth::user()->tahun_anggaran ;
-         
-        $kegiatan = Kegiatan::with('penawaran')
-                                ->with('pemberitahuan')
-                                ->with('negosiasiHarga')
-                                ->find( $id);
-       
-        $pemberitahuan = $kegiatan->pemberitahuan;
-         
-        $pemberitahuan->load('belanjas');
-        $penawaranHarga = $kegiatan->penawaran()->firstWhere('is_winner' , true);
-        $penawaranHarga->load('hargaPenawaran');
-        $hargaPenawaran = $penawaranHarga->hargaPenawaran;
-        $negosiasiHarga  = $kegiatan->negosiasiHarga ;
-        $negosiasiHarga->load('hargaNegosiasi');
-        $hargaNegosiasi = $negosiasiHarga->hargaNegosiasi;
+        try {
+            $report = $buildNegosiasiReportUseCase->execute($id);
+        } catch (DomainException $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
 
-        $ppn = $kegiatan->ppn;
-        $pph_22 = $kegiatan->pph_22;
-        
+        $pdf = Pdf::loadView('pdf.negosiasi-harga', [
+            'data' => $report->toViewData(),
+        ]);
 
-    /*
-    |--------------------------------------------------------------------------
-    | ITEM BELANJA (SUDAH DPP)
-    |--------------------------------------------------------------------------
-    */
-    $items = $pemberitahuan->belanjas->map(function ($item, $k)
-        use ($hargaPenawaran, $hargaNegosiasi, $ppn, $pph_22) {
-
-        $hargaPenawaranBersih = PajakHelper::hitungSiskeudes(
-            $hargaPenawaran[$k]->harga_satuan,
-            $ppn,
-            $pph_22
-
-        );
-
-        $hargaNegosiasiBersih = PajakHelper::hitungSiskeudes(
-            $hargaNegosiasi[$k]->harga_satuan,
-            $ppn,
-            $pph_22
-        );
-
-        return [
-            'uraian' => $item->uraian,
-            'volume' => $item->volume,
-            'satuan' => $item->satuan,
-
-            'harga_penawaran' => $hargaPenawaranBersih['bersih'],
-            'harga_negosiasi' => $hargaNegosiasiBersih['bersih'],
-
-            'jumlah_penawaran' => $item->volume * $hargaPenawaranBersih['bersih'],
-            'jumlah_negosiasi' => $item->volume * $hargaNegosiasiBersih['bersih'],
-
-            'ppn_penawaran' => $item->volume *$hargaPenawaranBersih['ppn'],
-            'ppn_negosiasi' => $item->volume * $hargaNegosiasiBersih['ppn'],
-
-            'pph22_penawaran' => $item->volume * $hargaPenawaranBersih['pph22'],
-            'pph22_negosiasi' => $item->volume * $hargaNegosiasiBersih['pph22'],
-
-            'total_penawaran' => $item->volume * ($hargaPenawaranBersih['bersih'] + $hargaPenawaranBersih['ppn'] + $hargaPenawaranBersih['pph22']),
-            'total_negosiasi' => $item->volume * ($hargaNegosiasiBersih['bersih'] + $hargaNegosiasiBersih['ppn'] + $hargaNegosiasiBersih['pph22']),
-        ];
-    });
-
-    /*
-    |--------------------------------------------------------------------------
-    | PENAWARAN HARGA
-    |--------------------------------------------------------------------------
-    */
-    $penawaranHarga->tgl_penawaran = Carbon::parse(
-        $penawaranHarga->tgl_penawaran
-    );
-    
-    $penawaranHarga->harga_sebelum_pajak = $items->sum('jumlah_penawaran');
-    $penawaranHarga->ppn = $items->sum('ppn_penawaran');
-    $penawaranHarga->pph_22 = $items->sum('pph22_penawaran');
-    $penawaranHarga->harga_total = round($items->sum('total_penawaran'), 0, PHP_ROUND_HALF_UP);
-
-    /*
-    |--------------------------------------------------------------------------
-    | NEGOSIASI HARGA
-    |--------------------------------------------------------------------------
-    */      
-
-    $negosiasiHarga->harga_sebelum_pajak = $items->sum('jumlah_negosiasi');
-    $negosiasiHarga->ppn = $items->sum('ppn_negosiasi');
-    $negosiasiHarga->pph_22 = $items->sum('pph22_negosiasi');
-    $negosiasiHarga->harga_total = round($items->sum('total_negosiasi'), 0, PHP_ROUND_HALF_UP);
-
-    /*
-    |--------------------------------------------------------------------------
-    | TANGGAL & HARI KERJA (BUKAN PAJAK)
-    |--------------------------------------------------------------------------
-    */
-    $negosiasiHarga->tgl_negosiasi = Carbon::parse(
-        $negosiasiHarga->tgl_negosiasi
-    );
-
-    $negosiasiHarga->tgl_persetujuan = Carbon::parse(
-        $negosiasiHarga->tgl_persetujuan
-    );
-
-    $negosiasiHarga->tgl_perjanjian =
-        $negosiasiHarga->tgl_persetujuan;
-
-    $negosiasiHarga->tgl_akhir_perjanjian = Carbon::parse(
-        $negosiasiHarga->tgl_akhir_perjanjian
-    );
-
-    $negosiasiHarga->jumlah_hari_kerja =
-        $negosiasiHarga->tgl_akhir_perjanjian
-            ->diffInDays($negosiasiHarga->tgl_perjanjian) * -1;
-        
-
-        
-        $negosiasi = $items;
-
-        $pemberitahuan->no_spk = $pemberitahuan->no_pbj . '/SPK' . $nomor_surat;
-        $pemberitahuan->no_ba_negosiasi = $pemberitahuan->no_pbj . '/BA-NEGO' . $nomor_surat;
-        $pemberitahuan->no_perjanjian = $pemberitahuan->no_pbj . '/PERJ' . $nomor_surat;
-
-        $penyedia = Penyedia::find($penawaranHarga->penyedia_id);
-        $data = [
-            'kegiatan' => $kegiatan,
-            'penyedia' => $penyedia,
-            'pemberitahuan' => $pemberitahuan,
-            'penawaranHarga' => $penawaranHarga,
-            'negosiasiHarga' => $negosiasiHarga,
-            'item' => $items,
-        ];
-
-        $pdf = Pdf::loadView('pdf.negosiasi-harga', compact('data'));
-        $filename = '3. NEGOSIASI HARGA - (' . $kegiatan->kegiatan . ')';
+        $filename = '3. NEGOSIASI HARGA - (' . $report->kegiatan->kegiatan . ')';
         $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
 
         return $pdf->stream($filename . '.pdf');
