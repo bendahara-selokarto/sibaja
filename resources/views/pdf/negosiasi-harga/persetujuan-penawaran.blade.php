@@ -1,7 +1,7 @@
 
 <div class="persetujuan-penawaran" style="margin: 10px 20px 20px 50px">
 <x-kop-tpk/>
-<p style="text-align: right">{{Auth::user()->desa .", "}}{{illuminate\support\Carbon::parse($data['negosiasiHarga']->tgl_negosiasi)->isoFormat('D MMMM Y') }} </p>
+<p style="text-align: right">{{Auth::user()->desa .", "}}{{ $data['negosiasiHarga']->tgl_negosiasi->isoFormat('D MMMM Y') }} </p>
 <table style="margin-bottom: 40px">
     <tr>
         <td style="width: 60px">Nomor</td>
@@ -36,7 +36,7 @@
 </table>
 <div style="margin-left: 74px">
     <p style="line-height: 1; text-align:justify">
-        Berdasarkan Surat Saudara Nomor {{$data['penawaranHarga']->no_penawaran }}/SPH/{{Auth::user()->tahun_anggaran }} tanggal {{illuminate\support\Carbon::parse($data['penawaranHarga']->tgl_penawaran)->isoFormat('D MMMM Y') }} perihal Penawaran Harga dan Berdasarkan Berita Acara Klarifikasi dan Negoisasi Harga Nomor : {{$data['pemberitahuan']->no_ba_negosiasi }}, maka kami sampaikan bahwa setelah menerima dan mempelajari isi surat Saudara serta Berita Acara Klarifikasi dan Negoisasi Harga, maka pada prinsipnya kami tidak keberatan dan dapat menerima dengan penawaran harga yang telah disepakati sebesar Rp {{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }},- ({{ Terbilang::make($data['negosiasiHarga']->harga_total)}} rupiah ).
+        Berdasarkan Surat Saudara Nomor {{$data['penawaranHarga']->no_penawaran }}/SPH/{{Auth::user()->tahun_anggaran }} tanggal {{ $data['penawaranHarga']->tgl_penawaran->isoFormat('D MMMM Y') }} perihal Penawaran Harga dan Berdasarkan Berita Acara Klarifikasi dan Negoisasi Harga Nomor : {{$data['pemberitahuan']->no_ba_negosiasi }}, maka kami sampaikan bahwa setelah menerima dan mempelajari isi surat Saudara serta Berita Acara Klarifikasi dan Negoisasi Harga, maka pada prinsipnya kami tidak keberatan dan dapat menerima dengan penawaran harga yang telah disepakati sebesar Rp {{ number_format($data['negosiasiHarga']->harga_total, 0, ',', '.') }},- ({{ Terbilang::make($data['negosiasiHarga']->harga_total)}} rupiah ).
     </p>
     <p style="line-height: 1; text-align:justify">
         Sehubungan dengan hal tersebut diatas, diminta kehadiran Saudara besok pada :

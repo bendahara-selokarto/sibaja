@@ -2,32 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\InteractsWithTenantScope;
+use App\Http\Requests\PembayaranRequest;
+use App\Models\Pembayaran;
+use App\UseCases\Pembayaran\BuildPembayaranReportUseCase;
 use App\UseCases\Pembayaran\StorePembayaranInput;
 use App\UseCases\Pembayaran\StorePembayaranUseCase;
 use App\UseCases\Pembayaran\UpdatePembayaranInput;
 use App\UseCases\Pembayaran\UpdatePembayaranUseCase;
-use App\UseCases\Pembayaran\BuildPembayaranReportUseCase;
-use App\Models\Kegiatan;
-use App\Models\Pembayaran;
-use App\Http\Requests\PembayaranRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DomainException;
 
 class PembayaranController extends Controller
 {
-    
+    use InteractsWithTenantScope;
+
     public function index()
     {
         //
     }
 
-    
     public function create($id)
-    {   
-        $kegiatan = Kegiatan::with('negosiasiHarga')->find($id);        
-        return view ('form.pembayaran', compact('kegiatan'));
-    }
+    {
+        $kegiatan = $this->findTenantKegiatan($id, ['negosiasiHarga']);
+        abort_if($kegiatan === null, 404);
 
+        return view('form.pembayaran', compact('kegiatan'));
+    }
 
     public function store(
         PembayaranRequest $request,
@@ -35,32 +36,32 @@ class PembayaranController extends Controller
     )
     {
         $validated = $request->validated();
+        $kegiatan = $this->findTenantKegiatan((string) $validated['kegiatan_id']);
+        abort_if($kegiatan === null, 404);
 
         $pembayaran = $storePembayaranUseCase->execute(new StorePembayaranInput(
-            kegiatanId: $validated['kegiatan_id'],
+            kegiatanId: $kegiatan->id,
             tglPembayaranCms: $validated['tgl_pembayaran_cms'],
             tglInvoice: $validated['tgl_invoice'],
         ));
-       
-        return redirect()->route('kegiatan.show', ['id' => $pembayaran->kegiatan_id]);
 
+        return redirect()->route('kegiatan.show', ['id' => $pembayaran->kegiatan_id]);
     }
 
-    
     public function show(Pembayaran $pembayaran)
     {
         //
     }
 
-    
     public function edit($id)
     {
-        $kegiatan = Kegiatan::with('negosiasiHarga', 'pembayaran')->find($id);     
-        $pembayaran = $kegiatan->pembayaran;  
-        
-        return view ('form.pembayaran', compact('pembayaran', 'kegiatan'));
-    }
+        $kegiatan = $this->findTenantKegiatan($id, ['negosiasiHarga', 'pembayaran']);
+        abort_if($kegiatan === null, 404);
 
+        $pembayaran = $kegiatan->pembayaran;
+
+        return view('form.pembayaran', compact('pembayaran', 'kegiatan'));
+    }
 
     public function update(
         PembayaranRequest $request,
@@ -69,31 +70,44 @@ class PembayaranController extends Controller
     )
     {
         $validated = $request->validated();
+        $pembayaran = $this->findTenantPembayaran((string) $id);
+        abort_if($pembayaran === null, 404);
 
         $pembayaran = $updatePembayaranUseCase->execute(new UpdatePembayaranInput(
-            pembayaranId: $id,
+            pembayaranId: $pembayaran->id,
             tglPembayaranCms: $validated['tgl_pembayaran_cms'],
             tglInvoice: $validated['tgl_invoice'],
         ));
 
-        return redirect()->route('kegiatan.show' , ['id' => $pembayaran->kegiatan_id])->with('success', 'Pembayaran berhasil diperbarui.');
+        return redirect()->route('kegiatan.show', ['id' => $pembayaran->kegiatan_id])
+            ->with('success', 'Pembayaran berhasil diperbarui.');
     }
 
-   
     public function destroy($kegiatan_id)
     {
-        $pembayaran = Pembayaran::where('kegiatan_id', $kegiatan_id)->first();
+        $kegiatan = $this->findTenantKegiatan($kegiatan_id);
+        abort_if($kegiatan === null, 404);
+
+        $pembayaran = $this->scopedPembayaranQuery()
+            ->where('kegiatan_id', $kegiatan->id)
+            ->first();
+
         if ($pembayaran) {
             $pembayaran->delete();
-            return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id])->with('success', 'Pembayaran berhasil dihapus.');
+
+            return redirect()->route('kegiatan.show', ['id' => $kegiatan_id])
+                ->with('success', 'Pembayaran berhasil dihapus.');
         }
-        return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id]);
+
+        return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
     }
 
     public function render(
         $id,
         BuildPembayaranReportUseCase $buildPembayaranReportUseCase,
-    ){
+    ) {
+        abort_if($this->findTenantKegiatan((string) $id) === null, 404);
+
         try {
             $report = $buildPembayaranReportUseCase->execute($id);
         } catch (DomainException $exception) {
@@ -101,9 +115,7 @@ class PembayaranController extends Controller
         }
 
         $pdf = Pdf::loadView('pdf.pembayaran.kuitansi', $report->toViewData());
-
         $filename = '4. PEMBAYARAN - (' . $report->kegiatan->kegiatan . ')';
-
         $filename = preg_replace('/[\/\\\\\?\%\*\:\|\"<>\.]/', '_', $filename);
 
         return $pdf->stream($filename . '.pdf');

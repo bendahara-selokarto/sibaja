@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Data\Pemberitahuan\PrepareCreatePemberitahuanData;
-use App\Models\Kegiatan;
-use App\Models\Penyedia;
-use App\Models\Pemberitahuan;
+use App\Http\Controllers\Concerns\InteractsWithTenantScope;
 use App\Http\Requests\PemberitahuanRequest;
+use App\Models\Kegiatan;
+use App\Models\Pemberitahuan;
 use App\UseCases\Pemberitahuan\PrepareCreatePemberitahuanInput;
 use App\UseCases\Pemberitahuan\PrepareCreatePemberitahuanUseCase;
 use App\UseCases\Pemberitahuan\UpsertPemberitahuanInput;
@@ -16,46 +16,49 @@ use Illuminate\Support\Facades\Auth;
 
 class PemberitahuanController extends Controller
 {
+    use InteractsWithTenantScope;
+
     public function index()
     {
         return redirect()->route('menu.kegiatan');
     }
 
-    
     public function create(
         $id,
         PrepareCreatePemberitahuanUseCase $prepareCreatePemberitahuanUseCase,
     )
     {
+        $kegiatan = $this->findTenantKegiatan((string) $id);
+        abort_if($kegiatan === null, 404);
+
         $result = $prepareCreatePemberitahuanUseCase->execute(
             new PrepareCreatePemberitahuanInput(
-                kegiatanId: $id,
+                kegiatanId: $kegiatan->id,
                 kodeDesa: Auth::user()->kode_desa,
             )
         );
 
         $viewData = new PrepareCreatePemberitahuanData(
             kegiatan: $result->kegiatan,
-            penyedia: $result->penyedia,
+            penyedia: Auth::user()->penyedias()->select('penyedias.nama_penyedia', 'penyedias.id')->get(),
             nomorPbJ: $result->noPbJ,
         );
 
         return view('form.pemberitahuan', $viewData->toViewData());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(
         PemberitahuanRequest $request,
         UpsertPemberitahuanUseCase $upsertPemberitahuanUseCase,
     )
     {
         $validated = $request->validated();
+        $kegiatan = $this->findTenantKegiatan((string) $validated['kegiatan_id']);
+        abort_if($kegiatan === null, 404);
 
         $upsertPemberitahuanUseCase->execute(new UpsertPemberitahuanInput(
             pemberitahuanId: null,
-            kegiatanId: $validated['kegiatan_id'],
+            kegiatanId: $kegiatan->id,
             rekeningApbdes: $validated['rekening_apbdes'],
             penyediaIds: array_values($validated['penyedia']),
             noPbj: $validated['no_pbj'],
@@ -63,36 +66,26 @@ class PemberitahuanController extends Controller
             belanjaItems: $request->belanjaItems(),
         ));
 
-        return redirect()->route('kegiatan.show', $request->validated('kegiatan_id'));
+        return redirect()->route('kegiatan.show', $kegiatan->id);
     }
-     
+
     public function edit(string $id)
     {
-        $pemberitahuan = Pemberitahuan::with('belanjas')->find($id);
-        if (!$pemberitahuan) {
-            noty()->error('Pemberitahuan tidak ditemukan.');
-            return redirect()->back();
-        }
-        $penyediaTerpilih = $pemberitahuan->penyedia;
-        $penyedia = Auth::user()->penyedias()->get();
-        
-        $kegiatan = Kegiatan::find($pemberitahuan->kegiatan_id);
-        if (!$kegiatan) {
-            noty()->error('Kegiatan tidak ditemukan.');
-            return redirect()->back();
-        }
-        $belanja = $pemberitahuan->belanjas;
-        
+        $pemberitahuan = $this->findTenantPemberitahuan($id, ['belanjas', 'penyedias']);
+        abort_if($pemberitahuan === null, 404);
+
+        $kegiatan = $this->findTenantKegiatan((string) $pemberitahuan->kegiatan_id);
+        abort_if($kegiatan === null, 404);
+
         return view('form.pemberitahuan', [
-            'pemberitahuan' => $pemberitahuan, 
-            'penyedia' => $penyedia, 'kegiatan' => $kegiatan, 
-            'penyediaTerpilih' => $penyediaTerpilih, 
-            'belanja' => $belanja]);
-        }
-        
-    /**
-     * Update the specified resource in storage.
-     */
+            'pemberitahuan' => $pemberitahuan,
+            'penyedia' => Auth::user()->penyedias()->select('penyedias.nama_penyedia', 'penyedias.id')->get(),
+            'kegiatan' => $kegiatan,
+            'penyediaTerpilih' => $pemberitahuan->selectedPenyediaIds(),
+            'belanja' => $pemberitahuan->belanjas,
+        ]);
+    }
+
     public function update(
         PemberitahuanRequest $request,
         string $id,
@@ -100,10 +93,15 @@ class PemberitahuanController extends Controller
     )
     {
         $validated = $request->validated();
+        $pemberitahuan = $this->findTenantPemberitahuan($id);
+        abort_if($pemberitahuan === null, 404);
+
+        $kegiatan = $this->findTenantKegiatan((string) $validated['kegiatan_id']);
+        abort_if($kegiatan === null || (string) $pemberitahuan->kegiatan_id !== (string) $kegiatan->id, 404);
 
         $upsertPemberitahuanUseCase->execute(new UpsertPemberitahuanInput(
-            pemberitahuanId: $id,
-            kegiatanId: $validated['kegiatan_id'],
+            pemberitahuanId: $pemberitahuan->id,
+            kegiatanId: $kegiatan->id,
             rekeningApbdes: $validated['rekening_apbdes'],
             penyediaIds: array_values($validated['penyedia']),
             noPbj: $validated['no_pbj'],
@@ -111,51 +109,43 @@ class PemberitahuanController extends Controller
             belanjaItems: $request->belanjaItems(),
         ));
 
-        return redirect()->route('kegiatan.show', ['id' => $request->validated('kegiatan_id')]);
+        return redirect()->route('kegiatan.show', ['id' => $kegiatan->id]);
     }
 
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $pemberitahuan = Pemberitahuan::where('kegiatan_id', $id)->first();
+        $kegiatan = $this->findTenantKegiatan($id);
+        abort_if($kegiatan === null, 404);
+
+        $pemberitahuan = $this->scopedPemberitahuanQuery()->where('kegiatan_id', $kegiatan->id)->first();
         if ($pemberitahuan) {
             $pemberitahuan->delete();
             noty()->success('Pemberitahuan berhasil dihapus.');
         } else {
             noty()->error('Pemberitahuan tidak ditemukan.');
         }
+
         return redirect()->route('kegiatan.show', ['id' => $id]);
     }
 
     public function render(string $id)
-        {
-           
-            $pemberitahuan = Pemberitahuan::with('belanjas')->where('kegiatan_id', $id)->first();
-            if (!$pemberitahuan) {
-                noty()->error('Pemberitahuan tidak ditemukan.');
-                return redirect()->back();
-            }
-           
-            $kegiatan = Kegiatan::with('pemberitahuan')->find($id);
-            if (!$kegiatan) {
-                noty()->error('Kegiatan tidak ditemukan.');
-                return redirect()->back();
-            }         
-            $belanja = $pemberitahuan->belanjas;
-            // dd($belanja);
+    {
+        $kegiatan = $this->findTenantKegiatan($id, ['pemberitahuan']);
+        abort_if($kegiatan === null, 404);
 
-            $pdf = Pdf::loadView('pdf.pemberitahuan', ['pemberitahuan' => $pemberitahuan, 'kegiatan' => $kegiatan , 'belanja' => $belanja] );
+        $pemberitahuan = $this->scopedPemberitahuanQuery(['belanjas', 'penyedias'])
+            ->where('kegiatan_id', $kegiatan->id)
+            ->first();
+        abort_if($pemberitahuan === null, 404);
 
-            if (!$pdf) {
-                flash()->error('Gagal membuat PDF.');
-                return redirect()->back();
-            }
+        $pdf = Pdf::loadView('pdf.pemberitahuan', [
+            'pemberitahuan' => $pemberitahuan,
+            'kegiatan' => $kegiatan,
+            'belanja' => $pemberitahuan->belanjas,
+        ]);
 
-            // Replace all invalid filename characters with underscore
-            $safeKegiatan = preg_replace('/[\/\\\:\*\?"<>\|]/', '_', $kegiatan->kegiatan);
-            return $pdf->stream('1. PEMBERITAHUAN- (' . $safeKegiatan . ').pdf');
-        }
+        $safeKegiatan = preg_replace('/[\/\\\:\*\?"<>\|]/', '_', $kegiatan->kegiatan);
+
+        return $pdf->stream('1. PEMBERITAHUAN- (' . $safeKegiatan . ').pdf');
+    }
 }

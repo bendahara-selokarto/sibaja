@@ -64,7 +64,7 @@
         <tr>
             <td>Tanggal Penawaran</td>
             <td>:</td>
-            <td>{{hari($penawaran->tgl_penawaran) .", ". tanggal_indo($penawaran->tgl_penawaran)}}</td>
+            <td>{{ $penawaran ? hari($penawaran->tgl_penawaran) .", ". tanggal_indo($penawaran->tgl_penawaran) : '-' }}</td>
         </tr>
         <tr>
             <td>Tanggal Negosiasi</td>

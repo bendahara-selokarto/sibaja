@@ -94,12 +94,12 @@
             <tr>
                 <td>Uang sebanyak</td>
                 <td style="width: 10px">: </td>
-                <td><strong>Rp. {{ number_format(round($kegiatan->negosiasiHarga->total, 0), 0, ',', '.') }},-</strong></td>
+                <td><strong>Rp. {{ number_format($kegiatan->negosiasiHarga->total, 0, ',', '.') }},-</strong></td>
             </tr>
             <tr>
                 <td>Terbilang</td>
                 <td>: </td>
-                <td><i>( {{ ucwords(Terbilang::make(round($kegiatan->negosiasiHarga->total, 0)) )}} Rupiah. )</i></td>
+                <td><i>( {{ ucwords(Terbilang::make($kegiatan->negosiasiHarga->total)) }} Rupiah. )</i></td>
             </tr>
             <tr>
                 <td>Untuk Keperluan</td>
@@ -116,7 +116,7 @@
         
         
         <div style="width: 300px; margin-left: auto; margin-right: 10px; text-align: right; ">
-            {{ ucwords(Auth::user()->desa) .", " .Illuminate\Support\Carbon::parse($kegiatan->pembayaran->tgl_pembayaran_cms)->isoFormat('D MMMM Y') }}
+            {{ ucwords(Auth::user()->desa) .", " .$kegiatan->pembayaran->tgl_pembayaran_cms->isoFormat('D MMMM Y') }}
         </div>
         <div style="width: 300px; text-align: center; margin-left: auto;">
             <p style="line-height: 2; ">

@@ -27,7 +27,7 @@ class PenawaranHargaRequest extends FormRequest
             'penyedia' => 'required|exists:penyedias,id',
             'tgl_surat_penawaran' => 'required|date',
             'no_penawaran' => 'required|string|max:255',
-            'pemenang' => 'required|boolean',
+            'pemenang' => 'nullable|boolean',
             'harga_satuan' => 'required|array|min:1',
             'harga_satuan.*' => 'required|numeric|min:0',
         ];

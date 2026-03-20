@@ -8,13 +8,18 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 class Pembayaran extends Model
 {
     use HasUuids;
+
     protected $table = 'pembayarans';
+
     protected $casts = [
-        'tgl_pembayaran_cms' => 'datetime',
-        'tgl_invoice' => 'datetime',
+        'tgl_invoice' => 'date',
+        'tgl_pembayaran_cms' => 'date',
     ];
+
     protected $guarded = [];
-    public function kegiatan(){
+
+    public function kegiatan()
+    {
         return $this->belongsTo(Kegiatan::class);
     }
 }

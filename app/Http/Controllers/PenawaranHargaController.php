@@ -2,75 +2,86 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\InteractsWithTenantScope;
 use App\Http\Requests\PenawaranHargaRequest;
-use App\Models\Kegiatan;
 use App\Models\Penawaran;
-use App\Models\Penyedia;
-use DomainException;
+use App\UseCases\Penawaran\BuildPenawaranReportUseCase;
 use App\UseCases\Penawaran\StorePenawaranInput;
 use App\UseCases\Penawaran\StorePenawaranUseCase;
 use App\UseCases\Penawaran\UpdatePenawaranInput;
 use App\UseCases\Penawaran\UpdatePenawaranUseCase;
-use App\UseCases\Penawaran\BuildPenawaranReportUseCase;
-use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
-
-
+use DomainException;
+use Illuminate\Support\Facades\Validator;
 
 class PenawaranHargaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use InteractsWithTenantScope;
+
     public function index()
     {
-        
-       
-        
         return view('menu.penawaran');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create($kegiatanId, $penyediaId)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan')->find($kegiatanId);
-        
-        $statusPemenang = $kegiatan->statusPemenang();
-        
-        $penyedia = Penyedia::find($penyediaId);
-              
+        $kegiatan = $this->findTenantKegiatan($kegiatanId, [
+            'penawaran',
+            'pemberitahuan.penyedias',
+            'pemberitahuan.belanjas',
+        ]);
+        abort_if($kegiatan === null, 404);
+
         $pemberitahuan = $kegiatan->pemberitahuan;
-        $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) {
+        $penyedia = $pemberitahuan
+            ? $pemberitahuan->selectedPenyedias()->firstWhere('id', (string) $penyediaId)
+            : null;
+
+        if (!$pemberitahuan || !$penyedia) {
+            return redirect()
+                ->route('kegiatan.show', ['id' => $kegiatanId])
+                ->with('error', 'Penyedia tidak terdaftar pada pemberitahuan ini.');
+        }
+
+        $belanja = collect($pemberitahuan->belanjas)->map(function ($item) {
             return [
                 'uraian' => $item['uraian'],
                 'volume' => $item['volume'],
                 'satuan' => $item['satuan'],
             ];
         });
-        
+
         return view('form.penawaran-harga', [
             'kegiatan' => $kegiatan,
             'pemberitahuan' => $pemberitahuan,
             'penyedia' => $penyedia,
             'belanja' => $belanja,
-            'statusPemenang' => $statusPemenang,
+            'statusPemenang' => $kegiatan->statusPemenang(),
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(
         PenawaranHargaRequest $request,
         StorePenawaranUseCase $storePenawaranUseCase,
     )
     {
         $validated = $request->validated();
+        $pemberitahuan = $this->findTenantPemberitahuan((string) $validated['pemberitahuan_id'], [
+            'kegiatan',
+            'penawaran',
+            'belanjas',
+            'penyedias',
+        ]);
+        abort_if($pemberitahuan === null, 404);
+
+        Validator::make(
+            ['penyedia' => (string) $validated['penyedia']],
+            ['penyedia' => ['required', 'in:' . implode(',', $pemberitahuan->selectedPenyediaIds())]],
+            ['penyedia.in' => 'Penyedia tidak terdaftar pada pemberitahuan ini.']
+        )->validate();
 
         $penawaran = $storePenawaranUseCase->execute(new StorePenawaranInput(
-            pemberitahuanId: $validated['pemberitahuan_id'],
+            pemberitahuanId: $pemberitahuan->id,
             penyediaId: $validated['penyedia'],
             tglSuratPenawaran: $validated['tgl_surat_penawaran'],
             noPenawaran: $validated['no_penawaran'],
@@ -81,44 +92,47 @@ class PenawaranHargaController extends Controller
         return redirect()->route('kegiatan.show', ['id' => $penawaran->kegiatan_id]);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $kegiatanId, string $penyediaId)
     {
-       $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran')->find($kegiatanId);
+        $kegiatan = $this->findTenantKegiatan($kegiatanId, [
+            'pemberitahuan.penyedias',
+            'pemberitahuan.penawaran.hargaPenawaran',
+            'pemberitahuan.belanjas',
+        ]);
+        abort_if($kegiatan === null, 404);
 
-        $penyedia = Penyedia::find($penyediaId);
-              
         $pemberitahuan = $kegiatan->pemberitahuan;
+        $penyedia = $pemberitahuan
+            ? $pemberitahuan->selectedPenyedias()->firstWhere('id', (string) $penyediaId)
+            : null;
 
-        $pemberitahuan->load('penawaran');
+        if (!$pemberitahuan || !$penyedia) {
+            return redirect()
+                ->route('kegiatan.show', ['id' => $kegiatanId])
+                ->with('error', 'Penyedia tidak terdaftar pada pemberitahuan ini.');
+        }
 
         $penawaran = $pemberitahuan->penawaran->firstWhere('penyedia_id', $penyediaId);
+        if (!$penawaran) {
+            return redirect()
+                ->route('kegiatan.show', ['id' => $kegiatanId])
+                ->with('error', 'Penawaran untuk penyedia ini tidak ditemukan.');
+        }
 
-        $penawaran->load('hargaPenawaran');
-
-        $harga_penawaran = $penawaran->hargaPenawaran()->orderBy('id', 'ASC')->get();
-
-        
-        $harga_satuan = $harga_penawaran->pluck('harga_satuan')->values();
-        $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) use ($harga_satuan) {
+        $hargaSatuan = $penawaran->hargaPenawaran->sortBy('id')->pluck('harga_satuan')->values();
+        $belanja = collect($pemberitahuan->belanjas)->map(function ($item, $key) use ($hargaSatuan) {
             return [
                 'uraian' => $item['uraian'],
                 'volume' => $item['volume'],
                 'satuan' => $item['satuan'],
-                'harga_satuan' => $harga_satuan->get($key),
+                'harga_satuan' => $hargaSatuan->get($key),
             ];
         });
-        $penawaran->tgl_penawaran = Carbon::parse($penawaran->tgl_penawaran)->format('Y-m-d');
 
         return view('form.penawaran-harga', [
             'kegiatan' => $kegiatan,
@@ -127,13 +141,9 @@ class PenawaranHargaController extends Controller
             'belanja' => $belanja,
             'penawaran' => $penawaran,
             'isEdit' => true,
-        ]); 
-        
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(
         PenawaranHargaRequest $request,
         string $pemberitahuanId,
@@ -141,39 +151,55 @@ class PenawaranHargaController extends Controller
     )
     {
         $validated = $request->validated();
+        $pemberitahuan = $this->findTenantPemberitahuan((string) $validated['pemberitahuan_id'], [
+            'kegiatan',
+            'penyedias',
+        ]);
+        abort_if($pemberitahuan === null, 404);
+
+        Validator::make(
+            ['penyedia' => (string) $validated['penyedia']],
+            ['penyedia' => ['required', 'in:' . implode(',', $pemberitahuan->selectedPenyediaIds())]],
+            ['penyedia.in' => 'Penyedia tidak terdaftar pada pemberitahuan ini.']
+        )->validate();
 
         $penawaran = $updatePenawaranUseCase->execute(new UpdatePenawaranInput(
-            pemberitahuanId: $validated['pemberitahuan_id'],
+            pemberitahuanId: $pemberitahuan->id,
             penyediaId: $validated['penyedia'],
             tglSuratPenawaran: $validated['tgl_surat_penawaran'],
             noPenawaran: $validated['no_penawaran'],
             isWinner: $request->isWinner(),
             hargaSatuan: $validated['harga_satuan'],
         ));
-                
+
         flash()->success('Penawaran berhasil diupdate.');
 
         return redirect()->route('kegiatan.show', ['id' => $penawaran->kegiatan_id]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $penawaran = Penawaran::where('kegiatan_id', $id)->get();
-       
-        $penawaran->each->delete();
+        $kegiatan = $this->findTenantKegiatan($id);
+        abort_if($kegiatan === null, 404);
+
+        $this->scopedPenawaranQuery()
+            ->where('kegiatan_id', $kegiatan->id)
+            ->get()
+            ->each
+            ->delete();
 
         flash()->success('Penawaran berhasil dihapus.');
-        
+
         return redirect()->route('kegiatan.show', ['id' => $id]);
     }
+
     public function render(
         string $id,
         BuildPenawaranReportUseCase $buildPenawaranReportUseCase,
     )
     {
+        abort_if($this->findTenantKegiatan($id) === null, 404);
+
         try {
             $report = $buildPenawaranReportUseCase->execute($id);
         } catch (DomainException $exception) {
@@ -181,10 +207,8 @@ class PenawaranHargaController extends Controller
         }
 
         $pdf = Pdf::loadView('pdf.penawaran-harga', $report->toViewData());
-
         $filename = '2. PENAWARAN HARGA - (' . $report->kegiatan->kegiatan . ')';
 
         return $pdf->stream(sanitize_filename($filename) . '.pdf');
-       
     }
 }

@@ -63,3 +63,66 @@ Follow these steps to clone the repository from GitHub and run the Laravel appli
     ```sh
     php artisan serve
     ```
+
+## Running Tests on Windows
+
+If `php` is not available on your `PATH`, use the repository wrapper below. It will locate a local PHP install, enable the minimum extensions needed for PHPUnit, and run the suite:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test.ps1
+```
+
+To run Laravel's `artisan test` entrypoint instead:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\test.ps1 -Artisan
+```
+
+If your PHP binary lives somewhere else, set `SIBAJA_PHP` first:
+
+```powershell
+$env:SIBAJA_PHP='C:\path\to\php.exe'
+```
+
+## Auditing `pemberitahuan` to `penyedia` sync
+
+To audit whether the legacy `pemberitahuans.penyedia` column matches the normalized `pemberitahuan_penyedia` pivot, run:
+
+```powershell
+php artisan audit:pemberitahuan-penyedia-sync
+```
+
+For machine-readable output:
+
+```powershell
+php artisan audit:pemberitahuan-penyedia-sync --json
+```
+
+You can limit the mismatch sample size with `--limit=25`. The command is read-only and does not modify data.
+
+On Windows, you can use the wrapper below to auto-detect PHP and optionally write a timestamped JSON report:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\audit-pemberitahuan-penyedia-sync.ps1 -Json
+```
+
+To save a timestamped report automatically without typing a filename:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\audit-pemberitahuan-penyedia-sync.ps1 -SaveReport
+```
+
+To save the audit output to a file:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\audit-pemberitahuan-penyedia-sync.ps1 -OutputPath .\storage\app\audits\pemberitahuan-penyedia-sync.json
+```
+
+You can also reduce the mismatch sample size:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\audit-pemberitahuan-penyedia-sync.ps1 -Limit 25 -OutputPath .\storage\app\audits\pemberitahuan-penyedia-sync.json
+```
+
+Operational runbook:
+[docs/ops/AUDIT_PEMBERITAHUAN_PENYEDIA_SYNC.md](/d:/2026/sibaja/docs/ops/AUDIT_PEMBERITAHUAN_PENYEDIA_SYNC.md)

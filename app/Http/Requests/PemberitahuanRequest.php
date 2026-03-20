@@ -3,8 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 
 class PemberitahuanRequest extends FormRequest
 {
@@ -27,7 +29,13 @@ class PemberitahuanRequest extends FormRequest
             'rekening_apbdes' => 'required|string|max:255',
             'kegiatan_id' => 'required|exists:kegiatans,id',
             'penyedia' => 'required|array|size:2',
-            'penyedia.*' => 'required|distinct|exists:penyedias,id',
+            'penyedia.*' => [
+                'required',
+                'distinct',
+                Rule::exists('daftar_penyedia', 'penyedia_id')->where(
+                    fn ($query) => $query->where('user_id', Auth::id())
+                ),
+            ],
             'no_pbj' => 'required|integer|min:1',
             'tgl_pemberitahuan' => 'required|date',
             'uraian' => 'required|array|min:1',

@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\InteractsWithTenantScope;
+use App\Http\Requests\KegiatanRequest;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
-use Illuminate\View\View;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\KegiatanRequest;
-use App\Models\Pemberitahuan;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class KegiatanController extends Controller
 {
+    use InteractsWithTenantScope;
+
     /**
      * Menampilkan menu Penyedia
      */
@@ -23,11 +25,10 @@ class KegiatanController extends Controller
             ->get();
 
         if ($kegiatan->isEmpty()) {
-            // Jika tidak ada kegiatan, langsung render tanpa data tambahan
             return view('menu.kegiatan')->with('kegiatans', collect());
         }
-       
-        return view('menu.kegiatan')->with('kegiatans', $kegiatan);           
+
+        return view('menu.kegiatan')->with('kegiatans', $kegiatan);
     }
 
     public function create()
@@ -35,20 +36,13 @@ class KegiatanController extends Controller
         if (!Penyedia::cukupUntukKegiatan(Auth::user()->kode_desa)) {
             return redirect()
                 ->route('menu.penyedia')
-                ->with(
-                    'error',
-                    Penyedia::pesanError(Auth::user()->kode_desa)
-                );
+                ->with('error', Penyedia::pesanError(Auth::user()->kode_desa));
         }
 
         return view('form.kegiatan', [
-            'kegiatan' => new Kegiatan()
+            'kegiatan' => new Kegiatan(),
         ]);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
 
     public function store(KegiatanRequest $request)
     {
@@ -58,23 +52,24 @@ class KegiatanController extends Controller
         } catch (\Throwable $th) {
             noty()->error($th->getMessage());
         }
+
         return redirect()->route('menu.kegiatan');
     }
-    
-    /**
-     * Display the specified resource.
-    */
+
     public function show(string $id)
     {
-        $kegiatan = Kegiatan::with([
+        $kegiatan = $this->findTenantKegiatan($id, [
             'pemberitahuan.penawaran',
             'pemberitahuan.belanjas',
+            'pemberitahuan.penyedias',
             'negosiasiHarga',
             'pembayaran',
-        ])->findOrFail($id);
+        ]);
+        abort_if($kegiatan === null, 404);
 
         $btn = [
             'penawaran-create' => false,
+            'penawaran-delete' => false,
             'penawaran-render' => false,
             'negosiasi-create' => false,
             'negosiasi-render' => false,
@@ -88,8 +83,8 @@ class KegiatanController extends Controller
         $penyediaAda = collect();
 
         if ($pemberitahuan) {
-            $penawaran = $pemberitahuan->penawaran;
-            $penyediaIds = collect($pemberitahuan->penyedia ?? []);
+            $penawaran = $pemberitahuan->penawaran ?? collect();
+            $penyediaIds = collect($pemberitahuan->selectedPenyediaIds());
             $penyediaDenganPenawaranIds = $penawaran
                 ->pluck('penyedia_id')
                 ->unique()
@@ -106,7 +101,8 @@ class KegiatanController extends Controller
                 $penyediaAda = Penyedia::whereIn('id', $penyediaDenganPenawaranIds)->get();
             }
 
-            $btn['penawaran-create'] = $penawaran->isNotEmpty();
+            $btn['penawaran-create'] = $penyediaIds->isNotEmpty();
+            $btn['penawaran-delete'] = $penawaran->isNotEmpty();
             $btn['penawaran-render'] = $penawaran->count() > 1;
             $btn['negosiasi-create'] = $btn['penawaran-render'] && $kegiatan->negosiasiHarga === null;
             $btn['negosiasi-render'] = $kegiatan->negosiasiHarga !== null;
@@ -121,29 +117,22 @@ class KegiatanController extends Controller
             ->with('penawaran', $penawaran)
             ->with('penyediaAda', $penyediaAda)
             ->with('penyedia', $penyedia);
-       
     }
-    
-    /**
-     * Show the form for editing the specified resource.
-    */
+
     public function edit(string $id)
     {
-        $kegiatan = Kegiatan::find($id);
-        if (!$kegiatan) {
-            flash()->error('kegiatan tidak ditemukan');
-            return redirect()->route('menu.kegiatan');
-        }
+        $kegiatan = $this->findTenantKegiatan($id);
+        abort_if($kegiatan === null, 404);
+
         return view('form.kegiatan', compact('kegiatan'));
     }
-    
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(KegiatanRequest $request, string $id)
     {
         try {
-            $kegiatan = Kegiatan::findOrFail($id);
+            $kegiatan = $this->findTenantKegiatan($id);
+            abort_if($kegiatan === null, 404);
+
             $kegiatan->update($request->validated());
 
             noty()->success('Data kegiatan berhasil diperbarui');
@@ -154,50 +143,57 @@ class KegiatanController extends Controller
         return redirect()->route('menu.kegiatan');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        $kegiatan = Kegiatan::find($id);
-        if (!$kegiatan) {
-            flash()->error('kegiatan tidak ditemukan');
-            return redirect()->route('menu.kegiatan');
-        }
+        $kegiatan = $this->findTenantKegiatan($id);
+        abort_if($kegiatan === null, 404);
 
         if ($kegiatan->pemberitahuan !== null) {
             flash()->error('kegiatan sudah memiliki pemberitahuan');
             return back();
         }
-            // $kegiatan->delete();
-            $deleted = Kegiatan::where('id', $id)->delete();
-            flash()->success('kegiatan berhasil diahpus');
-       
+
+        Kegiatan::where('id', $id)->delete();
+        flash()->success('kegiatan berhasil diahpus');
+
         return redirect()->route('menu.kegiatan');
     }
 
-    public function rekap(string $id){
-        $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran' , 'negosiasiHarga' , 'pembayaran' )->find($id);
+    public function rekap(string $id)
+    {
+        $kegiatan = $this->findTenantKegiatan($id, [
+            'pemberitahuan.penawaran.penyedia',
+            'negosiasiHarga',
+            'pembayaran',
+        ]);
+        abort_if($kegiatan === null, 404);
 
         $pemberitahuan = $kegiatan->pemberitahuan;
-
-        $penawaran = $kegiatan->penawaran;
+        $penawaranList = $pemberitahuan?->penawaran ?? collect();
+        $penawaran = $penawaranList->firstWhere('is_winner', true)
+            ?? $penawaranList->first();
 
         $namaPenyedia1 = optional(
-            Penyedia::find(optional($kegiatan->penawaran->firstWhere('is_winner', true))->penyedia_id)
+            optional($penawaranList->firstWhere('is_winner', true))->penyedia
         )->nama_penyedia;
 
         $namaPenyedia2 = optional(
-            Penyedia::find(optional($kegiatan->penawaran->firstWhere('is_winner', false))->penyedia_id)
+            optional($penawaranList->firstWhere('is_winner', false))->penyedia
         )->nama_penyedia;
 
         $negosiasiHarga = $kegiatan->negosiasiHarga;
-
         $pembayaran = $kegiatan->pembayaran;
 
-        $pdf = Pdf::loadView('pdf.rekap' , compact('kegiatan', 'pemberitahuan' , 'penawaran','namaPenyedia1' , 'namaPenyedia2' , 'negosiasiHarga' , 'pembayaran'));
-        
+        $pdf = Pdf::loadView('pdf.rekap', compact(
+            'kegiatan',
+            'pemberitahuan',
+            'penawaran',
+            'namaPenyedia1',
+            'namaPenyedia2',
+            'negosiasiHarga',
+            'pembayaran'
+        ));
+
         return $pdf->stream();
-       
     }
 }

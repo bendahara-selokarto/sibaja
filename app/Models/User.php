@@ -12,6 +12,19 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    private const LEGACY_DESA_PANEL_ALLOWLIST = [
+        'pecalungan',
+        'bandung',
+        'gombong',
+        'randu',
+        'siguci',
+        'pretek',
+        'selokarto',
+        'gemuh',
+        'gumawang',
+        'keniten',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -52,8 +65,20 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'akses_desa_panel' => 'boolean',
             'password' => 'hashed',
         ];
+    }
+
+    public function canAccessDesaPanel(): bool
+    {
+        if ($this->role === 'super-admin' || (bool) $this->akses_desa_panel) {
+            return true;
+        }
+
+        $desa = strtolower((string) $this->getRawOriginal('desa'));
+
+        return in_array($desa, self::LEGACY_DESA_PANEL_ALLOWLIST, true);
     }
 
 

@@ -50,11 +50,12 @@ final class UpsertPemberitahuanUseCase
                 'tgl_batas_akhir_penawaran' => Carbon::parse($input->tglPemberitahuan)->addDays(3),
             ]);
             $pemberitahuan->save();
+            $pemberitahuan->syncSelectedPenyedias(array_values($input->penyediaIds));
 
             $pemberitahuan->belanjas()->delete();
             $pemberitahuan->belanjas()->createMany($input->belanjaItems->all());
 
-            return $pemberitahuan->fresh(['belanjas']);
+            return $pemberitahuan->fresh(['belanjas', 'penyedias']);
         });
     }
 }

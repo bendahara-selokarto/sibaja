@@ -41,6 +41,8 @@ class PemberitahuanTest extends TestCase
             'nomor_npwp' => '02.234.567.8-999.001',
         ]);
 
+        $user->penyedias()->syncWithoutDetaching([$penyediaA->id, $penyediaB->id]);
+
         Pemberitahuan::create([
             'kegiatan_id' => $kegiatan->id,
             'rekening_apbdes' => $kegiatan->rekening_apbdes,

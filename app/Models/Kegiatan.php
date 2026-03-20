@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Auth;
 
 class Kegiatan extends Model
 {
@@ -32,20 +32,21 @@ class Kegiatan extends Model
         return $this->belongsToMany(Penyedia::class, 'kegiatan_penyedia');
     }
 
-
-
     public function pemberitahuan(): HasOne
     {
         return $this->hasOne(Pemberitahuan::class, 'kegiatan_id');
     }
+
     public function penawaran(): HasMany
     {
         return $this->hasMany(Penawaran::class, 'kegiatan_id');
     }
+
     public function negosiasiHarga(): HasOne
     {
         return $this->hasOne(NegosiasiHarga::class, 'kegiatan_id');
     }
+
     public function pembayaran(): HasOne
     {
         return $this->hasOne(Pembayaran::class, 'kegiatan_id');
@@ -84,18 +85,19 @@ class Kegiatan extends Model
         $month = date('m', strtotime($tgl));
         $year = date('Y', strtotime($tgl));
         $roman = $this->getRomanMonth($month);
-        return "140/" . $this->nomor_sk_tpk . "/" . $roman . "/" . $year;
+
+        return '140/' . $this->nomor_sk_tpk . '/' . $roman . '/' . $year;
     }
+
     public function getNomorPkaAttribute()
     {
         $tgl = $this->tgl_sk_pka ?? date('Y-m-d');
         $month = date('m', strtotime($tgl));
         $year = date('Y', strtotime($tgl));
         $roman = $this->getRomanMonth($month);
-        return "140/" . $this->nomor_sk_pka . "/" . $roman . "/" . $year;
+
+        return '140/' . $this->nomor_sk_pka . '/' . $roman . '/' . $year;
     }
-    
-    
 
     private function getRomanMonth($month)
     {
@@ -138,6 +140,7 @@ class Kegiatan extends Model
                 $roman = 'XII';
                 break;
         }
+
         return $roman;
     }
 }

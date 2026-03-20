@@ -5,12 +5,6 @@
         </h2>
     </x-slot>
     <div class="py-12">
-        @foreach ($pemberitahuan->penyedia as $p)
-            @php
-                $nama_penyedia = App\Models\Penyedia::select('nama_penyedia')->where('id', $p)->first();
-
-            @endphp
-        @endforeach
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-full">
@@ -90,12 +84,12 @@
                         <div>
                             <x-input-label for="tgl_surat_penawaran" :value="__('Tanggal Surat Penawaran')" />
                            <x-text-input id="tgl_surat_penawaran" name="tgl_surat_penawaran" type="date"
-                                min="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan)->format('Y-m-d') }}"
-                                max="{{ \Carbon\Carbon::parse($pemberitahuan->tgl_batas_akhir_penawaran)->format('Y-m-d') }}"
+                                min="{{ $pemberitahuan->tgl_surat_pemberitahuan->format('Y-m-d') }}"
+                                max="{{ $pemberitahuan->tgl_batas_akhir_penawaran->format('Y-m-d') }}"
                                 class="mt-1 block" required
                                 value="{{ old('tgl_persetujuan', 
                                     isset($penawaran) && $penawaran->tgl_penawaran
-                                        ? \Carbon\Carbon::parse($penawaran->tgl_penawaran)->format('Y-m-d')
+                                        ? $penawaran->tgl_penawaran->format('Y-m-d')
                                         : ''
                                 ) }}"
 
@@ -144,7 +138,7 @@
                                                 <input type="hidden" name="satuan[]" value="{{ $k['satuan'] }}">
                                             </td>
                                             <td class="px-4 py-2 text-right">
-                                                <input required type="number" min="0" step="any" value="{{old('harga_satuan[]', isset($k['harga_satuan']) ? $k['harga_satuan'] : '')}}" name="harga_satuan[]" class="w-40 rounded-md border-gray-300 text-right" onblur="formatNumber(this)">
+                                                <input required type="number" min="0" step="1" value="{{ old('harga_satuan[]', isset($k['harga_satuan']) ? round($k['harga_satuan'], 0, PHP_ROUND_HALF_UP) : '') }}" name="harga_satuan[]" class="w-40 rounded-md border-gray-300 text-right" onblur="formatNumber(this)">
                                             </td>
                                             <td class="px-4 py-2 text-right" name="format_number"></td>
                                         </tr>
@@ -176,6 +170,32 @@
             return Math.round(angka).toLocaleString('id-ID');
         }
 
+        function toScaledQuantity(value) {
+            const normalized = String(value ?? '').replace(',', '.').trim();
+            if (normalized === '') {
+                return 0;
+            }
+
+            const [wholeRaw, fractionRaw = ''] = normalized.split('.');
+            const whole = wholeRaw.replace(/\D/g, '') || '0';
+            const fraction = fractionRaw.replace(/\D/g, '');
+            const paddedFraction = (fraction + '0000').slice(0, 4);
+            const carryDigit = Number(paddedFraction[3] || 0);
+            const scaledDigits = `${whole}${paddedFraction.slice(0, 3)}`.replace(/^0+(?=\d)/, '');
+            let scaled = Number(scaledDigits || '0');
+
+            if (carryDigit >= 5) {
+                scaled += 1;
+            }
+
+            return scaled;
+        }
+
+        function quantityTimesRupiah(quantity, rupiah) {
+            const quantityScaled = toScaledQuantity(quantity);
+            return Math.round((quantityScaled * rupiah) / 1000);
+        }
+
         function hitungTotal() {
             let total = 0;
 
@@ -191,7 +211,7 @@
                     hargaInput.value.replace(/\D/g, '')
                 ) || 0;
 
-                const subtotal = volume * harga;
+                const subtotal = quantityTimesRupiah(volumeInput.value, harga);
 
                 cellTotal.textContent = formatRupiah(subtotal);
                 total += subtotal;

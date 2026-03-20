@@ -30,7 +30,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td style="text-align: right">{{ ucwords(Auth::user()->desa) }}, {{ Illuminate\Support\Carbon::parse($data['pemberitahuan']->tgl_batas_akhir_penawaran)->isoFormat('D MMMM Y') }}</td>
+            <td style="text-align: right">{{ ucwords(Auth::user()->desa) }}, {{ $data['pemberitahuan']->tgl_batas_akhir_penawaran->isoFormat('D MMMM Y') }}</td>
         </tr>
         <tr>
             <td>Nomor</td>
@@ -67,13 +67,13 @@
         <tr>            
            
             <td style="width: 3cm">Hari</td>
-            <td>: {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_negosiasi)->isoFormat('dddd')  }}</td>
+            <td>: {{ $data['negosiasiHarga']->tgl_negosiasi->isoFormat('dddd')  }}</td>
         </tr>
         <tr>   
                
            
             <td>Tanggal</td>
-            <td>: {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_negosiasi)->isoFormat('D MMMM Y')  }}</td>
+            <td>: {{ $data['negosiasiHarga']->tgl_negosiasi->isoFormat('D MMMM Y')  }}</td>
         </tr>
         <tr>            
            
@@ -83,7 +83,7 @@
         <tr>            
            
             <td>Hari</td>
-            <td>: {{ Illuminate\Support\Carbon::parse($data['negosiasiHarga']->tgl_negosiasi)->isoFormat('dddd')  }}</td>
+            <td>: {{ $data['negosiasiHarga']->tgl_negosiasi->isoFormat('dddd')  }}</td>
         </tr>
         <tr>            
            
@@ -141,4 +141,3 @@
 {{-- @include('pdf.negosiasi-harga.surat-perintah-kerja') --}}
 @include('pdf.negosiasi-harga.spk') 
 @include('pdf.negosiasi-harga.papan-pengumuman') 
-

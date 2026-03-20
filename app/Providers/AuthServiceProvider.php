@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Penyedia;
 use App\Models\User;
+use App\Policies\PenyediaPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(Penyedia::class, PenyediaPolicy::class);
+
         Gate::define('access-desa-panel', function (User $user) {
             return in_array($user->role, ['desa',  'super-admin']);
         });

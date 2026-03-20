@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PenyediaRequest extends FormRequest
 {
@@ -21,7 +22,8 @@ class PenyediaRequest extends FormRequest
      */
     public function rules(): array
     {
-           
+        $requiredIfCreating = Rule::requiredIf(!$this->route('penyedia'));
+
         return [
             'nama_penyedia' => 'required|string|max:255',
             'alamat_penyedia' => 'required|string|max:255',
@@ -29,16 +31,19 @@ class PenyediaRequest extends FormRequest
             'alamat_pemilik' => 'required|string|max:255',
             'nomor_hp' => 'required|string|max:15',
             'nomor_identitas' => 'required|string|max:50',
-            'nomor_npwp' => 'nullable|string|max:50',
-            'no_siup' => 'nullable|string|max:100',
+            'nomor_npwp' => [$requiredIfCreating, 'nullable', 'string', 'max:50'],
+            'no_siup' => [$requiredIfCreating, 'nullable', 'string', 'max:100'],
             'jabatan_pemilik' => 'required|string|max:100',
-            'penerbit_siup' => 'nullable|string|max:255',
-            'rekening' => 'nullable|string|max:50',
-            'bank' => 'nullable|string|max:100',
-            'atas_nama' => 'nullable|string|max:255',
+            'penerbit_siup' => [$requiredIfCreating, 'nullable', 'string', 'max:255'],
+            'rekening' => [$requiredIfCreating, 'nullable', 'string', 'max:50'],
+            'bank' => [$requiredIfCreating, 'nullable', 'string', 'max:100'],
+            'atas_nama' => [$requiredIfCreating, 'nullable', 'string', 'max:255'],
             'logo_penyedia' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'kop_surat' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif,svg|max:4096',
             'data_dukung' => 'nullable|file|mimes:pdf,doc,docx,zip,rar|max:5120',
+            'clear_logo_penyedia' => 'nullable|boolean',
+            'clear_kop_surat' => 'nullable|boolean',
+            'clear_data_dukung' => 'nullable|boolean',
             'kabupaten' => 'required|string|max:100',
             
         ];
@@ -73,6 +78,9 @@ class PenyediaRequest extends FormRequest
             'logo_penyedia' => 'Logo Penyedia',
             'kop_surat' => 'Kop Surat',
             'data_dukung' => 'Data Dukung',
+            'clear_logo_penyedia' => 'Hapus Logo Penyedia',
+            'clear_kop_surat' => 'Hapus Kop Surat',
+            'clear_data_dukung' => 'Hapus Data Dukung',
             'kabupaten' => 'Kabupaten',
         ];
     }

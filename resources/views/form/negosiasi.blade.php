@@ -31,7 +31,7 @@
                                         min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
                                         class="mt-1 block"
                                         required
-                                        value="{{ old('tgl_negosiasi', isset($negosiasi) ? $negosiasi->tgl_negosiasi : '') }}"
+                                        value="{{ old('tgl_negosiasi', isset($negosiasi) ? optional($negosiasi->tgl_negosiasi)->format('Y-m-d') : '') }}"
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_negosiasi')" />
                                     <br>
@@ -41,7 +41,7 @@
                                         class="mt-1 block"
                                         min="{{ \Carbon\Carbon::create($kegiatan->tgl)->toDateString() }}"
                                         required
-                                        value="{{ old('tgl_persetujuan', isset($negosiasi) ? $negosiasi->tgl_persetujuan : $kegiatan->tgl) }}"
+                                        value="{{ old('tgl_persetujuan', isset($negosiasi) ? optional($negosiasi->tgl_persetujuan)->format('Y-m-d') : $kegiatan->tgl) }}"
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_persetujuan')" />
                                     <br>
@@ -51,7 +51,7 @@
                                     min="{{ \Carbon\Carbon::parse($kegiatan->tgl)->format('Y-m-d') }}"
                                     class="mt-1 block"
                                     required
-                                    value="{{ old('tgl_akhir_perjanjian', isset($negosiasi) ? $negosiasi->tgl_akhir_perjanjian : '') }}"
+                                    value="{{ old('tgl_akhir_perjanjian', isset($negosiasi) ? optional($negosiasi->tgl_akhir_perjanjian)->format('Y-m-d') : '') }}"
                                     />
                                     <x-input-error class="mt-2" :messages="$errors->get('tgl_akhir_perjanjian')" />
                                     <br>
@@ -76,7 +76,8 @@
                                                     <td class="text-end"><span class="harga-penawaran" data-value="{{ $item['harga_penawaran']}}">{{ number_format($item['harga_penawaran'], 0, ',', '.') }}</span></td>
                                                     <td class="px-2 py-1">
                                                         <input type="number" name="harga_satuan_negosiasi[]" required
-                                                            value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? $item['harga_negosiasi'] : '') }}"
+                                                            value="{{ old('harga_satuan_negosiasi.' . $i, isset($item['harga_negosiasi']) ? round($item['harga_negosiasi'], 0, PHP_ROUND_HALF_UP) : '') }}"
+                                                            step="1"
                                                             class="w-full border border-gray-300 rounded px-2 py-1 harga-negosiasi"
                                                         >
                                                     </td>

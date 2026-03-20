@@ -35,22 +35,21 @@
                                 <li>{{ $i['nomor_identitas'] }}</li>
                                 <li>{{ $i['nomor_npwp'] }}</li>                                
                             </ol></td>
-                            <td>{{$i['createdBy']->desa}}</td>
+                            <td>{{ optional($i['createdBy'])->desa }}</td>
                             <td>
-                                <form action="{{ route('penyedia.edit', $i['id']) }}" method="get">
+                                <form action="{{ route('penyedia.attach', $i['id']) }}" method="post">
                                     @csrf
-                                    @method('GET')
 
                                     <button type="submit" 
                                             class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">
-                                        Pilih
+                                        Tambahkan
                                     </button>
                                 </form>
                             </td>                            
                         </tr>
                         @empty
                             <tr>
-                                <td colspan="4">Tidak ada data penyedia.</td>
+                                <td colspan="5">Tidak ada data penyedia.</td>
                             </tr>
                         @endforelse
                     </x-bladewind::table>
