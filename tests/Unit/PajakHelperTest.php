@@ -3,12 +3,13 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 use App\Helpers\PajakHelper;
 
 
 class PajakHelperTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_can_calculate_siskeudes_tax_correctly()
     {
         $totalBruto = 111000;
@@ -30,7 +31,7 @@ class PajakHelperTest extends TestCase
         $this->assertEquals(111000, round($result['total'], 0));
     }
 
-        /** @test */
+    #[Test]
     public function it_calculates_net_value_after_ppn_and_pph22()
     {
         $nilai = 111000;
@@ -46,6 +47,5 @@ class PajakHelperTest extends TestCase
         $this->assertEquals(98500, round($bersih, 0));
     }
 }
-
 
 

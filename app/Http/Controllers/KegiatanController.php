@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\KegiatanRequest;
 use App\Models\Pemberitahuan;
 use Barryvdh\DomPDF\Facade\Pdf;
-use function PHPUnit\Framework\isEmpty;
 
 class KegiatanController extends Controller
 {
@@ -69,51 +66,61 @@ class KegiatanController extends Controller
     */
     public function show(string $id)
     {
-        $kegiatan = Kegiatan::with('pemberitahuan' , 'penawaran' , 'negosiasiHarga' )->find($id);
-        
-        $btn = [];
-        
-        if($kegiatan->pemberitahuan && $kegiatan->pemberitahuan->count() > 0){
-        
-            $pemberitahuanId = $kegiatan->pemberitahuan->id;
+        $kegiatan = Kegiatan::with([
+            'pemberitahuan.penawaran',
+            'pemberitahuan.belanjas',
+            'negosiasiHarga',
+            'pembayaran',
+        ])->findOrFail($id);
 
-            $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran' , 'belanjas' )->find($pemberitahuanId);
-            
-            $penyedias = $pemberitahuan->penyedia;
-            
-            $kegiatan_id = $id;
+        $btn = [
+            'penawaran-create' => false,
+            'penawaran-render' => false,
+            'negosiasi-create' => false,
+            'negosiasi-render' => false,
+            'pembayaran-create' => false,
+            'pembayaran-render' => false,
+        ];
 
-            $penawaran =  $pemberitahuan->penawaran;
-        
-                if($penawaran){
-                    $ids = $pemberitahuan->penawaran->pluck('penyedia_id')                   
-                    ->flatten()
-                    ->unique()
-                    ->toArray();
-                    $not_in = array_diff($penyedias, $ids);
-                    $penyedia = Penyedia::whereIn('id', $not_in)->get();           
-                    $penyediaAda = Penyedia::whereIn('id', $ids)->get();  
-                                        
-                }
-                
-                $btn['penawaran-create'] = ($penawaran && $penawaran->count() > 0);
-                $btn['penawaran-render'] = ($penawaran && $penawaran->count() > 1);
-                $btn['negosiasi-create'] = ($btn['penawaran-render'] && $kegiatan->negosiasiHarga == null );
-                $btn['negosiasi-render'] = ($kegiatan->negosiasiHarga && $kegiatan->negosiasiHarga->count() > 0);
-                $btn['pembayaran-create'] = ($btn['negosiasi-render'] && $kegiatan->pembayaran == null);
-                $btn['pembayaran-render'] = ($kegiatan->pembayaran && $kegiatan->pembayaran->count() > 0);
-           
+        $pemberitahuan = $kegiatan->pemberitahuan;
+        $penawaran = collect();
+        $penyedia = collect();
+        $penyediaAda = collect();
+
+        if ($pemberitahuan) {
+            $penawaran = $pemberitahuan->penawaran;
+            $penyediaIds = collect($pemberitahuan->penyedia ?? []);
+            $penyediaDenganPenawaranIds = $penawaran
+                ->pluck('penyedia_id')
+                ->unique()
+                ->values();
+
+            if ($penyediaIds->isNotEmpty()) {
+                $penyedia = Penyedia::whereIn(
+                    'id',
+                    $penyediaIds->diff($penyediaDenganPenawaranIds)
+                )->get();
             }
 
-          
-            
-            return view('menu.kegiatan-detail')
+            if ($penyediaDenganPenawaranIds->isNotEmpty()) {
+                $penyediaAda = Penyedia::whereIn('id', $penyediaDenganPenawaranIds)->get();
+            }
+
+            $btn['penawaran-create'] = $penawaran->isNotEmpty();
+            $btn['penawaran-render'] = $penawaran->count() > 1;
+            $btn['negosiasi-create'] = $btn['penawaran-render'] && $kegiatan->negosiasiHarga === null;
+            $btn['negosiasi-render'] = $kegiatan->negosiasiHarga !== null;
+            $btn['pembayaran-create'] = $btn['negosiasi-render'] && $kegiatan->pembayaran === null;
+            $btn['pembayaran-render'] = $kegiatan->pembayaran !== null;
+        }
+
+        return view('menu.kegiatan-detail')
             ->with('kegiatan', $kegiatan)
-            ->with('btn' ,$btn)
-        ->with('pemberitahuan', $pemberitahuan ?? collect())
-        ->with('penawaran' , $penawaran ?? collect())
-        ->with('penyediaAda', $penyediaAda ?? collect())
-        ->with('penyedia', $penyedia ?? collect());
+            ->with('btn', $btn)
+            ->with('pemberitahuan', $pemberitahuan)
+            ->with('penawaran', $penawaran)
+            ->with('penyediaAda', $penyediaAda)
+            ->with('penyedia', $penyedia);
        
     }
     
@@ -158,7 +165,7 @@ class KegiatanController extends Controller
             return redirect()->route('menu.kegiatan');
         }
 
-        if ($kegiatan->pemberitahuan && $kegiatan->pemberitahuan->count() > 0) {
+        if ($kegiatan->pemberitahuan !== null) {
             flash()->error('kegiatan sudah memiliki pemberitahuan');
             return back();
         }

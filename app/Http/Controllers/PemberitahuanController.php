@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Auth;
 
 class PemberitahuanController extends Controller
 {
+    public function index()
+    {
+        return redirect()->route('menu.kegiatan');
+    }
+
     
     public function create($id)
     {

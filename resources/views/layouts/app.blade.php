@@ -33,7 +33,6 @@
             <link rel="stylesheet" href="{{ config('app.url') }}/build/{{ $manifest['resources/css/app.css']['file'] }}">
             <script type="module" src="{{ config('app.url') }}/build/{{ $manifest['resources/js/app.js']['file'] }}"></script>
         @else
-            @viteReactRefresh
             @vite(['resources/js/app.js', 'resources/css/app.css'])
         @endif
         {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
@@ -56,8 +55,6 @@
                 {{ $slot }}
             </main>
         </div>
-        {{-- <script src="{{ asset('vendor/bladewind/js/helpers.js') }}"></script> --}}
-        <script src="//unpkg.com/alpinejs" defer></script>
         @stack('scripts')
     </body>
 </html>

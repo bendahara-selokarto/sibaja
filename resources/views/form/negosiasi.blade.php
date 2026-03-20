@@ -126,20 +126,6 @@ document.addEventListener('click', function (e) {
     }
 });
 </script>
-
-<script>
-    const hargaNegosiasi = document.getElementById('harga_negosiasi');
-    const formatCurency = document.getElementById('format_curency');
-
-    hargaNegosiasi.addEventListener('input', (e) => {
-    const nilai = parseInt(e.target.value);
-    const format = new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-    }).format(nilai);
-    formatCurency.innerText = format;
-    });
-    </script>
         <script>
     (function () {
     // flag: ada perubahan pada form

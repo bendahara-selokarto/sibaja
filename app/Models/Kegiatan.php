@@ -5,25 +5,26 @@ namespace App\Models;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Kegiatan extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids;
 
     public function statusPemenang(): int
     {
-        $penawaran = $this->penawaran()->first();
+        $penawaran = $this->relationLoaded('penawaran')
+            ? $this->penawaran
+            : $this->penawaran()->get();
 
-        if (!$penawaran) {
+        if ($penawaran->isEmpty()) {
             return 0;
         }
 
-        if ($penawaran && !$penawaran->is_winner) {
-            return 2;
-        }
-
-        return 1;
+        return $penawaran->contains('is_winner', true) ? 1 : 2;
     }
 
     public function penyedia(): BelongsToMany
@@ -33,19 +34,19 @@ class Kegiatan extends Model
 
 
 
-    public function pemberitahuan()
+    public function pemberitahuan(): HasOne
     {
         return $this->hasOne(Pemberitahuan::class, 'kegiatan_id');
     }
-    public function penawaran()
+    public function penawaran(): HasMany
     {
-        return $this->hasOne(Penawaran::class, 'kegiatan_id');
+        return $this->hasMany(Penawaran::class, 'kegiatan_id');
     }
-    public function negosiasiHarga()
+    public function negosiasiHarga(): HasOne
     {
         return $this->hasOne(NegosiasiHarga::class, 'kegiatan_id');
     }
-    public function pembayaran()
+    public function pembayaran(): HasOne
     {
         return $this->hasOne(Pembayaran::class, 'kegiatan_id');
     }
@@ -61,8 +62,12 @@ class Kegiatan extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->kode_desa = Auth::user()->kode_desa;
-            $model->tahun_anggaran = Auth::user()->tahun_anggaran;
+            if (!Auth::check()) {
+                return;
+            }
+
+            $model->kode_desa ??= Auth::user()->kode_desa;
+            $model->tahun_anggaran ??= Auth::user()->tahun_anggaran;
         });
     }
 

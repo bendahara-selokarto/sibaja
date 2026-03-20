@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class Pemberitahuan extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids;
 
     /**
      * Mass assignment.

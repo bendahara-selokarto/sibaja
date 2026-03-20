@@ -198,7 +198,6 @@
             });
 
             document.getElementById('total').textContent = formatRupiah(total);
-            document.getElementById('total_input').value = Math.round(total);
         }
 
         // trigger perubahan
@@ -291,19 +290,6 @@
             //         document.getElementById('total_input').value = total;
             //     });
             // });
-            document.getElementById('penyedia').addEventListener('change', function() {
-                var selectedOption = this.options[this.selectedIndex];
-                var selectedText = selectedOption.text;
-                var selectedValue = selectedOption.value;
-                var checkbox = document.getElementById('checkbox');
-                var checkboxLabelSpan = document.querySelector('label[for="checkbox"] span.ml-2');
-                if (checkboxLabelSpan) {
-                    checkboxLabelSpan.textContent = 'Tetapkan sebagai Pemenang: ' + selectedText;
-                }
-                if (checkbox) {
-                    checkbox.value = selectedValue;
-                }
-            });
         </script>
    
         <script>

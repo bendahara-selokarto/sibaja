@@ -8,12 +8,11 @@ use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
 use App\Models\Belanja;
 use App\Models\NegosiasiHarga;
-use App\Models\PenawaranHarga;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use App\Helpers\PajakHelper;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -26,18 +25,18 @@ class NegosiasiHargaController extends Controller
   
     public function create($id)
     {
-        $kegiatan = Kegiatan::with('negosiasiHarga' , 'penawaran', 'pemberitahuan')->find($id);
+        $kegiatan = Kegiatan::with('negosiasiHarga', 'penawaran.hargaPenawaran', 'pemberitahuan')->findOrFail($id);
 
-        
-        $penawaran = $kegiatan->penawaran()
-        ->where('is_winner', true)
-        ->first();
+        $penawaran = $kegiatan->penawaran->firstWhere('is_winner', true);
 
-        
-        if(empty($penawaran)){
+        if (!$penawaran) {
             return back()->with('error', 'PEMENANG belum di set');
-        };
-       
+        }
+
+        if (!$kegiatan->pemberitahuan) {
+            return back()->with('error', 'Pemberitahuan belum dibuat');
+        }
+
         $pemberitahuanId = $penawaran->pemberitahuan_id;
 
         $tgl_surat_pemberitahuan = $kegiatan->pemberitahuan->tgl_surat_pemberitahuan;
@@ -63,39 +62,57 @@ class NegosiasiHargaController extends Controller
 
     public function store(Request $request)
     {
-        
-        $kegiatan = Kegiatan::with('penawaran')->find($request->kegiatan_id);
-
         $validatedData = $request->validate([
-            'kegiatan_id' => 'required',
+            'kegiatan_id' => 'required|exists:kegiatans,id',
             'tgl_persetujuan' => 'required|date',
             'tgl_negosiasi' => 'required|date',
             'tgl_akhir_perjanjian' => 'required|date',
             'harga_satuan_negosiasi' => 'required|array',
             'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
         ]);
-        
-        $item_negosiasi =$request->harga_satuan_negosiasi; 
 
-        $item_negosiasi_array = collect($item_negosiasi)->map(function ($item) { return [             
-            'harga_satuan' => $item
-        ];})->toArray();
-        
-        $pemberitahuan = $kegiatan->pemberitahuan->first();
-        if (!$pemberitahuan) {
-            return redirect()->back()->with('error', 'Pemberitahuan not found');
+        $kegiatan = Kegiatan::with(['pemberitahuan.belanjas', 'negosiasiHarga'])
+            ->findOrFail($validatedData['kegiatan_id']);
+
+        if ($kegiatan->negosiasiHarga) {
+            return redirect()
+                ->route('negosiasi.edit', $kegiatan->id)
+                ->with('error', 'Negosiasi untuk kegiatan ini sudah dibuat.');
         }
-        $tgl = Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan);
 
+        if (!$kegiatan->penawaran()->where('is_winner', true)->exists()) {
+            return redirect()->back()->withInput()->with('error', 'PEMENANG belum di set');
+        }
 
-        $negosiasi = NegosiasiHarga::create([
-            'kegiatan_id' => $validatedData['kegiatan_id'],
-            'tgl_persetujuan' => Carbon::parse($validatedData['tgl_persetujuan']),
-            'tgl_negosiasi' => Carbon::parse($validatedData['tgl_negosiasi']),
-            'tgl_akhir_perjanjian' => Carbon::parse($validatedData['tgl_akhir_perjanjian']),
-        ]);
+        $pemberitahuan = $kegiatan->pemberitahuan;
 
-        $negosiasi->hargaNegosiasi()->createMany($item_negosiasi_array);
+        if (!$pemberitahuan) {
+            return redirect()->back()->withInput()->with('error', 'Pemberitahuan not found');
+        }
+
+        $item_negosiasi_array = collect($validatedData['harga_satuan_negosiasi'])->map(function ($item) {
+            return [
+            'harga_satuan' => $item
+            ];
+        })->toArray();
+
+        if ($pemberitahuan->belanjas->count() !== count($item_negosiasi_array)) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['harga_satuan_negosiasi' => 'Jumlah item harga tidak sesuai dengan data belanja.']);
+        }
+
+        DB::transaction(function () use ($validatedData, $item_negosiasi_array) {
+            $negosiasi = NegosiasiHarga::create([
+                'kegiatan_id' => $validatedData['kegiatan_id'],
+                'tgl_persetujuan' => Carbon::parse($validatedData['tgl_persetujuan']),
+                'tgl_negosiasi' => Carbon::parse($validatedData['tgl_negosiasi']),
+                'tgl_akhir_perjanjian' => Carbon::parse($validatedData['tgl_akhir_perjanjian']),
+            ]);
+
+            $negosiasi->hargaNegosiasi()->createMany($item_negosiasi_array);
+        });
 
         return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil menambahkan data');
 
@@ -193,11 +210,14 @@ class NegosiasiHargaController extends Controller
 
     public function destroy($kegiatan_id)
     {
-        $negosiasi = NegosiasiHarga::where('kegiatan_id', $kegiatan_id)->get();
+        $negosiasi = NegosiasiHarga::where('kegiatan_id', $kegiatan_id)->first();
+
         if (!$negosiasi) {
             return redirect()->back()->with('error', 'Negosiasi tidak ditemukan');
         }
-        $negosiasi->each->delete();
+
+        $negosiasi->delete();
+
         return redirect()->back()->with('success', 'Negosiasi berhasil dihapus');
     }
 

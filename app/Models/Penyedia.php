@@ -68,7 +68,11 @@ class Penyedia extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->kode_desa = Auth::user()->kode_desa;
+            if (!Auth::check()) {
+                return;
+            }
+
+            $model->kode_desa ??= Auth::user()->kode_desa;
         });
     }
 }

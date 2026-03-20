@@ -5,26 +5,45 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Kegiatan;
 use App\Models\Pemberitahuan;
-use App\Models\PenawaranHarga;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\Penawaran;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\NegosiasiHarga;
+use Illuminate\Support\Str;
 
 class KegiatanTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
-    public function kegiatan_memiliki_satu_pemberitahuan()
+    use RefreshDatabase;
+
+    public function test_kegiatan_memiliki_satu_pemberitahuan(): void
     {
-        // Buat data dummy
         $kegiatan = Kegiatan::factory()->create();
         $pemberitahuan = Pemberitahuan::factory()->create(['kegiatan_id' => $kegiatan->id]);
-        $penawaranHarga = PenawaranHarga::factory()->create(['pemberitahuan_id' => $pemberitahuan->id]);
-        NegosiasiHarga::factory()->create(['penawaran_harga_id' => $penawaranHarga->id]);
 
-        
-        // Lakukan assertion
-        $this->assertInstanceOf(Pemberitahuan::class, $kegiatan->pemberitahuan);
+        $this->assertTrue($kegiatan->fresh()->pemberitahuan->is($pemberitahuan));
+    }
+
+    public function test_status_pemenang_memeriksa_semua_penawaran(): void
+    {
+        $kegiatan = Kegiatan::factory()->create();
+        $pemberitahuan = Pemberitahuan::factory()->create(['kegiatan_id' => $kegiatan->id]);
+
+        Penawaran::create([
+            'kegiatan_id' => $kegiatan->id,
+            'pemberitahuan_id' => $pemberitahuan->id,
+            'penyedia_id' => (string) Str::uuid(),
+            'tgl_penawaran' => now(),
+            'no_penawaran' => '001',
+            'is_winner' => false,
+        ]);
+
+        Penawaran::create([
+            'kegiatan_id' => $kegiatan->id,
+            'pemberitahuan_id' => $pemberitahuan->id,
+            'penyedia_id' => (string) Str::uuid(),
+            'tgl_penawaran' => now(),
+            'no_penawaran' => '002',
+            'is_winner' => true,
+        ]);
+
+        $this->assertSame(1, $kegiatan->fresh()->statusPemenang());
     }
 }
