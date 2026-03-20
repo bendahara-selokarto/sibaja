@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\NegosiasiRequest;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
-use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
 use App\Models\Belanja;
 use App\Models\NegosiasiHarga;
@@ -60,16 +60,9 @@ class NegosiasiHargaController extends Controller
        return view('form.negosiasi', compact('kegiatan', 'items'));
     }
 
-    public function store(Request $request)
+    public function store(NegosiasiRequest $request)
     {
-        $validatedData = $request->validate([
-            'kegiatan_id' => 'required|exists:kegiatans,id',
-            'tgl_persetujuan' => 'required|date',
-            'tgl_negosiasi' => 'required|date',
-            'tgl_akhir_perjanjian' => 'required|date',
-            'harga_satuan_negosiasi' => 'required|array',
-            'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
-        ]);
+        $validatedData = $request->validated();
 
         $kegiatan = Kegiatan::with(['pemberitahuan.belanjas', 'negosiasiHarga'])
             ->findOrFail($validatedData['kegiatan_id']);
@@ -90,28 +83,16 @@ class NegosiasiHargaController extends Controller
             return redirect()->back()->withInput()->with('error', 'Pemberitahuan not found');
         }
 
-        $item_negosiasi_array = collect($validatedData['harga_satuan_negosiasi'])->map(function ($item) {
-            return [
-            'harga_satuan' => $item
-            ];
-        })->toArray();
-
-        if ($pemberitahuan->belanjas->count() !== count($item_negosiasi_array)) {
+        if ($pemberitahuan->belanjas->count() !== count($validatedData['harga_satuan_negosiasi'])) {
             return redirect()
                 ->back()
                 ->withInput()
                 ->withErrors(['harga_satuan_negosiasi' => 'Jumlah item harga tidak sesuai dengan data belanja.']);
         }
 
-        DB::transaction(function () use ($validatedData, $item_negosiasi_array) {
-            $negosiasi = NegosiasiHarga::create([
-                'kegiatan_id' => $validatedData['kegiatan_id'],
-                'tgl_persetujuan' => Carbon::parse($validatedData['tgl_persetujuan']),
-                'tgl_negosiasi' => Carbon::parse($validatedData['tgl_negosiasi']),
-                'tgl_akhir_perjanjian' => Carbon::parse($validatedData['tgl_akhir_perjanjian']),
-            ]);
-
-            $negosiasi->hargaNegosiasi()->createMany($item_negosiasi_array);
+        DB::transaction(function () use ($request) {
+            $negosiasi = NegosiasiHarga::create($request->negosiasiPayload());
+            $negosiasi->hargaNegosiasi()->createMany($request->hargaNegosiasiPayload());
         });
 
         return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil menambahkan data');
@@ -163,47 +144,39 @@ class NegosiasiHargaController extends Controller
        return view('form.negosiasi', compact('kegiatan', 'items' , 'negosiasi'));
     }
 
-    public function update(Request $request, $kegiatan_id)
+    public function update(NegosiasiRequest $request, $kegiatan_id)
     {
-        
-        $validatedData = $request->validate([
-            'kegiatan_id' => 'required',
-            'tgl_negosiasi' => 'required|date',
-            'tgl_persetujuan' => 'required|date',
-            'tgl_akhir_perjanjian' => 'required|date',
-            'harga_satuan_negosiasi' => 'required|array',
-            'harga_satuan_negosiasi.*' => 'required|numeric|min:0',
-        ]);
+        $validatedData = $request->validated();
 
-        $kegiatan = Kegiatan::with('pemberitahuan','penawaran' , 'negosiasiHarga')->find($validatedData['kegiatan_id']);
+        $kegiatan = Kegiatan::with(['pemberitahuan.belanjas', 'penawaran', 'negosiasiHarga'])
+            ->findOrFail($validatedData['kegiatan_id']);
 
-        $pemberitahuan = $kegiatan->pemberitahuan;
-       
-        $tgl = Carbon::parse($pemberitahuan->tgl_surat_pemberitahuan);
-
-        $negosiasi = NegosiasiHarga::where('kegiatan_id', $validatedData['kegiatan_id'])->first();
-
-        
-
-
-        $negosiasi->update([
-            'kegiatan_id' => $validatedData['kegiatan_id'],
-            'tgl_persetujuan' => Carbon::parse($validatedData['tgl_persetujuan']),
-            'tgl_negosiasi' => Carbon::parse($validatedData['tgl_negosiasi']),
-            'tgl_akhir_perjanjian' => Carbon::parse($validatedData['tgl_akhir_perjanjian'])
-        ]);
-
-        $harga_satuan_array = $validatedData['harga_satuan_negosiasi'];
-
-        $hargaLama = $negosiasi->hargaNegosiasi()->orderBy('id')->get();
-
-        if ($hargaLama->count() !== count($harga_satuan_array)) {
-            throw new \Exception("Jumlah item harga tidak sesuai dengan data belanja!");
+        if (!$kegiatan->pemberitahuan) {
+            return redirect()->back()->withInput()->with('error', 'Pemberitahuan not found');
         }
 
-        foreach ($hargaLama as $index => $harga) {
-            $harga->update(['harga_satuan' => $harga_satuan_array[$index]]);
+        $negosiasi = NegosiasiHarga::with('hargaNegosiasi')
+            ->where('kegiatan_id', $validatedData['kegiatan_id'])
+            ->first();
+
+        if (!$negosiasi) {
+            return redirect()->back()->withInput()->with('error', 'Negosiasi tidak ditemukan');
         }
+
+        if ($kegiatan->pemberitahuan->belanjas->count() !== count($validatedData['harga_satuan_negosiasi'])) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['harga_satuan_negosiasi' => 'Jumlah item harga tidak sesuai dengan data belanja.']);
+        }
+
+        DB::transaction(function () use ($negosiasi, $request, $validatedData) {
+            $negosiasi->update($request->negosiasiPayload());
+
+            foreach ($negosiasi->hargaNegosiasi->values() as $index => $harga) {
+                $harga->update(['harga_satuan' => $validatedData['harga_satuan_negosiasi'][$index]]);
+            }
+        });
 
         return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil memperbarui data');
     }

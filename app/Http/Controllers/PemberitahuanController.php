@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
-use Illuminate\Http\Request;
 use App\Models\Pemberitahuan;
-use Illuminate\Support\Carbon;
+use App\Http\Requests\PemberitahuanRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PemberitahuanController extends Controller
 {
@@ -20,13 +20,10 @@ class PemberitahuanController extends Controller
     
     public function create($id)
     {
-        // $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
         $user = Auth::user();
         $penyedia = $user->penyedias()->get();     
         $kegiatan = Kegiatan::find($id);
         $nomor = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->count() + 1;
-
-        // $nomor = str_pad($nomor, 3, '0', STR_PAD_LEFT);
         
         return view('form.pemberitahuan', [
             'kegiatan' => $kegiatan, 
@@ -42,58 +39,16 @@ class PemberitahuanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PemberitahuanRequest $request)
     {
-        $validator = $request->validate([
-            'rekening_apbdes' => 'required|string|max:255',
-            'kegiatan_id' => 'required|exists:kegiatans,id',
-            'penyedia'   => 'required|array|size:2',
-            'penyedia.*' => 'required|distinct|exists:penyedias,id',
-            'no_pbj' => 'required|string|max:255',
-            'tgl_pemberitahuan' => 'required|date',
-            'uraian.*' => 'required|string|max:255',
-            'volume.*' => 'nullable|numeric',
-            'satuan.*' => 'nullable|string|max:100',
-        ]);
+        $belanja = $request->belanjaItems();
 
-                 
-       
-        $uraian = $request->input('uraian');  
-        $volume = $request->input('volume');  
-        $satuan = $request->input('satuan');
-
-        $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
-            return [
-                'uraian' => $item,
-                'volume' => $volume[$key] ?? null,
-                'satuan' => $satuan[$key] ?? null,
-            ];
+        DB::transaction(function () use ($request, $belanja) {
+            $pemberitahuan = Pemberitahuan::create($request->pemberitahuanPayload());
+            $pemberitahuan->belanjas()->createMany($belanja->all());
         });
 
-        $pekerjaan =  collect($belanja)->implode('uraian',', ');
-        
-         $data = $request->only([
-        'rekening_apbdes',
-        'kegiatan_id',
-        'penyedia',
-        'no_pbj',
-        ]);
-
-        $data['pekerjaan'] = $pekerjaan;
-
-        $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
-
-        $data['tgl_batas_akhir_penawaran'] = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
-        
-        $saveSpem = Pemberitahuan::create($data);
-
-        $saveSpem->belanjas()->createMany($belanja->toArray());
-        
-        $spem = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
-        
-        return redirect()->route('kegiatan.show' , $request->kegiatan_id);
-        
-        
+        return redirect()->route('kegiatan.show', $request->validated('kegiatan_id'));
     }
      
     public function edit(string $id)
@@ -104,7 +59,7 @@ class PemberitahuanController extends Controller
             return redirect()->back();
         }
         $penyediaTerpilih = $pemberitahuan->penyedia;
-        $penyedia = Penyedia::select('nama_penyedia', 'id')->where('kode_desa' , Auth::user()->kode_desa)->get();
+        $penyedia = Auth::user()->penyedias()->get();
         
         $kegiatan = Kegiatan::find($pemberitahuan->kegiatan_id);
         if (!$kegiatan) {
@@ -123,51 +78,19 @@ class PemberitahuanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-public function update(Request $request, string $id)
-{
-    $pemberitahuan = Pemberitahuan::findOrFail($id);
+    public function update(PemberitahuanRequest $request, string $id)
+    {
+        $pemberitahuan = Pemberitahuan::findOrFail($id);
+        $belanja = $request->belanjaItems();
 
-    $uraian = $request->input('uraian');  
-    $volume = $request->input('volume');  
-    $satuan = $request->input('satuan');
-    
-    $belanja = collect($uraian)->map(function ($item, $key) use ($volume, $satuan) {
-        return [
-            // 'nomor' => $key + 1,
-            'uraian' => $item,
-            'volume' => $volume[$key] ?? null,
-            'satuan' => $satuan[$key] ?? null,
-        ];
-    });
+        DB::transaction(function () use ($pemberitahuan, $request, $belanja) {
+            $pemberitahuan->update($request->pemberitahuanPayload());
+            $pemberitahuan->belanjas()->delete();
+            $pemberitahuan->belanjas()->createMany($belanja->all());
+        });
 
-    $pekerjaan = collect($belanja)->implode('uraian', ',');
-
-    $data = $request->only([
-        'rekening_apbdes',
-        'kegiatan_id',
-        'penyedia',
-        'no_pbj',
-    ]);
-
-    $data['pekerjaan'] = $pekerjaan;
-    $data['tgl_surat_pemberitahuan'] = $request->input('tgl_pemberitahuan');
-
-    $data['tgl_batas_akhir_penawaran'] = Carbon::parse($request->input('tgl_pemberitahuan'))->addDays(3);
-
-    $pemberitahuan->update($data);
-    
-    $pemberitahuan->belanjas()->delete(); // hapus semua relasi lama
-    
-    $pemberitahuan->belanjas()->createMany($belanja->toArray()); // insert ulang
-
-
-    // (opsional) ambil ulang data untuk ditampilkan
-    $pemberitahuan = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->get();
-
-    $kegiatan_id = $request->input('kegiatan_id');
-
-    return redirect()->route('kegiatan.show' , ['id' => $kegiatan_id ])->with('pemberitahuan', $pemberitahuan);
-}
+        return redirect()->route('kegiatan.show', ['id' => $request->validated('kegiatan_id')]);
+    }
 
 
     /**

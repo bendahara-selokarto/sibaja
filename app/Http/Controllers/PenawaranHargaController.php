@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PenawaranHargaRequest;
 use App\Models\Kegiatan;
-use App\Models\Penyedia;
-use Illuminate\Http\Request;
-use App\Models\Pemberitahuan;
-use App\Models\NegosiasiHarga;
-use App\Models\PenawaranHarga;
-use App\Models\Belanja;
 use App\Models\HargaPenawaran;
+use App\Models\Pemberitahuan;
 use App\Models\Penawaran;
+use App\Models\Penyedia;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use App\Helpers\PajakHelper;
 use Illuminate\Support\Facades\DB;
 
@@ -65,52 +60,48 @@ class PenawaranHargaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PenawaranHargaRequest $request)
     {
-    
-        $validated = $request->validate([
-        'pemberitahuan_id' => 'required|exists:pemberitahuans,id',
-        'penyedia' => 'required|exists:penyedias,id',
-        'tgl_surat_penawaran' => 'required|date',
-        'no_penawaran' => 'required|string|max:255',
-        'harga_satuan' => 'required|array',
-        'harga_satuan.*' => 'required|numeric|min:0',
-    ]);
+        $validated = $request->validated();
 
+        $pemberitahuan = Pemberitahuan::with(['kegiatan', 'penawaran', 'belanjas'])
+            ->findOrFail($validated['pemberitahuan_id']);
 
-    
-    $harga_satuan = $request->harga_satuan;
-    
-    $harga_satuan_array = [];
-    foreach ($harga_satuan as $item) {
-        $harga_satuan_array[] = [
-            'harga_satuan' => $item
-        ];
-    }
+        if ($pemberitahuan->penawaran->contains('penyedia_id', $validated['penyedia'])) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['penyedia' => 'Penyedia ini sudah mengirim penawaran untuk pemberitahuan ini.']);
+        }
 
-    
-    $pemberitahuan = Pemberitahuan::with('kegiatan', 'penawaran' , 'belanjas')->find($request->pemberitahuan_id);
-   
-    $penyedias = $pemberitahuan->penyedia;
+        if ($pemberitahuan->belanjas->count() !== count($validated['harga_satuan'])) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['harga_satuan' => 'Jumlah item harga tidak sesuai dengan data belanja.']);
+        }
 
-    $kegiatan_id = $pemberitahuan->kegiatan->id;
-    
-    $is_winner = $request->pemenang ? true : false;
-    
-        $penawaran = Penawaran::create([
-            'kegiatan_id' => $kegiatan_id,
-            'pemberitahuan_id' => $request->pemberitahuan_id,
-            'penyedia_id' => $request->penyedia,
-            'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
-            'no_penawaran' => $request->no_penawaran,
-            'is_winner' => $is_winner,
-            
-        ]);
+        if ($request->isWinner() && $pemberitahuan->penawaran->contains('is_winner', true)) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['pemenang' => 'Pemenang sudah ditetapkan. Ubah penawaran yang ada jika ingin mengganti pemenang.']);
+        }
 
-            $penawaran->hargaPenawaran()->createMany($harga_satuan_array);
+        DB::transaction(function () use ($request, $pemberitahuan, $validated) {
+            $penawaran = Penawaran::create([
+                'kegiatan_id' => $pemberitahuan->kegiatan->id,
+                'pemberitahuan_id' => $validated['pemberitahuan_id'],
+                'penyedia_id' => $validated['penyedia'],
+                'tgl_penawaran' => Carbon::parse($validated['tgl_surat_penawaran']),
+                'no_penawaran' => $validated['no_penawaran'],
+                'is_winner' => $request->isWinner(),
+            ]);
 
-    return redirect()->route('kegiatan.show', ['id' => $kegiatan_id ]);
-        
+            $penawaran->hargaPenawaran()->createMany($request->hargaPenawaranPayload());
+        });
+
+        return redirect()->route('kegiatan.show', ['id' => $pemberitahuan->kegiatan->id]);
     }
 
     /**
@@ -166,63 +157,53 @@ class PenawaranHargaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $pemberitahuanId)
+    public function update(PenawaranHargaRequest $request, string $pemberitahuanId)
     {
-        $penawaran = Penawaran::where('penyedia_id', $request->penyedia)
-        ->where('pemberitahuan_id', $request->pemberitahuan_id)
-        ->firstOrFail();
-        $penawaran2 = Penawaran::whereNot('penyedia_id', $request->penyedia)
-            ->where('pemberitahuan_id', $request->pemberitahuan_id)
-            ->first();
+        $validated = $request->validated();
 
+        $penawaran = Penawaran::where('penyedia_id', $validated['penyedia'])
+            ->where('pemberitahuan_id', $validated['pemberitahuan_id'])
+            ->firstOrFail();
 
-        $harga_satuan_array = $request->harga_satuan;
+        $hargaLama = $penawaran->hargaPenawaran()->orderBy('id', 'ASC')->get();
 
-        $hargaLama = $penawaran->hargaPenawaran()->orderBy('id' , 'ASC')->get();
+        if ($hargaLama->count() !== count($validated['harga_satuan'])) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['harga_satuan' => 'Jumlah item harga tidak sesuai dengan data belanja.']);
+        }
 
-        if ($hargaLama->count() !== count($harga_satuan_array)) {
-            throw new \Exception("Jumlah item harga tidak sesuai dengan data belanja!");
-        };
-        
-        $pemberitahuan = Pemberitahuan::with('kegiatan')->findOrFail($request->pemberitahuan_id);
-        
+        $pemberitahuan = Pemberitahuan::with(['kegiatan', 'penawaran'])
+            ->findOrFail($validated['pemberitahuan_id']);
+
         $kegiatan_id = $pemberitahuan->kegiatan->id;
-        
-        $is_winner = (bool) $request->pemenang;
-        $is_not_winner = (bool) $request->pemenang ? false : true;
-
-
 
         DB::transaction(function () use (
             $penawaran,
-            $penawaran2,
             $hargaLama,
-            $harga_satuan_array,
+            $validated,
             $kegiatan_id,
             $request,
-            $is_winner,
-            $is_not_winner,
         ) {
             $penawaran->update([
                 'kegiatan_id'   => $kegiatan_id,
-                'tgl_penawaran' => Carbon::parse($request->tgl_surat_penawaran),
-                'no_penawaran'  => $request->no_penawaran,
-                'is_winner'     => $is_winner,
+                'tgl_penawaran' => Carbon::parse($validated['tgl_surat_penawaran']),
+                'no_penawaran'  => $validated['no_penawaran'],
+                'is_winner'     => $request->isWinner(),
             ]);
 
-            $penawaran2->update([
-                'is_winner' => $is_not_winner,
-            ]);
+            Penawaran::where('pemberitahuan_id', $validated['pemberitahuan_id'])
+                ->where('id', '!=', $penawaran->id)
+                ->update(['is_winner' => !$request->isWinner()]);
 
             foreach ($hargaLama as $index => $row) {
                 $row->update([
-                    'harga_satuan' => $harga_satuan_array[$index],
+                    'harga_satuan' => $validated['harga_satuan'][$index],
                 ]);
-            };
-
+            }
         });
                 
-
         flash()->success('Penawaran berhasil diupdate.');
 
         return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
