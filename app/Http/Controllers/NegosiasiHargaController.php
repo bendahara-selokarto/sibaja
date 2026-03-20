@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NegosiasiRequest;
+use App\UseCases\Negosiasi\StoreNegosiasiInput;
+use App\UseCases\Negosiasi\StoreNegosiasiUseCase;
+use App\UseCases\Negosiasi\UpdateNegosiasiInput;
+use App\UseCases\Negosiasi\UpdateNegosiasiUseCase;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
-use App\Models\Pemberitahuan;
 use App\Models\Belanja;
 use App\Models\NegosiasiHarga;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\PajakHelper;
-use Illuminate\Support\Facades\DB;
 
 
 
@@ -60,42 +62,22 @@ class NegosiasiHargaController extends Controller
        return view('form.negosiasi', compact('kegiatan', 'items'));
     }
 
-    public function store(NegosiasiRequest $request)
+    public function store(
+        NegosiasiRequest $request,
+        StoreNegosiasiUseCase $storeNegosiasiUseCase,
+    )
     {
         $validatedData = $request->validated();
 
-        $kegiatan = Kegiatan::with(['pemberitahuan.belanjas', 'negosiasiHarga'])
-            ->findOrFail($validatedData['kegiatan_id']);
+        $negosiasi = $storeNegosiasiUseCase->execute(new StoreNegosiasiInput(
+            kegiatanId: $validatedData['kegiatan_id'],
+            tglPersetujuan: $validatedData['tgl_persetujuan'],
+            tglNegosiasi: $validatedData['tgl_negosiasi'],
+            tglAkhirPerjanjian: $validatedData['tgl_akhir_perjanjian'],
+            hargaSatuanNegosiasi: $validatedData['harga_satuan_negosiasi'],
+        ));
 
-        if ($kegiatan->negosiasiHarga) {
-            return redirect()
-                ->route('negosiasi.edit', $kegiatan->id)
-                ->with('error', 'Negosiasi untuk kegiatan ini sudah dibuat.');
-        }
-
-        if (!$kegiatan->penawaran()->where('is_winner', true)->exists()) {
-            return redirect()->back()->withInput()->with('error', 'PEMENANG belum di set');
-        }
-
-        $pemberitahuan = $kegiatan->pemberitahuan;
-
-        if (!$pemberitahuan) {
-            return redirect()->back()->withInput()->with('error', 'Pemberitahuan not found');
-        }
-
-        if ($pemberitahuan->belanjas->count() !== count($validatedData['harga_satuan_negosiasi'])) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['harga_satuan_negosiasi' => 'Jumlah item harga tidak sesuai dengan data belanja.']);
-        }
-
-        DB::transaction(function () use ($request) {
-            $negosiasi = NegosiasiHarga::create($request->negosiasiPayload());
-            $negosiasi->hargaNegosiasi()->createMany($request->hargaNegosiasiPayload());
-        });
-
-        return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil menambahkan data');
+        return redirect()->route('kegiatan.show', ['id' => $negosiasi->kegiatan_id])->with('success', 'berhasil menambahkan data');
 
 
 
@@ -144,41 +126,23 @@ class NegosiasiHargaController extends Controller
        return view('form.negosiasi', compact('kegiatan', 'items' , 'negosiasi'));
     }
 
-    public function update(NegosiasiRequest $request, $kegiatan_id)
+    public function update(
+        NegosiasiRequest $request,
+        $kegiatan_id,
+        UpdateNegosiasiUseCase $updateNegosiasiUseCase,
+    )
     {
         $validatedData = $request->validated();
 
-        $kegiatan = Kegiatan::with(['pemberitahuan.belanjas', 'penawaran', 'negosiasiHarga'])
-            ->findOrFail($validatedData['kegiatan_id']);
+        $negosiasi = $updateNegosiasiUseCase->execute(new UpdateNegosiasiInput(
+            kegiatanId: $validatedData['kegiatan_id'],
+            tglPersetujuan: $validatedData['tgl_persetujuan'],
+            tglNegosiasi: $validatedData['tgl_negosiasi'],
+            tglAkhirPerjanjian: $validatedData['tgl_akhir_perjanjian'],
+            hargaSatuanNegosiasi: $validatedData['harga_satuan_negosiasi'],
+        ));
 
-        if (!$kegiatan->pemberitahuan) {
-            return redirect()->back()->withInput()->with('error', 'Pemberitahuan not found');
-        }
-
-        $negosiasi = NegosiasiHarga::with('hargaNegosiasi')
-            ->where('kegiatan_id', $validatedData['kegiatan_id'])
-            ->first();
-
-        if (!$negosiasi) {
-            return redirect()->back()->withInput()->with('error', 'Negosiasi tidak ditemukan');
-        }
-
-        if ($kegiatan->pemberitahuan->belanjas->count() !== count($validatedData['harga_satuan_negosiasi'])) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['harga_satuan_negosiasi' => 'Jumlah item harga tidak sesuai dengan data belanja.']);
-        }
-
-        DB::transaction(function () use ($negosiasi, $request, $validatedData) {
-            $negosiasi->update($request->negosiasiPayload());
-
-            foreach ($negosiasi->hargaNegosiasi->values() as $index => $harga) {
-                $harga->update(['harga_satuan' => $validatedData['harga_satuan_negosiasi'][$index]]);
-            }
-        });
-
-        return redirect()->route('kegiatan.show', ['id' => $kegiatan->id])->with('success', 'berhasil memperbarui data');
+        return redirect()->route('kegiatan.show', ['id' => $negosiasi->kegiatan_id])->with('success', 'berhasil memperbarui data');
     }
 
     public function destroy($kegiatan_id)
