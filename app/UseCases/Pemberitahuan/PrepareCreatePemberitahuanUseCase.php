@@ -16,7 +16,9 @@ final class PrepareCreatePemberitahuanUseCase
             ->with('penyedias')
             ->get()
             ->pluck('penyedias')
-            ->flatten();
+            ->flatten()
+            ->unique('id')
+            ->values();
 
         $noPbJ = Pemberitahuan::where('kode_desa', $input->kodeDesa)->count() + 1;
 

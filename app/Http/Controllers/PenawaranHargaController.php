@@ -8,10 +8,13 @@ use App\Models\HargaPenawaran;
 use App\Models\Pemberitahuan;
 use App\Models\Penawaran;
 use App\Models\Penyedia;
+use App\UseCases\Penawaran\StorePenawaranInput;
+use App\UseCases\Penawaran\StorePenawaranUseCase;
+use App\UseCases\Penawaran\UpdatePenawaranInput;
+use App\UseCases\Penawaran\UpdatePenawaranUseCase;
 use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\PajakHelper;
-use Illuminate\Support\Facades\DB;
 
 
 
@@ -60,48 +63,23 @@ class PenawaranHargaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PenawaranHargaRequest $request)
+    public function store(
+        PenawaranHargaRequest $request,
+        StorePenawaranUseCase $storePenawaranUseCase,
+    )
     {
         $validated = $request->validated();
 
-        $pemberitahuan = Pemberitahuan::with(['kegiatan', 'penawaran', 'belanjas'])
-            ->findOrFail($validated['pemberitahuan_id']);
+        $penawaran = $storePenawaranUseCase->execute(new StorePenawaranInput(
+            pemberitahuanId: $validated['pemberitahuan_id'],
+            penyediaId: $validated['penyedia'],
+            tglSuratPenawaran: $validated['tgl_surat_penawaran'],
+            noPenawaran: $validated['no_penawaran'],
+            isWinner: $request->isWinner(),
+            hargaSatuan: $validated['harga_satuan'],
+        ));
 
-        if ($pemberitahuan->penawaran->contains('penyedia_id', $validated['penyedia'])) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['penyedia' => 'Penyedia ini sudah mengirim penawaran untuk pemberitahuan ini.']);
-        }
-
-        if ($pemberitahuan->belanjas->count() !== count($validated['harga_satuan'])) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['harga_satuan' => 'Jumlah item harga tidak sesuai dengan data belanja.']);
-        }
-
-        if ($request->isWinner() && $pemberitahuan->penawaran->contains('is_winner', true)) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['pemenang' => 'Pemenang sudah ditetapkan. Ubah penawaran yang ada jika ingin mengganti pemenang.']);
-        }
-
-        DB::transaction(function () use ($request, $pemberitahuan, $validated) {
-            $penawaran = Penawaran::create([
-                'kegiatan_id' => $pemberitahuan->kegiatan->id,
-                'pemberitahuan_id' => $validated['pemberitahuan_id'],
-                'penyedia_id' => $validated['penyedia'],
-                'tgl_penawaran' => Carbon::parse($validated['tgl_surat_penawaran']),
-                'no_penawaran' => $validated['no_penawaran'],
-                'is_winner' => $request->isWinner(),
-            ]);
-
-            $penawaran->hargaPenawaran()->createMany($request->hargaPenawaranPayload());
-        });
-
-        return redirect()->route('kegiatan.show', ['id' => $pemberitahuan->kegiatan->id]);
+        return redirect()->route('kegiatan.show', ['id' => $penawaran->kegiatan_id]);
     }
 
     /**
@@ -157,56 +135,26 @@ class PenawaranHargaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PenawaranHargaRequest $request, string $pemberitahuanId)
+    public function update(
+        PenawaranHargaRequest $request,
+        string $pemberitahuanId,
+        UpdatePenawaranUseCase $updatePenawaranUseCase,
+    )
     {
         $validated = $request->validated();
 
-        $penawaran = Penawaran::where('penyedia_id', $validated['penyedia'])
-            ->where('pemberitahuan_id', $validated['pemberitahuan_id'])
-            ->firstOrFail();
-
-        $hargaLama = $penawaran->hargaPenawaran()->orderBy('id', 'ASC')->get();
-
-        if ($hargaLama->count() !== count($validated['harga_satuan'])) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['harga_satuan' => 'Jumlah item harga tidak sesuai dengan data belanja.']);
-        }
-
-        $pemberitahuan = Pemberitahuan::with(['kegiatan', 'penawaran'])
-            ->findOrFail($validated['pemberitahuan_id']);
-
-        $kegiatan_id = $pemberitahuan->kegiatan->id;
-
-        DB::transaction(function () use (
-            $penawaran,
-            $hargaLama,
-            $validated,
-            $kegiatan_id,
-            $request,
-        ) {
-            $penawaran->update([
-                'kegiatan_id'   => $kegiatan_id,
-                'tgl_penawaran' => Carbon::parse($validated['tgl_surat_penawaran']),
-                'no_penawaran'  => $validated['no_penawaran'],
-                'is_winner'     => $request->isWinner(),
-            ]);
-
-            Penawaran::where('pemberitahuan_id', $validated['pemberitahuan_id'])
-                ->where('id', '!=', $penawaran->id)
-                ->update(['is_winner' => !$request->isWinner()]);
-
-            foreach ($hargaLama as $index => $row) {
-                $row->update([
-                    'harga_satuan' => $validated['harga_satuan'][$index],
-                ]);
-            }
-        });
+        $penawaran = $updatePenawaranUseCase->execute(new UpdatePenawaranInput(
+            pemberitahuanId: $validated['pemberitahuan_id'],
+            penyediaId: $validated['penyedia'],
+            tglSuratPenawaran: $validated['tgl_surat_penawaran'],
+            noPenawaran: $validated['no_penawaran'],
+            isWinner: $request->isWinner(),
+            hargaSatuan: $validated['harga_satuan'],
+        ));
                 
         flash()->success('Penawaran berhasil diupdate.');
 
-        return redirect()->route('kegiatan.show', ['id' => $kegiatan_id]);
+        return redirect()->route('kegiatan.show', ['id' => $penawaran->kegiatan_id]);
     }
 
     /**

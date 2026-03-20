@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\Pemberitahuan\PrepareCreatePemberitahuanData;
 use App\Models\Kegiatan;
 use App\Models\Penyedia;
 use App\Models\Pemberitahuan;
 use App\Http\Requests\PemberitahuanRequest;
+use App\UseCases\Pemberitahuan\PrepareCreatePemberitahuanInput;
+use App\UseCases\Pemberitahuan\PrepareCreatePemberitahuanUseCase;
+use App\UseCases\Pemberitahuan\UpsertPemberitahuanInput;
+use App\UseCases\Pemberitahuan\UpsertPemberitahuanUseCase;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class PemberitahuanController extends Controller
 {
@@ -18,35 +22,46 @@ class PemberitahuanController extends Controller
     }
 
     
-    public function create($id)
+    public function create(
+        $id,
+        PrepareCreatePemberitahuanUseCase $prepareCreatePemberitahuanUseCase,
+    )
     {
-        $user = Auth::user();
-        $penyedia = $user->penyedias()->get();     
-        $kegiatan = Kegiatan::find($id);
-        $nomor = Pemberitahuan::where('kode_desa', Auth::user()->kode_desa)->count() + 1;
-        
-        return view('form.pemberitahuan', [
-            'kegiatan' => $kegiatan, 
-            'penyedia' => $penyedia, 
-            'no_pbj' => $nomor,
-            'pemberitahuan' => null,
-            'belanja' => collect([['nomor' => 1, 'uraian' => '', 'volume' => '', 'satuan' => '']]),
-            'penyediaTerpilih' => []
-        ]);
-        
+        $result = $prepareCreatePemberitahuanUseCase->execute(
+            new PrepareCreatePemberitahuanInput(
+                kegiatanId: $id,
+                kodeDesa: Auth::user()->kode_desa,
+            )
+        );
+
+        $viewData = new PrepareCreatePemberitahuanData(
+            kegiatan: $result->kegiatan,
+            penyedia: $result->penyedia,
+            nomorPbJ: $result->noPbJ,
+        );
+
+        return view('form.pemberitahuan', $viewData->toViewData());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PemberitahuanRequest $request)
+    public function store(
+        PemberitahuanRequest $request,
+        UpsertPemberitahuanUseCase $upsertPemberitahuanUseCase,
+    )
     {
-        $belanja = $request->belanjaItems();
+        $validated = $request->validated();
 
-        DB::transaction(function () use ($request, $belanja) {
-            $pemberitahuan = Pemberitahuan::create($request->pemberitahuanPayload());
-            $pemberitahuan->belanjas()->createMany($belanja->all());
-        });
+        $upsertPemberitahuanUseCase->execute(new UpsertPemberitahuanInput(
+            pemberitahuanId: null,
+            kegiatanId: $validated['kegiatan_id'],
+            rekeningApbdes: $validated['rekening_apbdes'],
+            penyediaIds: array_values($validated['penyedia']),
+            noPbj: $validated['no_pbj'],
+            tglPemberitahuan: $validated['tgl_pemberitahuan'],
+            belanjaItems: $request->belanjaItems(),
+        ));
 
         return redirect()->route('kegiatan.show', $request->validated('kegiatan_id'));
     }
@@ -78,16 +93,23 @@ class PemberitahuanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PemberitahuanRequest $request, string $id)
+    public function update(
+        PemberitahuanRequest $request,
+        string $id,
+        UpsertPemberitahuanUseCase $upsertPemberitahuanUseCase,
+    )
     {
-        $pemberitahuan = Pemberitahuan::findOrFail($id);
-        $belanja = $request->belanjaItems();
+        $validated = $request->validated();
 
-        DB::transaction(function () use ($pemberitahuan, $request, $belanja) {
-            $pemberitahuan->update($request->pemberitahuanPayload());
-            $pemberitahuan->belanjas()->delete();
-            $pemberitahuan->belanjas()->createMany($belanja->all());
-        });
+        $upsertPemberitahuanUseCase->execute(new UpsertPemberitahuanInput(
+            pemberitahuanId: $id,
+            kegiatanId: $validated['kegiatan_id'],
+            rekeningApbdes: $validated['rekening_apbdes'],
+            penyediaIds: array_values($validated['penyedia']),
+            noPbj: $validated['no_pbj'],
+            tglPemberitahuan: $validated['tgl_pemberitahuan'],
+            belanjaItems: $request->belanjaItems(),
+        ));
 
         return redirect()->route('kegiatan.show', ['id' => $request->validated('kegiatan_id')]);
     }

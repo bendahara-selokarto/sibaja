@@ -15,8 +15,9 @@ class Penawaran extends Model
     use HasUuids;
     protected $table = 'penawaran';
     protected $casts = [
-        'item' => 'array'
-        
+        'item' => 'array',
+        'is_winner' => 'boolean',
+        'tgl_penawaran' => 'datetime',
     ];
    
     protected $guarded = [];
