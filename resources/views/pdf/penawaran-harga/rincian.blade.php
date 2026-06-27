@@ -7,24 +7,11 @@ style="max-width: 21cm; width: 100%; max-height: 3cm; height: auto;"
 onerror="this.src='{{ asset('') }}'" 
 >
 @else
-<table style="width: 100%">
-    <tr>
-        <td style="width: 120px">            
-            <img 
-                src="{{public_path('storage/'.$penyedia1->logo_penyedia)}}" 
-                class="logo-kop-desa" 
-                alt=" " 
-                width="120px" 
-                onerror="this.src='{{ asset('') }}'" 
-            >
-        </td>       
-        <td>
-           <h2 style="text-align: center; margin: 0cm;">{{ $penyedia1->nama_penyedia }}</h2>
-           <h4 style="text-align: center; margin: 0cm;">{{ $penyedia1->alamat_penyedia }}</h4>
-           <h4 style="text-align: center; margin: 0cm; color: blue;">HP : {{  $penyedia1->nomor_hp}}</h4>
-        </td>
-    </tr>
-</table>
+<div style="text-align: center">
+    <h2 style="margin: 0cm;">{{ $penyedia1->nama_penyedia }}</h2>
+    <h4 style="margin: 0cm;">{{ $penyedia1->alamat_penyedia }}</h4>
+    <h4 style="margin: 0cm; color: blue;">HP : {{ $penyedia1->nomor_hp }}</h4>
+</div>
 <hr>
 @endif
 <h3 style="text-align: center;line-height: 50%;">DAFTAR RINCIAN PENAWARAN HARGA BARANG/JASA</h3>

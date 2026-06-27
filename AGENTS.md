@@ -124,6 +124,7 @@ Kalau perubahan menyentuh audit atau proses operasional:
 
 - `pemberitahuan` dan `penyedia` punya hubungan sync yang diuji dan diaudit
 - `app/Console/Commands/AuditPemberitahuanPenyediaSyncCommand.php` adalah command operasional yang harus dijaga konsistensinya dengan `app/Support/PemberitahuanPenyediaSyncAudit.php`
+- contract aktif `penyedia` saat ini disederhanakan ke `kop_surat`; `logo_penyedia` dan `data_dukung` hanya artefak historis di migration/test lama dan jangan dijadikan jalur aktif baru
 - PDF berada di `resources/views/pdf/` dan sering dipakai oleh use case report
 - repository ini sudah memakai test feature dan unit untuk memastikan policy, helper, use case, dan command tetap stabil
 

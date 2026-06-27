@@ -6,6 +6,11 @@ Dokumen ini untuk menjalankan audit read-only antara kolom legacy `pemberitahuan
 
 Audit ini memastikan data transisi masih sinkron sebelum compat layer legacy dipensiunkan.
 
+Catatan kontrak saat ini:
+
+- `penyedia` aktif hanya memakai `kop_surat` untuk header dokumen.
+- `logo_penyedia` dan `data_dukung` masih bisa muncul di migration/test historis, tetapi bukan bagian dari contract aktif penyedia.
+
 ## Aman atau tidak
 
 - Command ini read-only.

@@ -13,14 +13,6 @@ class PenyediaMediaService
     public function buildMediaPayload(PenyediaRequest $request, ?Penyedia $penyedia = null): array
     {
         return [
-            'logo_penyedia' => $this->storeManagedMedia(
-                $request,
-                $request->user(),
-                'logo_penyedia',
-                'logo',
-                $penyedia?->logo_penyedia ?? 'logo/default.png',
-                'logo/default.png'
-            ),
             'kop_surat' => $this->storeManagedMedia(
                 $request,
                 $request->user(),
@@ -28,19 +20,12 @@ class PenyediaMediaService
                 'kop_surat',
                 $penyedia?->kop_surat ?? ''
             ),
-            'data_dukung' => $this->storeManagedMedia(
-                $request,
-                $request->user(),
-                'data_dukung',
-                'data_dukung',
-                $penyedia?->data_dukung ?? ''
-            ),
         ];
     }
 
     public function deleteManagedMedia(Penyedia $penyedia): void
     {
-        foreach ([$penyedia->logo_penyedia, $penyedia->kop_surat, $penyedia->data_dukung] as $path) {
+        foreach ([$penyedia->kop_surat] as $path) {
             if ($this->shouldDeleteManagedMedia($path)) {
                 Storage::disk('public')->delete($path);
             }
@@ -92,8 +77,7 @@ class PenyediaMediaService
     {
         return is_string($path)
             && $path !== ''
-            && $path !== 'logo/default.png'
             && $path !== 'kop_surat/default.png'
-            && $path !== 'data_dukung/default.pdf';
+            && $path !== '';
     }
 }

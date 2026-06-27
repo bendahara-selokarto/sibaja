@@ -91,22 +91,6 @@
                                 <x-text-input id="bank" name="bank" type="text" class="mt-1 block w-full" :value="old('bank', $penyedia->bank)" required autocomplete="bank" />
                                 <x-input-error class="mt-2" :messages="$errors->get('bank')" />
                             </div>
-                            <div>
-                                <x-input-label for="logo_penyedia" :value="__('Logo Penyedia')" />
-                                @if ($penyedia->logo_penyedia)
-                                    <div class="mb-2 text-sm text-green-600">
-                                        <strong>{{ basename($penyedia->logo_penyedia) }}</strong>
-                                    </div>
-                                @endif
-                                <input id="logo_penyedia" name="logo_penyedia" type="file" accept="image/*" class="mt-1 block w-full">
-                                <x-input-error class="mt-2" :messages="$errors->get('logo_penyedia')" />
-                                @if($penyedia->exists && $penyedia->logo_penyedia && $penyedia->logo_penyedia !== 'logo/default.png')
-                                    <label class="mt-2 flex items-center gap-2 text-sm text-gray-700">
-                                        <input type="checkbox" name="clear_logo_penyedia" value="1" {{ old('clear_logo_penyedia') ? 'checked' : '' }}>
-                                        Hapus logo saat simpan
-                                    </label>
-                                @endif
-                            </div>
                             <div class="mt-4">
                                 <x-input-label for="kop_surat" :value="__('Kop Surat')" />
                                 @if ($penyedia->kop_surat)
@@ -120,22 +104,6 @@
                                     <label class="mt-2 flex items-center gap-2 text-sm text-gray-700">
                                         <input type="checkbox" name="clear_kop_surat" value="1" {{ old('clear_kop_surat') ? 'checked' : '' }}>
                                         Hapus kop surat saat simpan
-                                    </label>
-                                @endif
-                            </div>
-                            <div class="mt-4">
-                                <x-input-label for="data_dukung" :value="__('Data Dukung')" />
-                                @if ($penyedia->data_dukung)
-                                    <div class="mb-2 text-sm text-green-600">
-                                        <strong>{{ basename($penyedia->data_dukung) }}</strong>
-                                    </div>
-                                @endif
-                                <input id="data_dukung" name="data_dukung" type="file" accept=".pdf,.doc,.docx,.zip,.rar" class="mt-1 block w-full">
-                                <x-input-error class="mt-2" :messages="$errors->get('data_dukung')" />
-                                @if($penyedia->exists && $penyedia->data_dukung)
-                                    <label class="mt-2 flex items-center gap-2 text-sm text-gray-700">
-                                        <input type="checkbox" name="clear_data_dukung" value="1" {{ old('clear_data_dukung') ? 'checked' : '' }}>
-                                        Hapus data dukung saat simpan
                                     </label>
                                 @endif
                             </div>

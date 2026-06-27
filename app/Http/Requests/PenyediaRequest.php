@@ -38,12 +38,8 @@ class PenyediaRequest extends FormRequest
             'rekening' => [$requiredIfCreating, 'nullable', 'string', 'max:50'],
             'bank' => [$requiredIfCreating, 'nullable', 'string', 'max:100'],
             'atas_nama' => [$requiredIfCreating, 'nullable', 'string', 'max:255'],
-            'logo_penyedia' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'kop_surat' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif,svg|max:4096',
-            'data_dukung' => 'nullable|file|mimes:pdf,doc,docx,zip,rar|max:5120',
-            'clear_logo_penyedia' => 'nullable|boolean',
             'clear_kop_surat' => 'nullable|boolean',
-            'clear_data_dukung' => 'nullable|boolean',
             'kabupaten' => 'required|string|max:100',
             
         ];
@@ -75,12 +71,8 @@ class PenyediaRequest extends FormRequest
             'rekening' => 'Rekening',
             'bank' => 'Bank',
             'atas_nama' => 'Atas Nama',
-            'logo_penyedia' => 'Logo Penyedia',
             'kop_surat' => 'Kop Surat',
-            'data_dukung' => 'Data Dukung',
-            'clear_logo_penyedia' => 'Hapus Logo Penyedia',
             'clear_kop_surat' => 'Hapus Kop Surat',
-            'clear_data_dukung' => 'Hapus Data Dukung',
             'kabupaten' => 'Kabupaten',
         ];
     }

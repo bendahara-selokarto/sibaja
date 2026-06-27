@@ -41,8 +41,6 @@ class PenyediaUpdateTest extends TestCase
             'rekening' => '1234567890',
             'bank' => 'BPD',
             'atas_nama' => 'CV Lama',
-            'logo_penyedia' => 'logo/existing-logo.png',
-            'data_dukung' => 'data_dukung/existing-data.pdf',
             'kop_surat' => 'kop_surat/existing-kop.png',
             'kabupaten' => 'Batang',
         ]);
@@ -69,8 +67,6 @@ class PenyediaUpdateTest extends TestCase
         $this->assertDatabaseHas('penyedias', [
             'id' => $penyedia->id,
             'nama_penyedia' => 'CV Baru',
-            'logo_penyedia' => 'logo/existing-logo.png',
-            'data_dukung' => 'data_dukung/existing-data.pdf',
             'kop_surat' => 'kop_surat/existing-kop.png',
         ]);
     }
@@ -112,8 +108,6 @@ class PenyediaUpdateTest extends TestCase
             'rekening' => '1234567890',
             'bank' => 'BPD',
             'atas_nama' => 'CV Master',
-            'logo_penyedia' => 'logo/existing-logo.png',
-            'data_dukung' => 'data_dukung/existing-data.pdf',
             'kop_surat' => 'kop_surat/existing-kop.png',
             'kabupaten' => 'Batang',
         ]);
@@ -184,8 +178,6 @@ class PenyediaUpdateTest extends TestCase
             'rekening' => '1234567890',
             'bank' => 'BPD',
             'atas_nama' => 'CV Bank',
-            'logo_penyedia' => 'logo/existing-logo.png',
-            'data_dukung' => 'data_dukung/existing-data.pdf',
             'kop_surat' => 'kop_surat/existing-kop.png',
             'kabupaten' => 'Batang',
         ]);
@@ -245,8 +237,6 @@ class PenyediaUpdateTest extends TestCase
             'rekening' => '1234567890',
             'bank' => 'BPD',
             'atas_nama' => 'CV Bank',
-            'logo_penyedia' => 'logo/existing-logo.png',
-            'data_dukung' => 'data_dukung/existing-data.pdf',
             'kop_surat' => 'kop_surat/existing-kop.png',
             'kabupaten' => 'Batang',
         ]);
@@ -275,10 +265,7 @@ class PenyediaUpdateTest extends TestCase
 
         $this->actingAs($user);
 
-        Storage::disk('public')->put('logo/existing-logo.png', 'old-logo');
         Storage::disk('public')->put('kop_surat/existing-kop.png', 'old-kop');
-        Storage::disk('public')->put('data_dukung/existing-data.pdf', 'old-data');
-
         $penyedia = Penyedia::create([
             'created_by' => $user->id,
             'nama_penyedia' => 'CV Lama',
@@ -294,8 +281,6 @@ class PenyediaUpdateTest extends TestCase
             'rekening' => '1234567890',
             'bank' => 'BPD',
             'atas_nama' => 'CV Lama',
-            'logo_penyedia' => 'logo/existing-logo.png',
-            'data_dukung' => 'data_dukung/existing-data.pdf',
             'kop_surat' => 'kop_surat/existing-kop.png',
             'kabupaten' => 'Batang',
         ]);
@@ -319,24 +304,16 @@ class PenyediaUpdateTest extends TestCase
             'bank' => 'BRI',
             'atas_nama' => 'CV Baru',
             'kabupaten' => 'Batang',
-            'logo_penyedia' => UploadedFile::fake()->createWithContent('new-logo.png', $png),
             'kop_surat' => UploadedFile::fake()->create('new-kop.pdf', 100, 'application/pdf'),
-            'data_dukung' => UploadedFile::fake()->create('new-data.pdf', 100, 'application/pdf'),
         ]);
 
         $response->assertRedirect(route('menu.penyedia'));
 
         $penyedia->refresh();
 
-        Storage::disk('public')->assertMissing('logo/existing-logo.png');
         Storage::disk('public')->assertMissing('kop_surat/existing-kop.png');
-        Storage::disk('public')->assertMissing('data_dukung/existing-data.pdf');
-        Storage::disk('public')->assertExists($penyedia->logo_penyedia);
         Storage::disk('public')->assertExists($penyedia->kop_surat);
-        Storage::disk('public')->assertExists($penyedia->data_dukung);
-        $this->assertNotSame('logo/existing-logo.png', $penyedia->logo_penyedia);
         $this->assertNotSame('kop_surat/existing-kop.png', $penyedia->kop_surat);
-        $this->assertNotSame('data_dukung/existing-data.pdf', $penyedia->data_dukung);
     }
 
     public function test_destroy_deletes_owned_media_files_when_master_penyedia_is_removed(): void
@@ -354,10 +331,7 @@ class PenyediaUpdateTest extends TestCase
 
         $this->actingAs($user);
 
-        Storage::disk('public')->put('logo/existing-logo.png', 'old-logo');
         Storage::disk('public')->put('kop_surat/existing-kop.png', 'old-kop');
-        Storage::disk('public')->put('data_dukung/existing-data.pdf', 'old-data');
-
         $penyedia = Penyedia::create([
             'created_by' => $user->id,
             'nama_penyedia' => 'CV Hapus',
@@ -373,8 +347,6 @@ class PenyediaUpdateTest extends TestCase
             'rekening' => '1234567890',
             'bank' => 'BPD',
             'atas_nama' => 'CV Hapus',
-            'logo_penyedia' => 'logo/existing-logo.png',
-            'data_dukung' => 'data_dukung/existing-data.pdf',
             'kop_surat' => 'kop_surat/existing-kop.png',
             'kabupaten' => 'Batang',
         ]);
@@ -385,9 +357,7 @@ class PenyediaUpdateTest extends TestCase
 
         $response->assertRedirect(route('menu.penyedia'));
 
-        Storage::disk('public')->assertMissing('logo/existing-logo.png');
         Storage::disk('public')->assertMissing('kop_surat/existing-kop.png');
-        Storage::disk('public')->assertMissing('data_dukung/existing-data.pdf');
         $this->assertDatabaseMissing('penyedias', [
             'id' => $penyedia->id,
         ]);
@@ -408,10 +378,7 @@ class PenyediaUpdateTest extends TestCase
 
         $this->actingAs($user);
 
-        Storage::disk('public')->put('logo/existing-logo.png', 'old-logo');
         Storage::disk('public')->put('kop_surat/existing-kop.png', 'old-kop');
-        Storage::disk('public')->put('data_dukung/existing-data.pdf', 'old-data');
-
         $penyedia = Penyedia::create([
             'created_by' => $user->id,
             'nama_penyedia' => 'CV Lama',
@@ -427,8 +394,6 @@ class PenyediaUpdateTest extends TestCase
             'rekening' => '1234567890',
             'bank' => 'BPD',
             'atas_nama' => 'CV Lama',
-            'logo_penyedia' => 'logo/existing-logo.png',
-            'data_dukung' => 'data_dukung/existing-data.pdf',
             'kop_surat' => 'kop_surat/existing-kop.png',
             'kabupaten' => 'Batang',
         ]);
@@ -448,20 +413,14 @@ class PenyediaUpdateTest extends TestCase
             'bank' => 'BRI',
             'atas_nama' => 'CV Baru',
             'kabupaten' => 'Batang',
-            'clear_logo_penyedia' => '1',
             'clear_kop_surat' => '1',
-            'clear_data_dukung' => '1',
         ]);
 
         $response->assertRedirect(route('menu.penyedia'));
 
         $penyedia->refresh();
 
-        Storage::disk('public')->assertMissing('logo/existing-logo.png');
         Storage::disk('public')->assertMissing('kop_surat/existing-kop.png');
-        Storage::disk('public')->assertMissing('data_dukung/existing-data.pdf');
-        $this->assertSame('logo/default.png', $penyedia->logo_penyedia);
         $this->assertSame('', $penyedia->kop_surat);
-        $this->assertSame('', $penyedia->data_dukung);
     }
 }
