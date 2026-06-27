@@ -29,6 +29,11 @@ Jika ada konflik instruksi, gunakan urutan berikut:
 - kalau ada risiko behavior drift, jelaskan sebelum lanjut
 - kalau perlu klarifikasi yang penting, ajukan pertanyaan singkat dan spesifik
 - kalau user memberi referensi file, jadikan itu titik awal sebelum menebak file lain
+- setiap patch wajib terdokumentasi dulu di tiga dokumen markdown: `plan`, `contract`, dan `todo`
+- urutan kerja baku: `plan -> contract -> todo -> code patch -> validation -> final report`
+- dokumen yang dipakai harus berada dalam format `.md`
+- jika perubahan melibatkan beberapa file/fitur, update ketiga dokumen itu sebelum patch kode
+- jika perubahan kecil benar-benar satu baris dan tidak mengubah perilaku, tetap buat catatan singkat di `todo`
 
 ## 3. Pola Arsitektur
 
@@ -119,6 +124,13 @@ Kalau perubahan menyentuh audit atau proses operasional:
 - pastikan instruksi di README tetap sinkron
 - kalau ada command baru yang penting, tulis contoh pemakaiannya
 - kalau command sudah ada dan hanya perilakunya berubah, perbarui contoh atau catatan penggunaan
+
+Standar dokumen kerja untuk semua perubahan:
+
+- `docs/process/PLAN_*.md` untuk maksud, tujuan, ruang lingkup, dan risiko
+- `docs/process/CONTRACT_*.md` untuk kontrak teknis/bisnis yang dikunci sebelum patch
+- `docs/process/TODO_*.md` untuk daftar langkah kerja dan statusnya
+- file patch kode hanya dibuat setelah tiga dokumen di atas ada dan sinkron
 
 ## 8. Domain Notes
 
