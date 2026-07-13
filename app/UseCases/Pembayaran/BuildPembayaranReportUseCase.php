@@ -49,23 +49,28 @@ final class BuildPembayaranReportUseCase
         }
 
         $item = $belanja->map(function ($belanjaItem, int $index) use ($hargaNegosiasi, $kegiatan) {
-            $hargaNegosiasiBersih = PajakHelper::hitungSiskeudes(
+            $volume = (float) $belanjaItem->volume;
+
+            $preciseNegosiasi = PajakHelper::hitungSiskeudesPresisi(
                 (float) $hargaNegosiasi->get($index)->harga_satuan,
                 $kegiatan->ppn,
                 $kegiatan->pph_22
             );
 
-            $volume = (float) $belanjaItem->volume;
+            $jumlahNegosiasiPrecise = bcmul($preciseNegosiasi['bersih'], (string) $volume, 4);
+            $ppnNegosiasiPrecise = bcmul($preciseNegosiasi['ppn'], (string) $volume, 4);
+            $pph22NegosiasiPrecise = bcmul($preciseNegosiasi['pph22'], (string) $volume, 4);
+            $totalNegosiasiPrecise = bcmul($preciseNegosiasi['total'], (string) $volume, 4);
 
             return [
                 'uraian' => $belanjaItem->uraian,
                 'volume' => $volume,
                 'satuan' => $belanjaItem->satuan,
-                'harga_negosiasi' => $hargaNegosiasiBersih['bersih'],
-                'jumlah_negosiasi' => $volume * $hargaNegosiasiBersih['bersih'],
-                'ppn_negosiasi' => $volume * $hargaNegosiasiBersih['ppn'],
-                'pph22_negosiasi' => $volume * $hargaNegosiasiBersih['pph22'],
-                'total_negosiasi' => $volume * $hargaNegosiasiBersih['total'],
+                'harga_negosiasi' => (int) round($preciseNegosiasi['bersih'], 0, PHP_ROUND_HALF_UP),
+                'jumlah_negosiasi' => (int) round($jumlahNegosiasiPrecise, 0, PHP_ROUND_HALF_UP),
+                'ppn_negosiasi' => (int) round($ppnNegosiasiPrecise, 0, PHP_ROUND_HALF_UP),
+                'pph22_negosiasi' => (int) round($pph22NegosiasiPrecise, 0, PHP_ROUND_HALF_UP),
+                'total_negosiasi' => (int) round($totalNegosiasiPrecise, 0, PHP_ROUND_HALF_UP),
             ];
         })->values();
 

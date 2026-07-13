@@ -86,12 +86,15 @@ final class BuildPenawaranReportUseCase
             $volume = (float) ($belanjaItem?->volume ?? 0);
             $hargaSatuan = (float) $harga->harga_satuan;
 
+            $preciseUnit = PajakHelper::hitungSiskeudesPresisi($hargaSatuan, $ppn, $pph22);
+            $preciseJumlah = bcmul($preciseUnit['bersih'], (string) $volume, 4);
+
             return [
                 'uraian' => $belanjaItem?->uraian,
                 'volume' => $volume,
                 'satuan' => $belanjaItem?->satuan,
-                'harga_satuan' => PajakHelper::bersihSetelahPpnDanPph22($hargaSatuan, $ppn, $pph22),
-                'jumlah' => PajakHelper::bersihSetelahPpnDanPph22($volume * $hargaSatuan, $ppn, $pph22),
+                'harga_satuan' => (int) round($preciseUnit['bersih'], 0, PHP_ROUND_HALF_UP),
+                'jumlah' => (int) round($preciseJumlah, 0, PHP_ROUND_HALF_UP),
             ];
         })->values();
     }
@@ -102,12 +105,33 @@ final class BuildPenawaranReportUseCase
         float $ppn,
         float $pph22,
     ): array {
-        $totalBruto = $hargaPenawaran->reduce(function (float $carry, $harga, int $index) use ($belanja) {
+        $totalBersih = '0.0000';
+        $totalPpn = '0.0000';
+        $totalPph22 = '0.0000';
+        $totalBruto = '0.0000';
+
+        foreach ($hargaPenawaran as $index => $harga) {
             $volume = (float) ($belanja->get($index)?->volume ?? 0);
+            $hargaSatuan = (float) $harga->harga_satuan;
 
-            return $carry + ($volume * (float) $harga->harga_satuan);
-        }, 0.0);
+            $preciseUnit = PajakHelper::hitungSiskeudesPresisi($hargaSatuan, $ppn, $pph22);
 
-        return PajakHelper::hitungSiskeudes($totalBruto, $ppn, $pph22);
+            $itemBersih = bcmul($preciseUnit['bersih'], (string) $volume, 4);
+            $itemPpn = bcmul($preciseUnit['ppn'], (string) $volume, 4);
+            $itemPph22 = bcmul($preciseUnit['pph22'], (string) $volume, 4);
+            $itemTotal = bcmul($preciseUnit['total'], (string) $volume, 4);
+
+            $totalBersih = bcadd($totalBersih, (string) round($itemBersih, 0, PHP_ROUND_HALF_UP), 4);
+            $totalPpn = bcadd($totalPpn, (string) round($itemPpn, 0, PHP_ROUND_HALF_UP), 4);
+            $totalPph22 = bcadd($totalPph22, (string) round($itemPph22, 0, PHP_ROUND_HALF_UP), 4);
+            $totalBruto = bcadd($totalBruto, (string) round($itemTotal, 0, PHP_ROUND_HALF_UP), 4);
+        }
+
+        return [
+            'bersih' => (int) $totalBersih,
+            'ppn' => (int) $totalPpn,
+            'pph22' => (int) $totalPph22,
+            'total' => (int) $totalBruto,
+        ];
     }
 }

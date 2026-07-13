@@ -54,34 +54,46 @@ final class BuildNegosiasiReportUseCase
         $pph22 = $kegiatan->pph_22;
 
         $items = $belanja->map(function ($belanjaItem, int $index) use ($hargaPenawaran, $hargaNegosiasi, $ppn, $pph22) {
-            $hargaPenawaranBersih = PajakHelper::hitungSiskeudes(
+            $volume = (float) $belanjaItem->volume;
+
+            $precisePenawaran = PajakHelper::hitungSiskeudesPresisi(
                 (float) $hargaPenawaran->get($index)->harga_satuan,
                 $ppn,
                 $pph22
             );
 
-            $hargaNegosiasiBersih = PajakHelper::hitungSiskeudes(
+            $preciseNegosiasi = PajakHelper::hitungSiskeudesPresisi(
                 (float) $hargaNegosiasi->get($index)->harga_satuan,
                 $ppn,
                 $pph22
             );
 
-            $volume = (float) $belanjaItem->volume;
+            $jumlahPenawaranPrecise = bcmul($precisePenawaran['bersih'], (string) $volume, 4);
+            $jumlahNegosiasiPrecise = bcmul($preciseNegosiasi['bersih'], (string) $volume, 4);
+
+            $ppnPenawaranPrecise = bcmul($precisePenawaran['ppn'], (string) $volume, 4);
+            $ppnNegosiasiPrecise = bcmul($preciseNegosiasi['ppn'], (string) $volume, 4);
+
+            $pph22PenawaranPrecise = bcmul($precisePenawaran['pph22'], (string) $volume, 4);
+            $pph22NegosiasiPrecise = bcmul($preciseNegosiasi['pph22'], (string) $volume, 4);
+
+            $totalPenawaranPrecise = bcmul($precisePenawaran['total'], (string) $volume, 4);
+            $totalNegosiasiPrecise = bcmul($preciseNegosiasi['total'], (string) $volume, 4);
 
             return [
                 'uraian' => $belanjaItem->uraian,
                 'volume' => $volume,
                 'satuan' => $belanjaItem->satuan,
-                'harga_penawaran' => $hargaPenawaranBersih['bersih'],
-                'harga_negosiasi' => $hargaNegosiasiBersih['bersih'],
-                'jumlah_penawaran' => $volume * $hargaPenawaranBersih['bersih'],
-                'jumlah_negosiasi' => $volume * $hargaNegosiasiBersih['bersih'],
-                'ppn_penawaran' => $volume * $hargaPenawaranBersih['ppn'],
-                'ppn_negosiasi' => $volume * $hargaNegosiasiBersih['ppn'],
-                'pph22_penawaran' => $volume * $hargaPenawaranBersih['pph22'],
-                'pph22_negosiasi' => $volume * $hargaNegosiasiBersih['pph22'],
-                'total_penawaran' => $volume * ($hargaPenawaranBersih['bersih'] + $hargaPenawaranBersih['ppn'] + $hargaPenawaranBersih['pph22']),
-                'total_negosiasi' => $volume * ($hargaNegosiasiBersih['bersih'] + $hargaNegosiasiBersih['ppn'] + $hargaNegosiasiBersih['pph22']),
+                'harga_penawaran' => (int) round($precisePenawaran['bersih'], 0, PHP_ROUND_HALF_UP),
+                'harga_negosiasi' => (int) round($preciseNegosiasi['bersih'], 0, PHP_ROUND_HALF_UP),
+                'jumlah_penawaran' => (int) round($jumlahPenawaranPrecise, 0, PHP_ROUND_HALF_UP),
+                'jumlah_negosiasi' => (int) round($jumlahNegosiasiPrecise, 0, PHP_ROUND_HALF_UP),
+                'ppn_penawaran' => (int) round($ppnPenawaranPrecise, 0, PHP_ROUND_HALF_UP),
+                'ppn_negosiasi' => (int) round($ppnNegosiasiPrecise, 0, PHP_ROUND_HALF_UP),
+                'pph22_penawaran' => (int) round($pph22PenawaranPrecise, 0, PHP_ROUND_HALF_UP),
+                'pph22_negosiasi' => (int) round($pph22NegosiasiPrecise, 0, PHP_ROUND_HALF_UP),
+                'total_penawaran' => (int) round($totalPenawaranPrecise, 0, PHP_ROUND_HALF_UP),
+                'total_negosiasi' => (int) round($totalNegosiasiPrecise, 0, PHP_ROUND_HALF_UP),
             ];
         })->values();
 
